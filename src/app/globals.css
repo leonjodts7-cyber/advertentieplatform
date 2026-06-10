@@ -1,0 +1,93 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: 240 10% 4%;
+  --foreground: 0 0% 98%;
+  --card: 240 8% 8%;
+  --card-foreground: 0 0% 98%;
+  --popover: 240 8% 8%;
+  --popover-foreground: 0 0% 98%;
+  --primary: 43 74% 55%;
+  --primary-foreground: 240 10% 4%;
+  --secondary: 240 6% 14%;
+  --secondary-foreground: 0 0% 98%;
+  --muted: 240 6% 14%;
+  --muted-foreground: 240 5% 65%;
+  --accent: 43 40% 20%;
+  --accent-foreground: 43 74% 70%;
+  --destructive: 0 62% 45%;
+  --destructive-foreground: 0 0% 98%;
+  --border: 240 6% 18%;
+  --input: 240 6% 18%;
+  --ring: 43 74% 55%;
+  --radius: 0.75rem;
+}
+
+* {
+  border-color: hsl(var(--border));
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -20%, hsl(43 74% 55% / 0.08), transparent),
+    hsl(var(--background));
+  color: hsl(var(--foreground));
+  font-feature-settings: "rlig" 1, "calt" 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.container {
+  width: 100%;
+  max-width: 72rem;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+@media (min-width: 640px) {
+  .container {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+
+.card-premium {
+  border-radius: var(--radius);
+  border: 1px solid hsl(var(--border));
+  background: linear-gradient(
+    145deg,
+    hsl(var(--card)) 0%,
+    hsl(240 8% 6%) 100%
+  );
+  box-shadow:
+    0 1px 0 hsl(0 0% 100% / 0.03) inset,
+    0 4px 24px hsl(0 0% 0% / 0.25);
+}
+
+.section-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  color: hsl(var(--foreground));
+}
+
+@media (min-width: 640px) {
+  .section-title {
+    font-size: 1.875rem;
+  }
+}
+
+.prose-advertentie {
+  color: hsl(var(--muted-foreground));
+  line-height: 1.75;
+  white-space: pre-wrap;
+}
