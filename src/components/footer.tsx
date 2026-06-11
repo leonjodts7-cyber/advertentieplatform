@@ -29,6 +29,14 @@ export function Footer() {
               </li>
               <li>
                 <Link
+                  href="/ai-lounge"
+                  className="text-muted-foreground hover:text-champagne-light"
+                >
+                  AI Lounge
+                </Link>
+              </li>
+              <li>
+                <Link
                   href="/dashboard/advertenties/nieuw"
                   className="text-muted-foreground hover:text-champagne-light"
                 >

@@ -9,6 +9,7 @@ interface HeaderProps {
 
 const navLinks = [
   { href: "/zoeken", label: "Advertenties" },
+  { href: "/ai-lounge", label: "AI Lounge" },
   { href: "/dashboard/advertenties/nieuw", label: "Plaats advertentie" },
   { href: "/dashboard", label: "Dashboard" },
 ];
@@ -55,6 +56,12 @@ export function Header({ user }: HeaderProps) {
         </nav>
 
         <div className="flex shrink-0 items-center gap-1.5 lg:hidden">
+          <Link
+            href="/ai-lounge"
+            className="rounded-full px-2 py-2 text-xs text-muted-foreground hover:text-champagne-light"
+          >
+            AI
+          </Link>
           <Link
             href="/zoeken"
             className="rounded-full px-2.5 py-2 text-xs text-muted-foreground hover:text-champagne-light sm:px-3 sm:text-sm"

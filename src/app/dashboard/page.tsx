@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import type { Metadata } from "next";
 import { Button } from "@/components/ui/button";
 import type { Advertentie } from "@/lib/types";
+import { haalAiLoungeStats } from "@/lib/ai/queries";
 import { createClient } from "@/lib/supabase/server";
 import { zorgProfielBestaat } from "@/lib/profiel";
 
@@ -20,10 +21,13 @@ export default async function DashboardPage() {
 
   await zorgProfielBestaat(user.id, user.email ?? "");
 
-  const { data: advertentiesRaw } = await supabase
-    .from("advertenties")
-    .select("id, status")
-    .eq("aanbieder_id", user.id);
+  const [{ data: advertentiesRaw }, aiStats] = await Promise.all([
+    supabase
+      .from("advertenties")
+      .select("id, status")
+      .eq("aanbieder_id", user.id),
+    haalAiLoungeStats(user.id),
+  ]);
 
   const advertenties = (advertentiesRaw ?? []) as Pick<
     Advertentie,
@@ -43,13 +47,16 @@ export default async function DashboardPage() {
           </p>
           <h1 className="section-title mt-1">Welkom terug</h1>
           <p className="section-subtitle mt-1">
-            Beheer jouw profielen als aanbieder.
+            Beheer jouw profielen als aanbieder en AI Lounge.
           </p>
         </div>
       </div>
 
       <div className="container py-6 sm:py-8">
-        <div className="grid gap-3 sm:grid-cols-3">
+        <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+          Marketplace
+        </h2>
+        <div className="mt-3 grid gap-3 sm:grid-cols-3">
           <div className="stat-card">
             <p className="text-xs uppercase tracking-wider text-muted-foreground">
               Totaal
@@ -74,7 +81,37 @@ export default async function DashboardPage() {
           </div>
         </div>
 
-        <div className="mt-6 grid gap-3 sm:grid-cols-2">
+        <h2 className="mt-8 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+          AI Lounge
+        </h2>
+        <div className="mt-3 grid gap-3 sm:grid-cols-3">
+          <div className="stat-card">
+            <p className="text-xs uppercase tracking-wider text-muted-foreground">
+              Gesprekken
+            </p>
+            <p className="mt-1 font-display text-3xl text-foreground">
+              {aiStats.gesprekken}
+            </p>
+          </div>
+          <div className="stat-card">
+            <p className="text-xs uppercase tracking-wider text-muted-foreground">
+              Gebruikte credits
+            </p>
+            <p className="mt-1 font-display text-3xl text-wine-light">
+              {aiStats.gebruikteCredits}
+            </p>
+          </div>
+          <div className="stat-card">
+            <p className="text-xs uppercase tracking-wider text-muted-foreground">
+              Resterende credits
+            </p>
+            <p className="mt-1 font-display text-3xl text-champagne-light">
+              {aiStats.resterendeCredits}
+            </p>
+          </div>
+        </div>
+
+        <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           <Link
             href="/dashboard/advertenties"
             className="luxury-card group p-5 transition-all hover:border-champagne/25 hover:shadow-glow"
@@ -87,14 +124,25 @@ export default async function DashboardPage() {
             </p>
           </Link>
           <Link
-            href="/dashboard/advertenties/nieuw"
+            href="/ai-lounge"
             className="velvet-card group p-5 transition-all hover:border-champagne/20 hover:shadow-glow"
           >
             <p className="font-display text-lg text-champagne-light">
-              + Nieuwe advertentie
+              AI Lounge
             </p>
             <p className="mt-1 text-sm text-muted-foreground">
-              Plaats een nieuw profiel
+              Chat met fictieve AI Companions
+            </p>
+          </Link>
+          <Link
+            href="/credits"
+            className="luxury-card group p-5 transition-all hover:border-champagne/25 hover:shadow-glow sm:col-span-2 lg:col-span-1"
+          >
+            <p className="font-display text-lg text-foreground group-hover:text-champagne-light">
+              Credits kopen
+            </p>
+            <p className="mt-1 text-sm text-muted-foreground">
+              {aiStats.resterendeCredits} credits beschikbaar
             </p>
           </Link>
         </div>
@@ -109,7 +157,7 @@ export default async function DashboardPage() {
             size="lg"
             className="w-full sm:w-auto"
           >
-            <Link href="/zoeken">Bekijk marketplace</Link>
+            <Link href="/ai-lounge">Open AI Lounge</Link>
           </Button>
         </div>
       </div>
