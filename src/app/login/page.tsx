@@ -36,20 +36,22 @@ export default function LoginPage() {
   return (
     <div className="flex min-h-[70vh] items-center py-10">
       <div className="container">
-        <div className="luxury-card relative mx-auto max-w-md overflow-hidden p-6 sm:p-8">
+        <div className="luxury-card-elevated relative mx-auto max-w-md overflow-hidden p-6 sm:p-8">
           <div className="relative">
-            <p className="text-[0.6875rem] uppercase tracking-wider text-veloura-soft">
+            <p className="text-[0.6875rem] uppercase tracking-wider text-muted-foreground">
               Veloura Account
             </p>
-            <h1 className="font-display mt-2 text-2xl text-veloura-ivory">Inloggen</h1>
-            <p className="mt-2 text-sm text-veloura-soft">
+            <h1 className="font-display mt-2 text-2xl text-foreground">
+              Inloggen
+            </h1>
+            <p className="mt-2 text-sm text-muted-foreground">
               Ontvang een magic link om in te loggen op jouw dashboard.
             </p>
 
             {verzonden ? (
-              <div className="mt-5 rounded-xl border border-veloura-champagne/20 bg-veloura-champagne/5 p-4 text-sm text-veloura-ivory">
+              <div className="mt-5 rounded-xl border border-accent/30 bg-accent-soft p-4 text-sm text-foreground">
                 Link verstuurd naar{" "}
-                <strong className="text-veloura-champagne">{email.trim()}</strong>
+                <strong className="text-primary-dark">{email.trim()}</strong>
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="mt-5 space-y-4">
@@ -71,14 +73,22 @@ export default function LoginPage() {
                     {fout}
                   </p>
                 )}
-                <Button type="submit" className="w-full" size="lg" disabled={laden}>
+                <Button
+                  type="submit"
+                  className="w-full"
+                  size="lg"
+                  disabled={laden}
+                >
                   {laden ? "Versturen..." : "Stuur magic link"}
                 </Button>
               </form>
             )}
 
-            <p className="mt-5 text-center text-sm text-veloura-soft">
-              <Link href="/" className="text-veloura-champagne hover:underline">
+            <p className="mt-5 text-center text-sm text-muted-foreground">
+              <Link
+                href="/"
+                className="font-medium text-primary-dark hover:underline"
+              >
                 ← Terug naar Veloura
               </Link>
             </p>

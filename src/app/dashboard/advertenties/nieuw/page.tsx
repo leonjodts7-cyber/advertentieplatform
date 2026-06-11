@@ -24,7 +24,7 @@ export default async function NieuweAdvertentiePage() {
         <div className="container">
           <Link
             href="/dashboard/advertenties"
-            className="text-sm text-veloura-soft hover:text-veloura-champagne"
+            className="text-sm text-muted-foreground hover:text-primary-dark"
           >
             ← Mijn advertenties
           </Link>

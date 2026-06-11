@@ -38,7 +38,7 @@ export default async function DashboardPage() {
     <div>
       <div className="page-header-band">
         <div className="container">
-          <p className="text-[0.6875rem] uppercase tracking-wider text-veloura-soft">
+          <p className="text-[0.6875rem] uppercase tracking-wider text-muted-foreground">
             Veloura Dashboard
           </p>
           <h1 className="section-title mt-1">Welkom terug</h1>
@@ -51,53 +51,62 @@ export default async function DashboardPage() {
       <div className="container py-6 sm:py-8">
         <div className="grid gap-3 sm:grid-cols-3">
           <div className="stat-card">
-            <p className="text-xs uppercase tracking-wider text-veloura-soft">Totaal</p>
-            <p className="mt-1 font-display text-3xl text-veloura-ivory">{totaal}</p>
+            <p className="text-xs uppercase tracking-wider text-muted-foreground">
+              Totaal
+            </p>
+            <p className="mt-1 font-display text-3xl text-foreground">
+              {totaal}
+            </p>
           </div>
           <div className="stat-card">
-            <p className="text-xs uppercase tracking-wider text-veloura-soft">Actief</p>
-            <p className="mt-1 font-display text-3xl text-veloura-green">{actief}</p>
+            <p className="text-xs uppercase tracking-wider text-muted-foreground">
+              Actief
+            </p>
+            <p className="mt-1 font-display text-3xl text-success">{actief}</p>
           </div>
           <div className="stat-card">
-            <p className="text-xs uppercase tracking-wider text-veloura-soft">
+            <p className="text-xs uppercase tracking-wider text-muted-foreground">
               In beoordeling
             </p>
-            <p className="mt-1 font-display text-3xl text-veloura-champagne">
-              {inReview}
-            </p>
+            <p className="mt-1 font-display text-3xl text-accent">{inReview}</p>
           </div>
         </div>
 
         <div className="mt-6 grid gap-3 sm:grid-cols-2">
           <Link
             href="/dashboard/advertenties"
-            className="luxury-card group p-5 transition-colors hover:border-veloura-champagne/25"
+            className="luxury-card group p-5 transition-all hover:border-primary/25 hover:shadow-card"
           >
-            <p className="font-display text-lg text-veloura-ivory group-hover:text-veloura-champagne">
+            <p className="font-display text-lg text-foreground group-hover:text-primary-dark">
               Mijn advertenties
             </p>
-            <p className="mt-1 text-sm text-veloura-soft">
+            <p className="mt-1 text-sm text-muted-foreground">
               Bekijk en bewerk al jouw listings
             </p>
           </Link>
           <Link
             href="/dashboard/advertenties/nieuw"
-            className="luxury-card group border-veloura-champagne/15 p-5 hover:border-veloura-champagne/30"
+            className="luxury-card group border-accent/25 bg-accent-soft/30 p-5 hover:border-accent/40 hover:shadow-card"
           >
-            <p className="font-display text-lg text-veloura-champagne">
+            <p className="font-display text-lg text-primary-dark">
               + Nieuwe advertentie
             </p>
-            <p className="mt-1 text-sm text-veloura-soft">
+            <p className="mt-1 text-sm text-muted-foreground">
               Plaats een nieuw profiel
             </p>
           </Link>
         </div>
 
         <div className="mt-6 flex flex-col gap-2.5 sm:flex-row">
-          <Button asChild size="lg" className="w-full sm:w-auto">
+          <Button asChild size="lg" variant="premium" className="w-full sm:w-auto">
             <Link href="/dashboard/advertenties/nieuw">Plaats advertentie</Link>
           </Button>
-          <Button asChild variant="outline" size="lg" className="w-full sm:w-auto">
+          <Button
+            asChild
+            variant="secondary"
+            size="lg"
+            className="w-full sm:w-auto"
+          >
             <Link href="/zoeken">Bekijk marketplace</Link>
           </Button>
         </div>

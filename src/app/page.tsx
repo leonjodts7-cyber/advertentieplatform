@@ -45,33 +45,32 @@ export default async function HomePage() {
 
   return (
     <div>
-      {/* Hero */}
-      <section className="border-b border-white/[0.08]">
-        <div className="container py-8 sm:py-10 lg:py-12">
+      <section className="border-b border-border">
+        <div className="container py-8 sm:py-10 lg:py-14">
           <div className="grid items-start gap-8 lg:grid-cols-2 lg:gap-12">
             <div className="animate-fade-in">
               <p className="trustline-text text-[0.6875rem] font-medium uppercase tracking-[0.14em] sm:text-xs">
-                Alleen 18+ · Discreet · Professioneel · Mobiel eerst
+                Alleen 18+ · Discreet · Professioneel · Veilig
               </p>
 
-              <h1 className="font-display mt-3 text-[1.65rem] font-medium leading-[1.15] text-veloura-ivory sm:text-4xl lg:text-[2.35rem]">
+              <h1 className="font-display mt-3 text-[1.75rem] font-medium leading-[1.15] text-foreground sm:text-4xl lg:text-[2.5rem]">
                 Ontdek{" "}
                 <span className="text-gradient-hero">discrete profielen</span>{" "}
                 in jouw regio
               </h1>
 
-              <p className="mt-3 max-w-lg text-sm leading-relaxed text-veloura-soft sm:text-base">
+              <p className="mt-3 max-w-lg text-sm leading-relaxed text-muted-foreground sm:text-base">
                 Veloura brengt zelfstandige aanbieders en bezoekers samen op een
                 stijlvol, veilig en professioneel advertentieplatform.
               </p>
 
-              <div className="mt-5 flex flex-col gap-2.5 sm:flex-row">
-                <Button asChild size="lg" className="w-full sm:w-auto">
+              <div className="mt-6 flex flex-col gap-2.5 sm:flex-row">
+                <Button asChild size="lg" variant="primary" className="w-full sm:w-auto">
                   <Link href="/zoeken">Bekijk advertenties</Link>
                 </Button>
                 <Button
                   asChild
-                  variant="outline"
+                  variant="premium"
                   size="lg"
                   className="w-full sm:w-auto"
                 >
@@ -81,7 +80,7 @@ export default async function HomePage() {
                 </Button>
               </div>
 
-              <div className="luxury-card-elevated mt-6 p-4 sm:p-5">
+              <div className="luxury-card-elevated mt-6 border-primary/10 p-4 sm:p-5">
                 <MarketplaceHeroSearch />
               </div>
             </div>
@@ -93,8 +92,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Categorieën */}
-      <section className="section-spacing border-b border-white/[0.08]">
+      <section className="section-spacing border-b border-border bg-surface-soft/40">
         <div className="container">
           <h2 className="section-title">Populaire categorieën</h2>
           <p className="section-subtitle mt-1">
@@ -106,8 +104,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Waarom Veloura */}
-      <section className="section-spacing border-b border-white/[0.08]">
+      <section className="section-spacing border-b border-border">
         <div className="container">
           <h2 className="section-title">Waarom Veloura?</h2>
           <p className="section-subtitle mt-1 max-w-lg">
@@ -117,12 +114,12 @@ export default async function HomePage() {
             {voordelen.map((v) => (
               <div
                 key={v.titel}
-                className="luxury-card p-4 transition-colors hover:border-veloura-rose/25 sm:p-5"
+                className="luxury-card p-4 transition-all hover:border-primary/25 hover:shadow-card sm:p-5"
               >
-                <h3 className="font-display text-base font-medium text-veloura-ivory sm:text-lg">
+                <h3 className="font-display text-base font-medium text-foreground sm:text-lg">
                   {v.titel}
                 </h3>
-                <p className="mt-2 text-sm leading-relaxed text-veloura-soft">
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
                   {v.tekst}
                 </p>
               </div>
@@ -131,7 +128,6 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Nieuwste advertenties */}
       <section className="section-spacing">
         <div className="container">
           <div className="flex items-end justify-between gap-3">
@@ -141,14 +137,14 @@ export default async function HomePage() {
             </div>
             <Link
               href="/zoeken"
-              className="hidden text-sm text-veloura-champagne hover:text-veloura-champagne/80 sm:inline"
+              className="hidden text-sm font-medium text-primary-dark hover:text-primary sm:inline"
             >
               Alles bekijken →
             </Link>
           </div>
 
           {advertenties.length > 0 ? (
-            <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
+            <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {advertenties.map((advertentie) => (
                 <AdvertentieCard
                   key={advertentie.id}
@@ -159,13 +155,13 @@ export default async function HomePage() {
             </div>
           ) : (
             <div className="luxury-card mt-6 p-8 text-center sm:p-12">
-              <p className="font-display text-xl text-veloura-ivory">
+              <p className="font-display text-xl text-foreground">
                 Er zijn nog geen actieve advertenties.
               </p>
-              <p className="mx-auto mt-2 max-w-sm text-sm text-veloura-soft">
+              <p className="mx-auto mt-2 max-w-sm text-sm text-muted-foreground">
                 Wees de eerste op Veloura en bereik bezoekers in jouw regio.
               </p>
-              <Button asChild size="lg" className="mt-5">
+              <Button asChild size="lg" variant="premium" className="mt-5">
                 <Link href="/dashboard/advertenties/nieuw">
                   Plaats eerste advertentie
                 </Link>
@@ -174,7 +170,10 @@ export default async function HomePage() {
           )}
 
           <div className="mt-4 text-center sm:hidden">
-            <Link href="/zoeken" className="text-sm text-veloura-champagne">
+            <Link
+              href="/zoeken"
+              className="text-sm font-medium text-primary-dark"
+            >
               Alles bekijken →
             </Link>
           </div>

@@ -62,11 +62,11 @@ export default async function AdvertentieDetailPage({
   const fotos = (fotosRaw ?? []) as AdvertentieFoto[];
 
   const contactKnop = advertentie.telefoon ? (
-    <Button asChild size="lg" className="w-full">
+    <Button asChild size="lg" variant="primary" className="w-full">
       <a href={`tel:${advertentie.telefoon}`}>Contacteer aanbieder</a>
     </Button>
   ) : (
-    <p className="rounded-xl border border-white/[0.1] bg-white/[0.03] px-4 py-3 text-center text-sm text-veloura-soft">
+    <p className="rounded-xl border border-border bg-surface-soft px-4 py-3 text-center text-sm text-muted-foreground">
       Geen contactgegevens beschikbaar
     </p>
   );
@@ -76,7 +76,7 @@ export default async function AdvertentieDetailPage({
       <div className="container py-4">
         <Link
           href="/zoeken"
-          className="text-sm text-veloura-soft hover:text-veloura-champagne"
+          className="text-sm text-muted-foreground hover:text-primary-dark"
         >
           ← Terug naar advertenties
         </Link>
@@ -85,21 +85,21 @@ export default async function AdvertentieDetailPage({
       <div className="container">
         {fotos.length > 0 ? (
           <div className="grid gap-2 sm:grid-cols-3">
-            <div className="relative aspect-[16/9] overflow-hidden rounded-2xl border border-white/[0.1] sm:col-span-2 sm:aspect-auto sm:min-h-[300px]">
+            <div className="relative aspect-[16/9] overflow-hidden rounded-2xl border border-border sm:col-span-2 sm:aspect-auto sm:min-h-[300px]">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={fotos[0].url}
                 alt={`Profiel ${advertentie.titel}`}
                 className="h-full w-full object-cover"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-veloura-bg/70 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#241718]/10 to-transparent" />
             </div>
             {fotos.length > 1 && (
               <div className="hidden gap-2 sm:grid">
                 {fotos.slice(1, 3).map((foto) => (
                   <div
                     key={foto.id}
-                    className="relative aspect-[4/3] overflow-hidden rounded-xl border border-white/[0.1]"
+                    className="relative aspect-[4/3] overflow-hidden rounded-xl border border-border"
                   >
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src={foto.url} alt="" className="h-full w-full object-cover" />
@@ -109,7 +109,7 @@ export default async function AdvertentieDetailPage({
             )}
           </div>
         ) : (
-          <div className="thumbnail-gradient relative aspect-[16/9] overflow-hidden rounded-2xl border border-white/[0.1] profile-gradient sm:aspect-[21/9]" />
+          <div className="thumbnail-gradient relative aspect-[16/9] overflow-hidden rounded-2xl border border-border sm:aspect-[21/9]" />
         )}
 
         <div className="mt-4 flex flex-wrap gap-2">
@@ -118,7 +118,10 @@ export default async function AdvertentieDetailPage({
             {beschikbaarLabel(advertentie.beschikbaar)}
           </Badge>
           {advertentie.geverifieerd && (
-            <Badge variant="champagne">Geverifieerd</Badge>
+            <Badge variant="success">Geverifieerd</Badge>
+          )}
+          {advertentie.geverifieerd && (
+            <Badge variant="premium">Premium</Badge>
           )}
           <Badge variant="muted">18+</Badge>
         </div>
@@ -127,12 +130,12 @@ export default async function AdvertentieDetailPage({
       <div className="container mt-6 lg:mt-8">
         <div className="lg:grid lg:grid-cols-3 lg:gap-8">
           <article className="lg:col-span-2">
-            <h1 className="font-display text-2xl font-medium text-veloura-ivory sm:text-3xl lg:text-4xl">
+            <h1 className="font-display text-2xl font-medium text-foreground sm:text-3xl lg:text-4xl">
               {advertentie.titel}
             </h1>
-            <p className="mt-2 text-sm text-veloura-soft">
+            <p className="mt-2 text-sm text-muted-foreground">
               {advertentie.leeftijd} jaar · {advertentie.stad} ·{" "}
-              <span className="font-medium text-veloura-champagne">
+              <span className="font-semibold text-primary-dark">
                 {formatPrijs(advertentie.prijs_vanaf)}
               </span>
             </p>
@@ -142,7 +145,7 @@ export default async function AdvertentieDetailPage({
               <p className="prose-advertentie mt-3">{advertentie.beschrijving}</p>
             </div>
 
-            <p className="mt-8 text-xs leading-relaxed text-veloura-soft/60">
+            <p className="mt-8 text-xs leading-relaxed text-muted-foreground/80">
               Alle aanbieders moeten 18+ zijn. Illegale inhoud, misleiding en
               gedwongen activiteiten zijn verboden.
             </p>
@@ -150,12 +153,12 @@ export default async function AdvertentieDetailPage({
 
           <aside className="mt-6 lg:mt-0">
             <div className="luxury-card lg:sticky lg:top-[4.5rem] p-5 sm:p-6">
-              <p className="font-display text-lg text-veloura-ivory">Contact</p>
-              <p className="mt-1 text-sm text-veloura-soft">
+              <p className="font-display text-lg text-foreground">Contact</p>
+              <p className="mt-1 text-sm text-muted-foreground">
                 Neem discreet contact op met de aanbieder.
               </p>
               {advertentie.telefoon && (
-                <p className="mt-4 font-display text-2xl text-veloura-champagne">
+                <p className="mt-4 font-display text-2xl text-primary-dark">
                   {advertentie.telefoon}
                 </p>
               )}
@@ -163,16 +166,16 @@ export default async function AdvertentieDetailPage({
               <div className="divider-soft mt-6" />
               <dl className="mt-4 space-y-2 text-sm">
                 <div className="flex justify-between gap-4">
-                  <dt className="text-veloura-soft">Stad</dt>
-                  <dd className="text-veloura-ivory">{advertentie.stad}</dd>
+                  <dt className="text-muted-foreground">Stad</dt>
+                  <dd className="text-foreground">{advertentie.stad}</dd>
                 </div>
                 <div className="flex justify-between gap-4">
-                  <dt className="text-veloura-soft">Leeftijd</dt>
+                  <dt className="text-muted-foreground">Leeftijd</dt>
                   <dd>{advertentie.leeftijd} jaar</dd>
                 </div>
                 <div className="flex justify-between gap-4">
-                  <dt className="text-veloura-soft">Prijs vanaf</dt>
-                  <dd className="text-veloura-champagne">
+                  <dt className="text-muted-foreground">Prijs vanaf</dt>
+                  <dd className="font-semibold text-primary-dark">
                     {formatPrijs(advertentie.prijs_vanaf)}
                   </dd>
                 </div>

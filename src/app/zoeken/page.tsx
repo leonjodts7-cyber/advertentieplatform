@@ -3,6 +3,7 @@ import { Suspense } from "react";
 import type { Metadata } from "next";
 import { AdvertentieCard } from "@/components/advertentie-card";
 import { ZoekFilterBar } from "@/components/zoek-filter-bar";
+import { ZoekMobileBar } from "@/components/zoek-mobile-bar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { haalEersteFotos } from "@/lib/advertentie-fotos";
@@ -54,7 +55,7 @@ export default async function ZoekenPage({ searchParams }: ZoekenPageProps) {
     <div>
       <div className="page-header-band">
         <div className="container">
-          <p className="text-[0.6875rem] uppercase tracking-wider text-veloura-soft">
+          <p className="text-[0.6875rem] uppercase tracking-wider text-muted-foreground">
             Veloura
           </p>
           <h1 className="section-title mt-1">Advertenties zoeken</h1>
@@ -64,59 +65,77 @@ export default async function ZoekenPage({ searchParams }: ZoekenPageProps) {
         </div>
       </div>
 
-      <div className="filter-bar-sticky">
+      <div className="filter-bar-sticky lg:hidden">
         <div className="container">
           <Suspense
             fallback={
-              <div className="h-20 animate-pulse rounded-2xl bg-white/[0.04]" />
+              <div className="h-11 animate-pulse rounded-xl bg-surface-soft" />
             }
           >
-            <ZoekFilterBar />
+            <ZoekMobileBar />
           </Suspense>
         </div>
       </div>
 
       <div className="container py-6 sm:py-8">
-        <div className="mb-5 flex flex-wrap items-center gap-2">
-          <p className="text-sm text-veloura-soft">
-            <span className="font-medium text-veloura-ivory">
-              {advertenties.length}
-            </span>{" "}
-            resultaten
-            {stad?.trim() ? ` in ${stad.trim()}` : ""}
-          </p>
-          {categorieLabel && (
-            <Badge variant="rose">Categorie: {categorieLabel}</Badge>
-          )}
-          {beschikbaar === "1" && <Badge variant="green">Beschikbaar</Badge>}
-          {geverifieerd === "1" && (
-            <Badge variant="champagne">Geverifieerd</Badge>
-          )}
-        </div>
+        <div className="lg:grid lg:grid-cols-[minmax(0,280px)_1fr] lg:gap-8">
+          <aside className="hidden lg:block">
+            <div className="sticky top-[5.5rem]">
+              <Suspense
+                fallback={
+                  <div className="h-64 animate-pulse rounded-2xl bg-surface-soft" />
+                }
+              >
+                <ZoekFilterBar />
+              </Suspense>
+            </div>
+          </aside>
 
-        {advertenties.length > 0 ? (
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
-            {advertenties.map((advertentie) => (
-              <AdvertentieCard
-                key={advertentie.id}
-                advertentie={advertentie}
-                afbeeldingUrl={fotos.get(advertentie.id)}
-              />
-            ))}
+          <div>
+            <div className="mb-5 flex flex-wrap items-center gap-2">
+              <p className="text-sm text-muted-foreground">
+                <span className="font-medium text-foreground">
+                  {advertenties.length}
+                </span>{" "}
+                resultaten
+                {stad?.trim() ? ` in ${stad.trim()}` : ""}
+              </p>
+              {categorieLabel && (
+                <Badge variant="rose">Categorie: {categorieLabel}</Badge>
+              )}
+              {beschikbaar === "1" && <Badge variant="green">Beschikbaar</Badge>}
+              {geverifieerd === "1" && (
+                <Badge variant="premium">Geverifieerd</Badge>
+              )}
+            </div>
+
+            {advertenties.length > 0 ? (
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {advertenties.map((advertentie) => (
+                  <AdvertentieCard
+                    key={advertentie.id}
+                    advertentie={advertentie}
+                    afbeeldingUrl={fotos.get(advertentie.id)}
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="luxury-card mx-auto max-w-md p-8 text-center sm:p-10">
+                <p className="font-display text-xl text-foreground">
+                  Geen advertenties gevonden
+                </p>
+                <p className="mt-2 text-sm text-muted-foreground">
+                  Pas je filters aan of plaats zelf een profiel.
+                </p>
+                <Button asChild variant="premium" className="mt-5">
+                  <Link href="/dashboard/advertenties/nieuw">
+                    Plaats advertentie
+                  </Link>
+                </Button>
+              </div>
+            )}
           </div>
-        ) : (
-          <div className="luxury-card mx-auto max-w-md p-8 text-center sm:p-10">
-            <p className="font-display text-xl text-veloura-ivory">
-              Geen advertenties gevonden
-            </p>
-            <p className="mt-2 text-sm text-veloura-soft">
-              Pas je filters aan of plaats zelf een profiel.
-            </p>
-            <Button asChild className="mt-5">
-              <Link href="/dashboard/advertenties/nieuw">Plaats advertentie</Link>
-            </Button>
-          </div>
-        )}
+        </div>
       </div>
     </div>
   );

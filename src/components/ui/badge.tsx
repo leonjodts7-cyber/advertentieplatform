@@ -9,6 +9,7 @@ export interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {
     | "muted"
     | "review"
     | "danger"
+    | "premium"
     | "default"
     | "gold"
     | "success"
@@ -16,26 +17,17 @@ export interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {
 }
 
 const variantClasses: Record<NonNullable<BadgeProps["variant"]>, string> = {
-  default:
-    "bg-veloura-champagne/[0.08] text-veloura-champagne/90 border-veloura-champagne/20",
-  champagne:
-    "bg-veloura-champagne/[0.08] text-veloura-champagne/90 border-veloura-champagne/20",
-  gold:
-    "bg-veloura-champagne/[0.08] text-veloura-champagne/90 border-veloura-champagne/20",
-  rose:
-    "bg-veloura-rose/[0.1] text-[#e8b4c0] border-veloura-rose/22",
-  green:
-    "bg-veloura-green/[0.08] text-veloura-green/90 border-veloura-green/18",
-  success:
-    "bg-veloura-green/[0.08] text-veloura-green/90 border-veloura-green/18",
-  muted:
-    "bg-white/[0.04] text-veloura-muted border-white/[0.1]",
-  review:
-    "bg-veloura-plum-light/50 text-veloura-champagne/85 border-veloura-champagne/18",
-  danger:
-    "bg-veloura-rose-deep/25 text-[#d4a0aa] border-veloura-rose/20",
-  bordeaux:
-    "bg-veloura-plum/50 text-veloura-soft border-veloura-rose/18",
+  default: "bg-primary-soft text-primary-dark border-primary/20",
+  champagne: "bg-accent-soft text-[#8a6530] border-accent/30",
+  gold: "bg-accent-soft text-[#8a6530] border-accent/30",
+  premium: "bg-accent-soft text-[#8a6530] border-accent/30",
+  rose: "bg-primary-soft text-primary-dark border-primary/25",
+  green: "bg-success/10 text-success border-success/25",
+  success: "bg-success/10 text-success border-success/25",
+  muted: "bg-surface-soft text-muted-foreground border-border",
+  review: "bg-accent-soft/80 text-[#8a6530] border-accent/25",
+  danger: "bg-destructive/10 text-destructive border-destructive/20",
+  bordeaux: "bg-primary-soft text-primary-dark border-primary/20",
 };
 
 export function Badge({
@@ -46,7 +38,7 @@ export function Badge({
   return (
     <span
       className={cn(
-        "inline-flex items-center rounded-full border px-2.5 py-0.5 text-[0.625rem] font-medium uppercase tracking-wider sm:text-[0.6875rem]",
+        "inline-flex items-center rounded-full border px-2.5 py-0.5 text-[0.625rem] font-semibold uppercase tracking-wider sm:text-[0.6875rem]",
         variantClasses[variant],
         className
       )}

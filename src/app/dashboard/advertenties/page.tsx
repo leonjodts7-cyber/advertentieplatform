@@ -37,7 +37,7 @@ export default async function DashboardAdvertentiesPage() {
         <div className="container">
           <Link
             href="/dashboard"
-            className="text-sm text-veloura-soft hover:text-veloura-champagne"
+            className="text-sm text-muted-foreground hover:text-primary-dark"
           >
             ← Dashboard
           </Link>
@@ -50,13 +50,13 @@ export default async function DashboardAdvertentiesPage() {
 
       <div className="container py-6 sm:py-8">
         <div className="mb-5 flex justify-end">
-          <Button asChild>
+          <Button asChild variant="premium">
             <Link href="/dashboard/advertenties/nieuw">+ Nieuwe advertentie</Link>
           </Button>
         </div>
 
         {advertenties.length > 0 ? (
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {advertenties.map((advertentie) => (
               <AdvertentieCard
                 key={advertentie.id}
@@ -68,13 +68,13 @@ export default async function DashboardAdvertentiesPage() {
           </div>
         ) : (
           <div className="luxury-card p-8 text-center sm:p-12">
-            <p className="font-display text-xl text-veloura-ivory">
+            <p className="font-display text-xl text-foreground">
               Nog geen advertenties
             </p>
-            <p className="mt-2 text-sm text-veloura-soft">
+            <p className="mt-2 text-sm text-muted-foreground">
               Start met je eerste profiel op Veloura.
             </p>
-            <Button asChild className="mt-5">
+            <Button asChild variant="premium" className="mt-5">
               <Link href="/dashboard/advertenties/nieuw">Nieuwe advertentie</Link>
             </Button>
           </div>

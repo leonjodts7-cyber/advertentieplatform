@@ -3,56 +3,33 @@
 @tailwind utilities;
 
 :root {
-  /* Veloura — luxury nightlife palette */
-  --veloura-bg-deep: #140b12;
-  --veloura-bg-mid: #1a1017;
-  --veloura-bg-surface: #21131d;
-
-  --veloura-card: rgba(255, 248, 241, 0.055);
-  --veloura-card-elevated: rgba(255, 248, 241, 0.075);
-  --veloura-border: rgba(255, 248, 241, 0.12);
-
-  --veloura-ivory: #fff7ef;
-  --veloura-soft: #cbb9ad;
-  --veloura-muted: #9f8f86;
-
-  --veloura-champagne: #e8c982;
-  --veloura-champagne-deep: #d6ad5f;
-  --veloura-rose: #c47a8a;
-  --veloura-rose-deep: #8f3a55;
-  --veloura-plum: #3a1b2e;
-  --veloura-plum-light: #4b2239;
-  --veloura-green: #67d391;
-
-  --veloura-bg: var(--veloura-bg-deep);
-  --veloura-text: var(--veloura-ivory);
-  --veloura-text-soft: var(--veloura-soft);
-
-  /* Tailwind compat */
-  --background: 330 28% 7%;
-  --foreground: 33 100% 97%;
-  --card: 33 100% 97% / 0.055;
-  --card-foreground: 33 100% 97%;
-  --popover: 330 24% 9%;
-  --popover-foreground: 33 100% 97%;
-  --primary: 42 68% 71%;
-  --primary-foreground: 330 24% 7%;
-  --secondary: 33 100% 97% / 0.06;
-  --secondary-foreground: 33 100% 97%;
-  --muted: 33 100% 97% / 0.05;
-  --muted-foreground: 22 14% 64%;
-  --accent: 322 36% 17%;
-  --accent-foreground: 33 100% 97%;
-  --destructive: 350 42% 42%;
-  --destructive-foreground: 33 100% 97%;
-  --border: 33 100% 97% / 0.12;
-  --input: 33 100% 97% / 0.055;
-  --ring: 42 68% 71%;
+  --background: #fff7f2;
+  --surface: #ffffff;
+  --surface-soft: #f8ede7;
+  --text-main: #241718;
+  --text-muted: #7a6461;
+  --primary: #b76e79;
+  --primary-dark: #8f4e5b;
+  --primary-soft: #f1d8d2;
+  --accent: #d8a96a;
+  --accent-soft: #fae8c8;
+  --border: #e8d6cf;
+  --success: #6f9e83;
+  --danger: #b84a4a;
   --radius: 1rem;
+
+  /* Legacy aliases */
+  --veloura-bg: var(--background);
+  --veloura-ivory: var(--text-main);
+  --veloura-soft: var(--text-muted);
+  --veloura-muted: var(--text-muted);
+  --veloura-champagne: var(--accent);
+  --veloura-rose: var(--primary);
+  --veloura-border: var(--border);
 }
 
 * {
-  border-color: var(--veloura-border);
+  border-color: var(--border);
 }
 
 html {
@@ -63,124 +40,95 @@ html {
 body {
   min-height: 100vh;
   overflow-x: hidden;
-  color: var(--veloura-ivory);
+  color: var(--text-main);
+  background: var(--background);
   font-family: var(--font-sans), system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Luxury background — no pure black */
+/* Warm luxury background */
 .luxury-bg {
-  background-color: var(--veloura-bg-deep);
+  background-color: var(--background);
   background-image:
-    radial-gradient(ellipse 75% 55% at 0% 0%, rgba(143, 58, 85, 0.28), transparent 52%),
-    radial-gradient(ellipse 55% 45% at 100% 0%, rgba(232, 201, 130, 0.1), transparent 48%),
-    radial-gradient(ellipse 70% 50% at 50% 100%, rgba(58, 27, 46, 0.45), transparent 55%),
-    linear-gradient(180deg, var(--veloura-bg-mid) 0%, var(--veloura-bg-deep) 45%, var(--veloura-bg-surface) 100%);
-}
-
-.luxury-bg::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
-  opacity: 0.22;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
-}
-
-.luxury-bg::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
-  background:
-    radial-gradient(ellipse 90% 70% at 50% 50%, transparent 40%, rgba(20, 11, 18, 0.55) 100%);
+    radial-gradient(ellipse 90% 70% at 0% 0%, rgba(241, 216, 210, 0.65), transparent 52%),
+    radial-gradient(ellipse 70% 55% at 100% 0%, rgba(250, 232, 200, 0.55), transparent 48%),
+    radial-gradient(ellipse 60% 40% at 50% 100%, rgba(248, 237, 231, 0.9), transparent 55%),
+    linear-gradient(180deg, #fff7f2 0%, #f8ede7 100%);
 }
 
 .luxury-card {
   border-radius: var(--radius);
-  border: 1px solid var(--veloura-border);
-  background: var(--veloura-card);
-  backdrop-filter: blur(22px) saturate(1.15);
+  border: 1px solid var(--border);
+  background: var(--surface);
   box-shadow:
-    0 1px 0 rgba(255, 248, 241, 0.06) inset,
-    0 0 0 1px rgba(255, 248, 241, 0.02) inset,
-    0 12px 40px rgba(58, 27, 46, 0.22),
-    0 4px 16px rgba(143, 58, 85, 0.08);
+    0 1px 2px rgba(36, 23, 24, 0.03),
+    0 6px 20px rgba(36, 23, 24, 0.04);
 }
 
 .luxury-card-elevated {
   border-radius: var(--radius);
-  border: 1px solid rgba(255, 248, 241, 0.14);
-  background: var(--veloura-card-elevated);
-  backdrop-filter: blur(24px) saturate(1.2);
+  border: 1px solid var(--border);
+  background: var(--surface);
   box-shadow:
-    0 1px 0 rgba(255, 248, 241, 0.08) inset,
-    0 16px 48px rgba(75, 34, 57, 0.18),
-    0 0 32px rgba(232, 201, 130, 0.04);
+    0 4px 6px rgba(36, 23, 24, 0.02),
+    0 16px 40px rgba(183, 110, 121, 0.07);
 }
 
-.luxury-border {
-  border: 1px solid var(--veloura-border);
+.luxury-card-soft {
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--surface-soft);
 }
 
-.luxury-glow {
-  box-shadow:
-    0 0 0 1px rgba(232, 201, 130, 0.1),
-    0 8px 32px rgba(75, 34, 57, 0.2),
-    0 0 48px rgba(196, 122, 138, 0.1);
+.glass-nav {
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(18px) saturate(1.25);
+  border-bottom: 1px solid var(--border);
 }
 
 .soft-gradient {
   background: linear-gradient(
     145deg,
-    var(--veloura-plum) 0%,
-    var(--veloura-plum-light) 42%,
-    rgba(196, 122, 138, 0.35) 78%,
-    rgba(232, 201, 130, 0.18) 100%
+    var(--primary-soft) 0%,
+    #fceee8 48%,
+    var(--accent-soft) 100%
   );
 }
 
 .rose-gradient {
   background: linear-gradient(
     135deg,
-    var(--veloura-rose-deep) 0%,
-    var(--veloura-plum-light) 45%,
-    rgba(196, 122, 138, 0.5) 72%,
-    rgba(232, 201, 130, 0.22) 100%
+    #f5d5cf 0%,
+    var(--primary-soft) 55%,
+    var(--accent-soft) 100%
   );
 }
 
 .profile-gradient {
   background: linear-gradient(
     160deg,
-    var(--veloura-plum) 0%,
-    var(--veloura-rose-deep) 38%,
-    rgba(196, 122, 138, 0.45) 68%,
-    rgba(232, 201, 130, 0.28) 100%
+    var(--primary-soft) 0%,
+    #f8e8e2 45%,
+    var(--accent-soft) 100%
   );
-}
-
-.champagne-text {
-  color: var(--veloura-champagne);
-}
-
-.trustline-text {
-  color: rgba(232, 201, 130, 0.72);
 }
 
 .text-gradient-hero {
   background: linear-gradient(
     120deg,
-    var(--veloura-champagne) 0%,
-    #f0d9a8 40%,
-    var(--veloura-rose) 100%
+    var(--primary-dark) 0%,
+    var(--primary) 45%,
+    var(--accent) 100%
   );
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+}
+
+.trustline-text {
+  color: var(--text-muted);
+  letter-spacing: 0.12em;
 }
 
 .premium-card,
@@ -216,7 +164,7 @@ body {
   font-weight: 500;
   letter-spacing: -0.02em;
   line-height: 1.2;
-  color: var(--veloura-ivory);
+  color: var(--text-main);
 }
 
 @media (min-width: 640px) {
@@ -227,8 +175,8 @@ body {
 
 .section-subtitle {
   font-size: 0.875rem;
-  line-height: 1.6;
-  color: var(--veloura-soft);
+  line-height: 1.65;
+  color: var(--text-muted);
 }
 
 .section-spacing {
@@ -240,13 +188,13 @@ body {
   margin-bottom: 0.5rem;
   font-size: 0.6875rem;
   font-weight: 600;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--veloura-muted);
+  color: var(--text-muted);
 }
 
 .prose-advertentie {
-  color: var(--veloura-soft);
+  color: var(--text-muted);
   line-height: 1.8;
   white-space: pre-wrap;
   font-size: 0.9375rem;
@@ -262,74 +210,82 @@ body {
   top: 0;
   left: 0;
   right: 0;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(232, 201, 130, 0.28), transparent);
+  height: 3px;
+  background: linear-gradient(90deg, var(--primary-soft), var(--accent-soft));
 }
 
 .page-header-band {
-  border-bottom: 1px solid var(--veloura-border);
-  background: linear-gradient(180deg, rgba(75, 34, 57, 0.2) 0%, transparent 100%);
+  border-bottom: 1px solid var(--border);
+  background: linear-gradient(180deg, var(--surface-soft) 0%, transparent 100%);
   @apply py-8 sm:py-10;
 }
 
 .divider-soft {
   height: 1px;
-  background: linear-gradient(90deg, transparent, var(--veloura-border), transparent);
+  background: var(--border);
 }
 
 .mobile-contact-bar {
-  @apply fixed bottom-0 left-0 right-0 z-40 p-3 backdrop-blur-xl lg:hidden;
-  border-top: 1px solid var(--veloura-border);
-  background: rgba(20, 11, 18, 0.9);
+  @apply fixed bottom-0 left-0 right-0 z-40 border-t bg-white/95 p-3 backdrop-blur-lg lg:hidden;
+  border-color: var(--border);
+  box-shadow: 0 -4px 24px rgba(36, 23, 24, 0.06);
 }
 
 .city-pill {
-  @apply inline-flex min-h-[44px] shrink-0 items-center rounded-full px-3.5 py-2 text-xs transition-all sm:text-sm;
-  border: 1px solid var(--veloura-border);
-  background: var(--veloura-card);
-  color: var(--veloura-soft);
+  @apply inline-flex min-h-[44px] shrink-0 items-center rounded-full border px-3.5 py-2 text-xs transition-all sm:text-sm;
+  border-color: var(--border);
+  background: var(--surface);
+  color: var(--text-muted);
 }
 
-.city-pill:hover {
-  border-color: rgba(232, 201, 130, 0.28);
-  color: var(--veloura-champagne);
-  background: rgba(232, 201, 130, 0.06);
+.city-pill:hover,
+.city-pill-active {
+  border-color: var(--primary);
+  color: var(--primary-dark);
+  background: var(--primary-soft);
 }
 
 .type-chip {
-  @apply inline-flex min-h-[40px] shrink-0 items-center rounded-full px-3.5 py-1.5 text-xs font-medium transition-all;
-  border: 1px solid var(--veloura-border);
-  background: var(--veloura-card);
-  color: var(--veloura-soft);
+  @apply inline-flex min-h-[40px] shrink-0 items-center rounded-full border px-3.5 py-1.5 text-xs font-medium transition-all;
+  border-color: var(--border);
+  background: var(--surface);
+  color: var(--text-muted);
 }
 
 .type-chip:hover {
-  border-color: rgba(196, 122, 138, 0.32);
-  color: var(--veloura-ivory);
+  border-color: var(--primary);
+  color: var(--text-main);
+  background: var(--surface-soft);
 }
 
 .type-chip-active {
-  border-color: rgba(232, 201, 130, 0.35);
-  background: rgba(232, 201, 130, 0.08);
-  color: var(--veloura-champagne);
-  box-shadow: 0 0 20px rgba(232, 201, 130, 0.06);
+  border-color: var(--primary);
+  background: var(--primary-soft);
+  color: var(--primary-dark);
+  box-shadow: 0 2px 8px rgba(183, 110, 121, 0.1);
 }
 
 .category-card {
   @apply luxury-card flex min-h-[72px] items-center justify-center p-3 text-center text-sm font-medium transition-all;
-  color: var(--veloura-soft);
+  color: var(--text-muted);
 }
 
 .category-card:hover {
-  border-color: rgba(196, 122, 138, 0.3);
-  color: var(--veloura-ivory);
-  box-shadow: 0 8px 28px rgba(75, 34, 57, 0.2), 0 0 24px rgba(196, 122, 138, 0.08);
+  border-color: var(--primary);
+  color: var(--primary-dark);
+  background: var(--primary-soft);
+  box-shadow: 0 8px 24px rgba(183, 110, 121, 0.1);
 }
 
 .filter-bar-sticky {
-  @apply sticky top-14 z-30 py-3 backdrop-blur-xl sm:top-[3.75rem];
-  border-bottom: 1px solid var(--veloura-border);
-  background: rgba(20, 11, 18, 0.82);
+  @apply sticky top-14 z-30 border-b py-3 backdrop-blur-lg sm:top-[3.75rem];
+  border-color: var(--border);
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: 0 2px 12px rgba(36, 23, 24, 0.04);
+}
+
+.filter-panel {
+  @apply luxury-card p-4 sm:p-5;
 }
 
 .no-scrollbar {
@@ -349,5 +305,29 @@ body {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(to top, rgba(20, 11, 18, 0.72) 0%, transparent 55%);
+  background: linear-gradient(
+    to top,
+    rgba(36, 23, 24, 0.06) 0%,
+    transparent 55%
+  );
+}
+
+.filter-drawer-backdrop {
+  @apply fixed inset-0 z-50 lg:hidden;
+  background: rgba(36, 23, 24, 0.18);
+}
+
+.filter-drawer {
+  @apply fixed inset-x-0 bottom-0 z-50 max-h-[85vh] overflow-y-auto rounded-t-2xl border-t bg-white p-5 shadow-2xl lg:hidden;
+  border-color: var(--border);
+  animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
 }
