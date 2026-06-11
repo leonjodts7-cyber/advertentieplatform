@@ -3,13 +3,17 @@ import type { HTMLAttributes } from "react";
 
 export interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {
   variant?:
+    | "online"
+    | "verified"
+    | "premium"
+    | "fictief"
+    | "credits"
     | "champagne"
     | "wine"
     | "green"
     | "muted"
     | "review"
     | "danger"
-    | "premium"
     | "default"
     | "gold"
     | "success"
@@ -18,13 +22,17 @@ export interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {
 }
 
 const variantClasses: Record<NonNullable<BadgeProps["variant"]>, string> = {
-  default: "bg-champagne/15 text-champagne-light border-champagne/25",
-  champagne: "bg-champagne/12 text-champagne-light border-champagne/30",
-  gold: "bg-champagne/12 text-champagne-light border-champagne/30",
-  premium: "bg-champagne/12 text-champagne-light border-champagne/30",
-  wine: "bg-wine/40 text-foreground border-wine-light/40",
-  rose: "bg-wine/30 text-foreground border-wine-light/35",
-  bordeaux: "bg-wine/40 text-foreground border-wine-light/40",
+  default: "bg-champagne/12 text-soft-champagne border-champagne/25",
+  online: "bg-success/12 text-success border-success/30",
+  verified: "bg-success/12 text-success border-success/30",
+  premium: "bg-champagne/12 text-soft-champagne border-champagne/30",
+  fictief: "bg-white/[0.05] text-muted-foreground border-white/12",
+  credits: "bg-wine/30 text-soft-champagne border-wine-light/35",
+  champagne: "bg-champagne/12 text-soft-champagne border-champagne/30",
+  gold: "bg-champagne/12 text-soft-champagne border-champagne/30",
+  wine: "bg-wine/35 text-foreground border-wine-light/40",
+  rose: "bg-wine/25 text-foreground border-rose-nude/35",
+  bordeaux: "bg-wine/35 text-foreground border-wine-light/40",
   green: "bg-success/12 text-success border-success/30",
   success: "bg-success/12 text-success border-success/30",
   muted: "bg-white/[0.04] text-muted-foreground border-white/10",

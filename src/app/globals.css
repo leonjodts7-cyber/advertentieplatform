@@ -3,32 +3,28 @@
 @tailwind utilities;
 
 :root {
-  --background: #08070a;
-  --background-mid: #100b10;
-  --background-soft: #171016;
-  --background-elevated: #21131b;
-  --surface: rgba(255, 255, 255, 0.045);
-  --surface-elevated: rgba(255, 255, 255, 0.065);
-  --text-main: #f7efe7;
-  --text-muted: #a79a91;
-  --champagne: #caa45d;
-  --champagne-light: #e0bd73;
-  --wine: #5a1f35;
-  --wine-light: #7b2e49;
-  --velvet: #2b1826;
-  --velvet-light: #3a2033;
-  --rose: #a9576d;
+  --background: #141014;
+  --background-elevated: #1d171d;
+  --surface: rgba(255, 255, 255, 0.065);
+  --surface-hover: rgba(255, 255, 255, 0.09);
+  --text-main: #fff5ee;
+  --text-muted: #b8aaa2;
+  --champagne: #d7b46a;
+  --champagne-soft: #f0d99a;
+  --wine: #6f2d45;
+  --wine-deep: #421b2d;
+  --rose-nude: #b76d78;
+  --warm-skin: #c58b72;
   --success: #62c990;
-  --danger: #8b2e3a;
-  --border: rgba(255, 255, 255, 0.1);
+  --danger: #8b3040;
+  --border: rgba(255, 255, 255, 0.12);
   --radius: 1rem;
 
+  /* Legacy aliases */
   --veloura-bg: var(--background);
   --veloura-ivory: var(--text-main);
   --veloura-soft: var(--text-muted);
-  --veloura-muted: var(--text-muted);
   --veloura-champagne: var(--champagne);
-  --veloura-rose: var(--rose);
   --veloura-border: var(--border);
 }
 
@@ -51,112 +47,122 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Warm premium marketplace background */
+.marketplace-bg,
 .luxury-bg {
   position: relative;
   background-color: var(--background);
   background-image:
-    radial-gradient(ellipse 55% 45% at 0% 0%, rgba(90, 31, 53, 0.55), transparent 55%),
-    radial-gradient(ellipse 45% 35% at 100% 0%, rgba(202, 164, 93, 0.12), transparent 50%),
-    radial-gradient(ellipse 60% 40% at 50% 100%, rgba(43, 24, 38, 0.85), transparent 60%),
-    linear-gradient(180deg, #08070a 0%, #100b10 45%, #171016 100%);
+    radial-gradient(ellipse 50% 45% at 0% 0%, rgba(111, 45, 69, 0.35), transparent 55%),
+    radial-gradient(ellipse 45% 40% at 100% 0%, rgba(215, 180, 106, 0.14), transparent 50%),
+    radial-gradient(ellipse 55% 35% at 50% 100%, rgba(197, 139, 114, 0.12), transparent 55%),
+    linear-gradient(180deg, #141014 0%, #1a151a 50%, #1d171d 100%);
 }
 
+.marketplace-bg::before,
 .luxury-bg::before {
   content: "";
   position: fixed;
   inset: 0;
   pointer-events: none;
   z-index: 0;
-  opacity: 0.035;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
+.marketplace-bg::after,
 .luxury-bg::after {
   content: "";
   position: fixed;
   inset: 0;
   pointer-events: none;
   z-index: 0;
-  opacity: 0.04;
+  opacity: 0.025;
   background-image:
-    linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
-  background-size: 48px 48px;
+    linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+  background-size: 40px 40px;
 }
 
-.luxury-card {
+.marketplace-section {
+  @apply py-8 sm:py-10;
+}
+
+.profile-card {
   border-radius: var(--radius);
   border: 1px solid var(--border);
   background: var(--surface);
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+  transition: all 0.25s ease;
+}
+
+.profile-card:hover {
+  background: var(--surface-hover);
+  border-color: rgba(215, 180, 106, 0.22);
+}
+
+.glass-card,
+.glass-panel,
+.luxury-card {
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: rgba(29, 23, 29, 0.75);
+  backdrop-filter: blur(16px) saturate(1.2);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
 }
 
 .luxury-card-elevated {
-  border-radius: var(--radius);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  background: var(--surface-elevated);
-  box-shadow:
-    0 8px 32px rgba(0, 0, 0, 0.45),
-    0 0 0 1px rgba(202, 164, 93, 0.06);
-}
-
-.luxury-card-soft {
-  border-radius: var(--radius);
-  border: 1px solid var(--border);
-  background: rgba(255, 255, 255, 0.03);
+  @apply glass-card;
+  background: rgba(29, 23, 29, 0.88);
 }
 
 .velvet-card {
-  border-radius: var(--radius);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: linear-gradient(145deg, rgba(43, 24, 38, 0.9) 0%, rgba(33, 19, 27, 0.95) 100%);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  @apply profile-card;
+  background: linear-gradient(145deg, rgba(66, 27, 45, 0.25) 0%, rgba(29, 23, 29, 0.9) 100%);
 }
 
-.glass-panel {
-  border-radius: var(--radius);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(16, 11, 16, 0.72);
-  backdrop-filter: blur(20px) saturate(1.3);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
-}
-
-.glass-nav {
-  background: rgba(8, 7, 10, 0.82);
-  backdrop-filter: blur(20px) saturate(1.4);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.luxury-border {
+.soft-border {
   border: 1px solid var(--border);
 }
 
-.champagne-gradient {
-  background: linear-gradient(135deg, #caa45d 0%, #e0bd73 50%, #b8924a 100%);
-}
-
-.wine-gradient {
-  background: linear-gradient(145deg, #5a1f35 0%, #3a2033 50%, #21131b 100%);
-}
-
-.profile-gradient {
-  background: linear-gradient(
-    160deg,
-    #5a1f35 0%,
-    #3a2033 40%,
-    #21131b 70%,
-    rgba(202, 164, 93, 0.15) 100%
-  );
-}
-
-.soft-glow {
+.warm-glow {
   box-shadow:
-    0 0 40px rgba(202, 164, 93, 0.08),
-    0 8px 32px rgba(0, 0, 0, 0.4);
+    0 0 32px rgba(215, 180, 106, 0.1),
+    0 8px 28px rgba(0, 0, 0, 0.28);
+}
+
+.champagne-button {
+  @apply inline-flex items-center justify-center rounded-full font-medium transition-all;
+  background: linear-gradient(135deg, #6f2d45 0%, #8a3a55 40%, #d7b46a 140%);
+  color: var(--text-main);
+  border: 1px solid rgba(215, 180, 106, 0.25);
+  box-shadow: 0 2px 12px rgba(111, 45, 69, 0.3);
+}
+
+.champagne-button:hover {
+  filter: brightness(1.06);
+  box-shadow: 0 4px 20px rgba(215, 180, 106, 0.15);
+}
+
+.wine-button {
+  @apply inline-flex items-center justify-center rounded-full font-medium transition-all;
+  background: linear-gradient(135deg, #421b2d 0%, #6f2d45 100%);
+  color: var(--text-main);
+  border: 1px solid rgba(111, 45, 69, 0.5);
+}
+
+.champagne-gradient {
+  background: linear-gradient(135deg, #6f2d45 0%, #8a3a55 50%, #d7b46a 120%);
+}
+
+.glass-nav {
+  background: rgba(20, 16, 20, 0.82);
+  backdrop-filter: blur(18px) saturate(1.25);
+  border-bottom: 1px solid var(--border);
 }
 
 .text-gradient-hero {
-  background: linear-gradient(120deg, #e0bd73 0%, #caa45d 45%, #f7efe7 100%);
+  background: linear-gradient(120deg, #f0d99a 0%, #d7b46a 45%, #fff5ee 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -164,17 +170,7 @@ body {
 
 .trustline-text {
   color: var(--text-muted);
-  letter-spacing: 0.14em;
-}
-
-.premium-card,
-.card-premium,
-.card-glass {
-  @apply luxury-card;
-}
-
-.premium-bg {
-  @apply luxury-bg;
+  letter-spacing: 0.12em;
 }
 
 .container {
@@ -237,7 +233,7 @@ body {
 }
 
 .stat-card {
-  @apply luxury-card relative overflow-hidden p-5 sm:p-6;
+  @apply profile-card relative overflow-hidden p-5 sm:p-6;
 }
 
 .stat-card::before {
@@ -264,8 +260,31 @@ body {
 .mobile-contact-bar {
   @apply fixed bottom-0 left-0 right-0 z-40 border-t p-3 backdrop-blur-lg lg:hidden;
   border-color: var(--border);
-  background: rgba(8, 7, 10, 0.92);
-  box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.5);
+  background: rgba(20, 16, 20, 0.94);
+}
+
+.muted-chip {
+  @apply inline-flex min-h-[40px] shrink-0 items-center rounded-full border px-3.5 py-1.5 text-xs font-medium transition-all;
+  border-color: var(--border);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text-muted);
+}
+
+.muted-chip:hover {
+  border-color: rgba(215, 180, 106, 0.3);
+  color: var(--text-main);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.active-chip,
+.type-chip-active {
+  border-color: rgba(215, 180, 106, 0.45) !important;
+  background: rgba(111, 45, 69, 0.35) !important;
+  color: var(--champagne-soft) !important;
+}
+
+.type-chip {
+  @apply muted-chip;
 }
 
 .city-pill {
@@ -277,28 +296,9 @@ body {
 
 .city-pill:hover,
 .city-pill-active {
-  border-color: rgba(202, 164, 93, 0.45);
-  color: var(--champagne-light);
-  background: rgba(202, 164, 93, 0.08);
-}
-
-.type-chip {
-  @apply inline-flex min-h-[40px] shrink-0 items-center rounded-full border px-3.5 py-1.5 text-xs font-medium transition-all;
-  border-color: var(--border);
-  background: rgba(255, 255, 255, 0.04);
-  color: var(--text-muted);
-}
-
-.type-chip:hover {
-  border-color: rgba(202, 164, 93, 0.35);
-  color: var(--text-main);
-  background: rgba(255, 255, 255, 0.06);
-}
-
-.type-chip-active {
-  border-color: rgba(202, 164, 93, 0.5);
-  background: rgba(202, 164, 93, 0.1);
-  color: var(--champagne-light);
+  border-color: rgba(215, 180, 106, 0.35);
+  color: var(--champagne-soft);
+  background: rgba(111, 45, 69, 0.25);
 }
 
 .search-chip {
@@ -309,32 +309,30 @@ body {
 }
 
 .search-chip:hover {
-  border-color: rgba(123, 46, 73, 0.6);
+  border-color: rgba(111, 45, 69, 0.5);
   color: var(--text-main);
-  background: rgba(90, 31, 53, 0.25);
-  box-shadow: 0 0 20px rgba(90, 31, 53, 0.2);
+  background: rgba(111, 45, 69, 0.2);
 }
 
 .category-card {
-  @apply luxury-card flex min-h-[72px] items-center justify-center p-3 text-center text-sm font-medium transition-all;
+  @apply profile-card flex min-h-[72px] items-center justify-center p-3 text-center text-sm font-medium transition-all;
   color: var(--text-muted);
 }
 
 .category-card:hover {
-  border-color: rgba(123, 46, 73, 0.5);
-  color: var(--champagne-light);
-  background: rgba(90, 31, 53, 0.2);
-  box-shadow: 0 0 24px rgba(90, 31, 53, 0.15);
+  border-color: rgba(215, 180, 106, 0.3);
+  color: var(--champagne-soft);
+  background: rgba(111, 45, 69, 0.2);
 }
 
 .filter-bar-sticky {
   @apply sticky top-14 z-30 border-b py-3 backdrop-blur-lg sm:top-[3.75rem];
   border-color: var(--border);
-  background: rgba(8, 7, 10, 0.9);
+  background: rgba(20, 16, 20, 0.92);
 }
 
 .filter-panel {
-  @apply glass-panel p-4 sm:p-5;
+  @apply glass-card p-4 sm:p-5;
 }
 
 .no-scrollbar {
@@ -346,82 +344,94 @@ body {
   display: none;
 }
 
-.thumbnail-gradient {
-  @apply profile-gradient relative overflow-hidden;
+/* Profile photo placeholders — warm portrait feel */
+.profile-photo__base {
+  background: linear-gradient(165deg, #c58b72 0%, #b76d78 25%, #6f2d45 70%, #421b2d 100%);
 }
 
-.thumbnail-gradient::after {
+.profile-photo__light {
+  background: radial-gradient(ellipse 70% 55% at 50% 15%, rgba(240, 217, 154, 0.35), transparent 60%);
+}
+
+.profile-photo__vignette {
+  background: linear-gradient(to top, rgba(20, 16, 20, 0.92) 0%, rgba(20, 16, 20, 0.15) 45%, transparent 70%);
+}
+
+.profile-photo__figure {
+  position: relative;
+  width: 42%;
+  height: 72%;
+}
+
+.profile-photo__figure::before {
   content: "";
   position: absolute;
-  inset: 0;
-  background: linear-gradient(to top, rgba(8, 7, 10, 0.75) 0%, transparent 55%);
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 52%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle at 40% 35%, rgba(240, 217, 154, 0.45), rgba(197, 139, 114, 0.55) 50%, rgba(111, 45, 69, 0.4));
+  box-shadow: 0 0 40px rgba(197, 139, 114, 0.25);
+}
+
+.profile-photo__figure::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 85%;
+  height: 48%;
+  border-radius: 45% 45% 0 0;
+  background: linear-gradient(to bottom, rgba(183, 109, 120, 0.5), rgba(66, 27, 45, 0.65));
+}
+
+.profile-photo[data-photo-variant="warm-wine"] .profile-photo__base {
+  background: linear-gradient(165deg, #c58b72 0%, #b76d78 30%, #6f2d45 75%, #421b2d 100%);
+}
+
+.profile-photo[data-photo-variant="champagne-rose"] .profile-photo__base {
+  background: linear-gradient(165deg, #d4a88a 0%, #c58b72 30%, #8a5060 70%, #421b2d 100%);
+}
+
+.profile-photo[data-photo-variant="burgundy"] .profile-photo__base {
+  background: linear-gradient(165deg, #b76d78 0%, #8a3a55 35%, #6f2d45 70%, #2a1520 100%);
+}
+
+.profile-photo[data-photo-variant="ivory-champagne"] .profile-photo__base {
+  background: linear-gradient(165deg, #d4b896 0%, #c58b72 25%, #6f2d45 65%, #1d171d 100%);
+}
+
+.profile-photo[data-photo-variant="velvet-purple"] .profile-photo__base {
+  background: linear-gradient(165deg, #a87888 0%, #6f2d45 40%, #3d2535 75%, #141014 100%);
+}
+
+.profile-photo[data-photo-variant="deep-gold"] .profile-photo__base {
+  background: linear-gradient(165deg, #c99550 0%, #c58b72 25%, #6f2d45 60%, #421b2d 100%);
 }
 
 .filter-drawer-backdrop {
   @apply fixed inset-0 z-50 lg:hidden;
-  background: rgba(0, 0, 0, 0.65);
+  background: rgba(0, 0, 0, 0.55);
 }
 
 .filter-drawer {
   @apply fixed inset-x-0 bottom-0 z-50 max-h-[85vh] overflow-y-auto rounded-t-2xl border-t p-5 shadow-2xl lg:hidden;
   border-color: var(--border);
-  background: #100b10;
+  background: #1d171d;
   animation: slideUp 0.3s ease-out;
 }
 
 @keyframes slideUp {
-  from {
-    transform: translateY(100%);
-  }
-  to {
-    transform: translateY(0);
-  }
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
 }
 
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(6px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.companion-avatar {
-  border-radius: 0;
-}
-
-.companion-avatar__grid {
-  background-image:
-    linear-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
-  background-size: 24px 24px;
-}
-
-.companion-avatar[data-companion="valentina"] .companion-avatar__silhouette {
-  filter: drop-shadow(0 0 24px rgba(123, 46, 73, 0.4));
-}
-
-.companion-avatar[data-companion="mila"] .companion-avatar__silhouette {
-  filter: drop-shadow(0 0 24px rgba(202, 164, 93, 0.35));
-}
-
-.companion-avatar[data-companion="scarlett"] .companion-avatar__silhouette {
-  filter: drop-shadow(0 0 24px rgba(139, 48, 80, 0.45));
-}
-
-.companion-avatar[data-companion="sophia"] .companion-avatar__silhouette {
-  filter: drop-shadow(0 0 24px rgba(224, 189, 115, 0.3));
-}
-
-.companion-avatar[data-companion="victoria"] .companion-avatar__silhouette {
-  filter: drop-shadow(0 0 24px rgba(90, 58, 85, 0.45));
-}
-
-.companion-avatar[data-companion="isabella"] .companion-avatar__silhouette {
-  filter: drop-shadow(0 0 24px rgba(201, 149, 80, 0.4));
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .animate-fade-in {

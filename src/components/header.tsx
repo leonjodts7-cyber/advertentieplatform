@@ -58,9 +58,9 @@ export function Header({ user }: HeaderProps) {
         <div className="flex shrink-0 items-center gap-1.5 lg:hidden">
           <Link
             href="/ai-lounge"
-            className="rounded-full px-2 py-2 text-xs text-muted-foreground hover:text-champagne-light"
+            className="rounded-full px-2 py-2 text-xs text-muted-foreground hover:text-soft-champagne sm:px-2.5 sm:text-sm"
           >
-            AI
+            Lounge
           </Link>
           <Link
             href="/zoeken"

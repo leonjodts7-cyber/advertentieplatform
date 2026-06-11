@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { AiChatInterface } from "@/components/ai/ai-chat-interface";
-import { CompanionAvatar } from "@/components/ai/companion-avatar";
+import { ProfilePhotoPlaceholder } from "@/components/profile-photo-placeholder";
 import { Badge } from "@/components/ui/badge";
 import { getCompanionById } from "@/lib/ai-companions";
 
@@ -18,7 +18,7 @@ export async function generateMetadata({
   if (!companion) return { title: "AI Companion" };
   return {
     title: `Chat met ${companion.naam}`,
-    description: `Chat met ${companion.naam} (${companion.leeftijd}) — fictieve AI Companion op Veloura.`,
+    description: `Chat met ${companion.naam} (${companion.leeftijd}) — fictieve companion op Veloura.`,
   };
 }
 
@@ -33,39 +33,32 @@ export default async function AiChatPage({ params }: AiChatPageProps) {
         <div className="container flex items-center gap-3 py-3">
           <Link
             href="/ai-lounge"
-            className="shrink-0 text-sm text-muted-foreground hover:text-champagne-light"
+            className="shrink-0 text-sm text-muted-foreground hover:text-soft-champagne"
           >
             ← Lounge
           </Link>
 
-          <CompanionAvatar
-            companion={companion}
-            size="md"
-            showInitials
-            className="shrink-0 rounded-xl"
-          />
+          <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-xl lg:hidden">
+            <ProfilePhotoPlaceholder
+              variant={companion.photoVariant}
+              className="!aspect-square h-full w-full"
+            />
+          </div>
 
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-center gap-2">
               <p className="font-display text-base text-foreground sm:text-lg">
-                {companion.naam}
-                <span className="ml-1.5 text-sm font-normal text-muted-foreground">
-                  {companion.leeftijd}
-                </span>
+                {companion.naam}, {companion.leeftijd}
               </p>
-              <Badge variant="green">
+              <Badge variant="online">
                 <span className="mr-1 inline-block h-1.5 w-1.5 animate-pulse rounded-full bg-success" />
                 Online
               </Badge>
             </div>
-            <p className="truncate text-xs text-champagne-light sm:text-sm">
-              {companion.type}
+            <p className="truncate text-xs text-muted-foreground sm:text-sm">
+              {companion.type} · Fictief 21+
             </p>
           </div>
-
-          <Badge variant="muted" className="hidden shrink-0 sm:inline-flex">
-            Fictief 21+
-          </Badge>
         </div>
       </div>
 

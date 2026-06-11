@@ -108,10 +108,10 @@ export default async function ZoekenPage({ searchParams }: ZoekenPageProps) {
                 <Badge variant="wine">Categorie: {categorieLabel}</Badge>
               )}
               {isTruthyFilter(beschikbaar) && (
-                <Badge variant="green">Beschikbaar</Badge>
+                <Badge variant="online">Beschikbaar</Badge>
               )}
               {isTruthyFilter(geverifieerd) && (
-                <Badge variant="champagne">Geverifieerd</Badge>
+                <Badge variant="verified">Geverifieerd</Badge>
               )}
             </div>
 
@@ -126,7 +126,7 @@ export default async function ZoekenPage({ searchParams }: ZoekenPageProps) {
                 ))}
               </div>
             ) : (
-              <div className="velvet-card mx-auto max-w-md p-8 text-center sm:p-10">
+              <div className="profile-card mx-auto max-w-md p-8 text-center sm:p-10">
                 <p className="font-display text-xl text-foreground">
                   Geen profielen gevonden
                 </p>

@@ -3,6 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { formatPrijs, statusLabel } from "@/lib/helpers";
 import type { Advertentie } from "@/lib/types";
 import { cn } from "@/lib/utils";
+import { ProfilePhotoPlaceholder } from "@/components/profile-photo-placeholder";
 import { MapPin } from "lucide-react";
 
 interface AdvertentieCardProps {
@@ -45,12 +46,12 @@ export function AdvertentieCard({
     <Link
       href={linkHref}
       className={cn(
-        "group luxury-card flex flex-col overflow-hidden transition-all duration-300",
-        "hover:-translate-y-1 hover:border-champagne/25 hover:shadow-glow",
+        "profile-card group flex flex-col overflow-hidden transition-all duration-300",
+        "hover:-translate-y-0.5 hover:shadow-warm-glow",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-champagne/25"
       )}
     >
-      <div className="relative aspect-[4/5] overflow-hidden sm:aspect-[3/4]">
+      <div className="relative aspect-[3/4] overflow-hidden">
         {afbeeldingUrl ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
@@ -59,24 +60,27 @@ export function AdvertentieCard({
             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
           />
         ) : (
-          <div className="thumbnail-gradient h-full w-full" />
+          <ProfilePhotoPlaceholder variant="warm-wine" className="!aspect-auto h-full" />
         )}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#08070a]/90 via-[#08070a]/20 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#141014]/95 via-[#141014]/25 to-transparent" />
         <div className="absolute inset-x-0 top-0 flex flex-wrap gap-1.5 p-3">
+          {advertentie.beschikbaar && (
+            <Badge variant="online">Beschikbaar</Badge>
+          )}
           {advertentie.geverifieerd && (
-            <Badge variant="green">Geverifieerd</Badge>
+            <Badge variant="verified">Geverifieerd</Badge>
+          )}
+          {!dashboard && (
+            <Badge variant="muted">{advertentie.stad}</Badge>
           )}
           {isPremium && !dashboard && (
-            <Badge variant="champagne">Premium</Badge>
-          )}
-          {advertentie.beschikbaar && (
-            <Badge variant="green">Beschikbaar</Badge>
+            <Badge variant="premium">Premium</Badge>
           )}
         </div>
       </div>
 
       <div className="flex flex-1 flex-col gap-2 p-4">
-        <h3 className="font-display line-clamp-2 text-base font-medium leading-snug text-foreground transition-colors group-hover:text-champagne-light sm:text-lg">
+        <h3 className="font-display line-clamp-2 text-base font-medium leading-snug text-foreground transition-colors group-hover:text-soft-champagne sm:text-lg">
           {advertentie.titel}
         </h3>
 
@@ -91,7 +95,7 @@ export function AdvertentieCard({
         </div>
 
         {advertentie.prijs_vanaf != null && (
-          <p className="text-sm font-semibold text-champagne-light">
+          <p className="text-sm font-semibold text-soft-champagne">
             Vanaf {formatPrijs(advertentie.prijs_vanaf)}
           </p>
         )}

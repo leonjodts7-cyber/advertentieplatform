@@ -57,7 +57,7 @@ export default async function DashboardPage() {
           Marketplace
         </h2>
         <div className="mt-3 grid gap-3 sm:grid-cols-3">
-          <div className="stat-card">
+          <div className="profile-card p-5">
             <p className="text-xs uppercase tracking-wider text-muted-foreground">
               Totaal
             </p>
@@ -65,13 +65,13 @@ export default async function DashboardPage() {
               {totaal}
             </p>
           </div>
-          <div className="stat-card">
+          <div className="profile-card p-5">
             <p className="text-xs uppercase tracking-wider text-muted-foreground">
               Actief
             </p>
             <p className="mt-1 font-display text-3xl text-success">{actief}</p>
           </div>
-          <div className="stat-card">
+          <div className="profile-card p-5">
             <p className="text-xs uppercase tracking-wider text-muted-foreground">
               In beoordeling
             </p>
@@ -85,7 +85,7 @@ export default async function DashboardPage() {
           AI Lounge
         </h2>
         <div className="mt-3 grid gap-3 sm:grid-cols-3">
-          <div className="stat-card">
+          <div className="profile-card p-5">
             <p className="text-xs uppercase tracking-wider text-muted-foreground">
               Gesprekken
             </p>
@@ -93,19 +93,19 @@ export default async function DashboardPage() {
               {aiStats.gesprekken}
             </p>
           </div>
-          <div className="stat-card">
+          <div className="profile-card p-5">
             <p className="text-xs uppercase tracking-wider text-muted-foreground">
               Gebruikte credits
             </p>
-            <p className="mt-1 font-display text-3xl text-wine-light">
+            <p className="mt-1 font-display text-3xl text-soft-champagne">
               {aiStats.gebruikteCredits}
             </p>
           </div>
-          <div className="stat-card">
+          <div className="profile-card p-5">
             <p className="text-xs uppercase tracking-wider text-muted-foreground">
               Resterende credits
             </p>
-            <p className="mt-1 font-display text-3xl text-champagne-light">
+            <p className="mt-1 font-display text-3xl text-champagne">
               {aiStats.resterendeCredits}
             </p>
           </div>
@@ -114,9 +114,9 @@ export default async function DashboardPage() {
         <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           <Link
             href="/dashboard/advertenties"
-            className="luxury-card group p-5 transition-all hover:border-champagne/25 hover:shadow-glow"
+            className="profile-card group p-5 transition-all hover:-translate-y-0.5 hover:shadow-warm-glow"
           >
-            <p className="font-display text-lg text-foreground group-hover:text-champagne-light">
+            <p className="font-display text-lg text-foreground group-hover:text-soft-champagne">
               Mijn advertenties
             </p>
             <p className="mt-1 text-sm text-muted-foreground">
@@ -125,20 +125,20 @@ export default async function DashboardPage() {
           </Link>
           <Link
             href="/ai-lounge"
-            className="velvet-card group p-5 transition-all hover:border-champagne/20 hover:shadow-glow"
+            className="profile-card group p-5 transition-all hover:-translate-y-0.5 hover:shadow-warm-glow"
           >
-            <p className="font-display text-lg text-champagne-light">
+            <p className="font-display text-lg text-soft-champagne">
               AI Lounge
             </p>
             <p className="mt-1 text-sm text-muted-foreground">
-              Chat met fictieve AI Companions
+              Chat met fictieve companions
             </p>
           </Link>
           <Link
             href="/credits"
-            className="luxury-card group p-5 transition-all hover:border-champagne/25 hover:shadow-glow sm:col-span-2 lg:col-span-1"
+            className="profile-card group p-5 transition-all hover:-translate-y-0.5 hover:shadow-warm-glow sm:col-span-2 lg:col-span-1"
           >
-            <p className="font-display text-lg text-foreground group-hover:text-champagne-light">
+            <p className="font-display text-lg text-foreground group-hover:text-soft-champagne">
               Credits kopen
             </p>
             <p className="mt-1 text-sm text-muted-foreground">

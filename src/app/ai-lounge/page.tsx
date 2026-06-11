@@ -1,17 +1,13 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { AiCompanionCard } from "@/components/ai/ai-companion-card";
-import {
-  AiLoungeCreditsInfo,
-  AiLoungeStats,
-} from "@/components/ai/ai-lounge-stats";
-import { getAllCompanions } from "@/lib/ai-companions";
+import { getAllCompanions, CREDITS_PER_BERICHT } from "@/lib/ai-companions";
 import { createClient } from "@/lib/supabase/server";
 
 export const metadata: Metadata = {
   title: "AI Lounge",
   description:
-    "Chat met fictieve volwassen AI companions op Veloura. 21+. Credits per bericht.",
+    "Kies een fictieve volwassen companion en chat per bericht met credits op Veloura.",
 };
 
 export default async function AiLoungePage() {
@@ -25,59 +21,51 @@ export default async function AiLoungePage() {
     <div>
       <div className="page-header-band">
         <div className="container">
-          <p className="text-[0.6875rem] uppercase tracking-wider text-muted-foreground">
-            Veloura Premium
-          </p>
-          <h1 className="section-title mt-1">AI Lounge</h1>
+          <h1 className="section-title">AI Lounge</h1>
           <p className="section-subtitle mt-2 max-w-2xl">
-            Chat met fictieve volwassen AI companions. Elk bericht kost credits.
+            Kies een fictieve volwassen companion en chat per bericht met credits.
           </p>
-
-          <div className="mt-4 rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3 text-sm text-muted-foreground">
-            Alle AI companions zijn{" "}
-            <strong className="text-foreground">
-              fictieve volwassen personages van 21+
-            </strong>
-            . Geen echte personen. Geen expliciete content.
+          <p className="mt-3 text-sm text-muted-foreground">
+            Alle companions zijn fictieve volwassen AI-personages van 21+. Geen
+            echte personen.
+          </p>
+          <div className="mt-4 flex flex-wrap gap-3 text-xs text-muted-foreground">
+            <span className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5">
+              {companions.length} companions online
+            </span>
+            <span className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5">
+              {CREDITS_PER_BERICHT} credits per bericht
+            </span>
+            <span className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5">
+              Geen gratis chat
+            </span>
           </div>
         </div>
       </div>
 
-      <div className="container space-y-6 py-6 sm:space-y-8 sm:py-8">
-        <AiLoungeStats />
-        <AiLoungeCreditsInfo />
-
+      <div className="container py-6 sm:py-8">
         {!user && (
-          <div className="velvet-card flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5">
+          <div className="profile-card mb-6 flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5">
             <p className="text-sm text-muted-foreground">
-              Log in om een gesprek te starten. Credits zijn vereist per
-              bericht.
+              Log in om een gesprek te starten.
             </p>
             <Link
               href="/login?redirect=/ai-lounge"
-              className="inline-flex min-h-[44px] items-center justify-center rounded-full champagne-gradient px-6 text-sm font-medium text-background"
+              className="champagne-button min-h-[44px] px-6 text-sm"
             >
               Inloggen
             </Link>
           </div>
         )}
 
-        <div>
-          <h2 className="font-display text-lg text-foreground sm:text-xl">
-            Kies jouw companion
-          </h2>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Premium AI-personages — klaar voor discreet chatten
-          </p>
-          <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {companions.map((companion) => (
-              <AiCompanionCard
-                key={companion.id}
-                companion={companion}
-                ingelogd={!!user}
-              />
-            ))}
-          </div>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {companions.map((companion) => (
+            <AiCompanionCard
+              key={companion.id}
+              companion={companion}
+              ingelogd={!!user}
+            />
+          ))}
         </div>
       </div>
     </div>
