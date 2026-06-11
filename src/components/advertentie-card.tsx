@@ -1,10 +1,6 @@
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
-import {
-  beschikbaarLabel,
-  formatPrijs,
-  statusLabel,
-} from "@/lib/helpers";
+import { formatPrijs, statusLabel } from "@/lib/helpers";
 import type { Advertentie } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
@@ -44,9 +40,9 @@ export function AdvertentieCard({
     <Link
       href={linkHref}
       className={cn(
-        "group block w-full overflow-hidden rounded-2xl border border-border/50 bg-card/90 transition-all duration-300",
-        "hover:border-champagne/25 hover:shadow-premium md:hover:-translate-y-1",
-        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        "group block w-full overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04] transition-all duration-300",
+        "hover:border-veloura-champagne/25 hover:shadow-luxury md:hover:-translate-y-0.5",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-veloura-champagne/40"
       )}
     >
       <div className="relative aspect-[4/3] overflow-hidden">
@@ -55,52 +51,52 @@ export function AdvertentieCard({
           <img
             src={afbeeldingUrl}
             alt=""
-            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
           />
         ) : (
-          <div className="gradient-placeholder h-full w-full gold-gradient opacity-90" />
+          <div className="thumbnail-gradient h-full w-full soft-gradient" />
         )}
-        <div className="absolute inset-0 bg-gradient-to-t from-background/95 via-background/25 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-veloura-bg/90 via-veloura-bg/20 to-transparent" />
         <div className="absolute left-2.5 top-2.5 flex flex-wrap gap-1">
           {advertentie.beschikbaar && (
             <Badge variant="green">Beschikbaar</Badge>
           )}
           {advertentie.geverifieerd && (
-            <Badge variant="gold">Geverifieerd</Badge>
+            <Badge variant="champagne">Geverifieerd</Badge>
           )}
         </div>
         <div className="absolute bottom-2.5 left-2.5">
-          <Badge variant="bordeaux">{advertentie.stad}</Badge>
+          <Badge variant="rose">{advertentie.stad}</Badge>
         </div>
       </div>
 
       <div className="p-4">
-        <h3 className="font-display text-lg font-medium leading-snug text-foreground line-clamp-2 group-hover:text-champagne">
+        <h3 className="font-display text-lg font-medium leading-snug text-veloura-ivory line-clamp-2 group-hover:text-veloura-champagne">
           {advertentie.titel}
         </h3>
 
-        <div className="mt-2.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-muted-foreground">
+        <div className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-veloura-soft">
           <span>{advertentie.stad}</span>
           <span aria-hidden="true">·</span>
           <span>{advertentie.leeftijd} jaar</span>
           <span aria-hidden="true">·</span>
-          <span className="font-semibold text-champagne">
+          <span className="font-medium text-veloura-champagne">
             {formatPrijs(advertentie.prijs_vanaf)}
           </span>
         </div>
 
         <div className="mt-3 flex items-center justify-between gap-2">
-          {!dashboard ? (
-            <span className="text-xs font-semibold uppercase tracking-wider text-champagne/80 transition-colors group-hover:text-champagne">
-              Bekijk profiel →
-            </span>
-          ) : (
+          {dashboard ? (
             <Badge variant={statusVariant(advertentie.status)}>
               {statusLabel(advertentie.status)}
             </Badge>
+          ) : (
+            <span className="text-xs font-medium tracking-wide text-veloura-champagne/80 group-hover:text-veloura-champagne">
+              Bekijk profiel →
+            </span>
           )}
           {!advertentie.beschikbaar && !dashboard && (
-            <Badge variant="muted">{beschikbaarLabel(false)}</Badge>
+            <Badge variant="muted">Niet beschikbaar</Badge>
           )}
         </div>
       </div>

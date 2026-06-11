@@ -11,49 +11,49 @@ const config: Config = {
     extend: {
       fontFamily: {
         sans: ["var(--font-sans)", "system-ui", "sans-serif"],
-        display: ["var(--font-display)", "Georgia", "serif"],
+        display: ["var(--font-display)", "Georgia, serif"],
       },
       colors: {
-        border: "hsl(var(--border))",
-        input: "hsl(var(--input))",
-        ring: "hsl(var(--ring))",
-        background: "hsl(var(--background))",
-        foreground: "hsl(var(--foreground))",
+        border: "var(--veloura-border)",
+        input: "var(--veloura-border)",
+        ring: "#d8b46a",
+        background: "#120d10",
+        foreground: "#fff8f1",
         primary: {
-          DEFAULT: "hsl(var(--primary))",
-          foreground: "hsl(var(--primary-foreground))",
+          DEFAULT: "#d8b46a",
+          foreground: "#120d10",
         },
         secondary: {
-          DEFAULT: "hsl(var(--secondary))",
-          foreground: "hsl(var(--secondary-foreground))",
+          DEFAULT: "rgba(255,255,255,0.06)",
+          foreground: "#fff8f1",
         },
         destructive: {
-          DEFAULT: "hsl(var(--destructive))",
-          foreground: "hsl(var(--destructive-foreground))",
+          DEFAULT: "#a85a5a",
+          foreground: "#fff8f1",
         },
         muted: {
-          DEFAULT: "hsl(var(--muted))",
-          foreground: "hsl(var(--muted-foreground))",
+          DEFAULT: "rgba(255,255,255,0.06)",
+          foreground: "#c8b8ad",
         },
         accent: {
-          DEFAULT: "hsl(var(--accent))",
-          foreground: "hsl(var(--accent-foreground))",
+          DEFAULT: "#3a1f2d",
+          foreground: "#fff8f1",
         },
-        bordeaux: {
-          DEFAULT: "hsl(var(--bordeaux))",
-          light: "hsl(var(--bordeaux-light))",
-        },
-        champagne: {
-          DEFAULT: "hsl(var(--champagne))",
-          muted: "hsl(var(--champagne-muted))",
+        veloura: {
+          bg: "#120d10",
+          ivory: "#fff8f1",
+          soft: "#c8b8ad",
+          champagne: "#d8b46a",
+          rose: "#b76e79",
+          plum: "#3a1f2d",
         },
         popover: {
-          DEFAULT: "hsl(var(--popover))",
-          foreground: "hsl(var(--popover-foreground))",
+          DEFAULT: "#1a1216",
+          foreground: "#fff8f1",
         },
         card: {
-          DEFAULT: "hsl(var(--card))",
-          foreground: "hsl(var(--card-foreground))",
+          DEFAULT: "rgba(255,255,255,0.06)",
+          foreground: "#fff8f1",
         },
       },
       borderRadius: {
@@ -62,22 +62,16 @@ const config: Config = {
         sm: "calc(var(--radius) - 4px)",
       },
       boxShadow: {
-        premium:
-          "0 1px 0 hsl(42 65% 58% / 0.08) inset, 0 8px 32px hsl(0 0% 0% / 0.4)",
-        glow: "0 0 40px hsl(42 65% 58% / 0.15)",
+        luxury: "0 8px 32px rgba(0,0,0,0.22), 0 0 0 1px rgba(255,255,255,0.04) inset",
+        glow: "0 0 40px rgba(183,110,121,0.1)",
       },
       animation: {
         "fade-in": "fadeIn 0.5s ease-out",
-        shimmer: "shimmer 2.5s infinite",
       },
       keyframes: {
         fadeIn: {
-          from: { opacity: "0", transform: "translateY(8px)" },
+          from: { opacity: "0", transform: "translateY(6px)" },
           to: { opacity: "1", transform: "translateY(0)" },
-        },
-        shimmer: {
-          "0%, 100%": { opacity: "0.4" },
-          "50%": { opacity: "0.8" },
         },
       },
     },

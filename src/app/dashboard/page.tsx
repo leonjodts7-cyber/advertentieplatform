@@ -38,12 +38,12 @@ export default async function DashboardPage() {
     <div>
       <div className="page-header-band">
         <div className="container">
-          <p className="text-[0.6875rem] uppercase tracking-wider text-champagne">
-            RedLight Dashboard
+          <p className="text-[0.6875rem] uppercase tracking-wider text-veloura-soft">
+            Veloura Dashboard
           </p>
-          <h1 className="section-title mt-1.5">Welkom terug</h1>
+          <h1 className="section-title mt-1">Welkom terug</h1>
           <p className="section-subtitle mt-1">
-            Beheer jouw profielen en listings commercieel sterk.
+            Beheer jouw profielen en advertenties.
           </p>
         </div>
       </div>
@@ -51,22 +51,18 @@ export default async function DashboardPage() {
       <div className="container py-6 sm:py-8">
         <div className="grid gap-3 sm:grid-cols-3">
           <div className="stat-card">
-            <p className="text-xs uppercase tracking-wider text-muted-foreground">
-              Totaal
-            </p>
-            <p className="mt-1 font-display text-3xl text-foreground">{totaal}</p>
+            <p className="text-xs uppercase tracking-wider text-veloura-soft">Totaal</p>
+            <p className="mt-1 font-display text-3xl text-veloura-ivory">{totaal}</p>
           </div>
           <div className="stat-card">
-            <p className="text-xs uppercase tracking-wider text-muted-foreground">
-              Actief
-            </p>
-            <p className="mt-1 font-display text-3xl text-champagne">{actief}</p>
+            <p className="text-xs uppercase tracking-wider text-veloura-soft">Actief</p>
+            <p className="mt-1 font-display text-3xl text-emerald-300/90">{actief}</p>
           </div>
           <div className="stat-card">
-            <p className="text-xs uppercase tracking-wider text-muted-foreground">
+            <p className="text-xs uppercase tracking-wider text-veloura-soft">
               In beoordeling
             </p>
-            <p className="mt-1 font-display text-3xl text-amber-400">
+            <p className="mt-1 font-display text-3xl text-veloura-champagne">
               {inReview}
             </p>
           </div>
@@ -75,24 +71,24 @@ export default async function DashboardPage() {
         <div className="mt-6 grid gap-3 sm:grid-cols-2">
           <Link
             href="/dashboard/advertenties"
-            className="premium-card group p-5 transition-colors hover:border-champagne/25"
+            className="luxury-card group p-5 transition-colors hover:border-veloura-champagne/25"
           >
-            <p className="font-display text-lg text-foreground group-hover:text-champagne">
+            <p className="font-display text-lg text-veloura-ivory group-hover:text-veloura-champagne">
               Mijn advertenties
             </p>
-            <p className="mt-1 text-sm text-muted-foreground">
+            <p className="mt-1 text-sm text-veloura-soft">
               Bekijk en bewerk al jouw listings
             </p>
           </Link>
           <Link
             href="/dashboard/advertenties/nieuw"
-            className="premium-card group border-champagne/20 p-5 transition-colors hover:border-champagne/40"
+            className="luxury-card group border-veloura-champagne/15 p-5 hover:border-veloura-champagne/30"
           >
-            <p className="font-display text-lg text-champagne">
+            <p className="font-display text-lg text-veloura-champagne">
               + Nieuwe advertentie
             </p>
-            <p className="mt-1 text-sm text-muted-foreground">
-              Plaats een nieuw premium profiel
+            <p className="mt-1 text-sm text-veloura-soft">
+              Plaats een nieuw profiel
             </p>
           </Link>
         </div>

@@ -26,52 +26,52 @@ export default async function HomePage() {
 
   const voordelen = [
     {
-      titel: "Sneller gevonden",
-      tekst: "Jouw profiel verschijnt direct in relevante zoekresultaten per stad en regio.",
+      titel: "Premium presentatie",
+      tekst: "Jouw profiel oogt verzorgd en professioneel — de eerste indruk telt.",
     },
     {
-      titel: "Mobiel-first profielpagina's",
-      tekst: "Bezoekers browsen op hun telefoon — jouw listing is daarop geoptimaliseerd.",
+      titel: "Mobiel-first ervaring",
+      tekst: "Bezoekers browsen op hun telefoon. Veloura is daar volledig op gebouwd.",
     },
     {
-      titel: "Slimme zoekfilters",
-      tekst: "Categorieën, stad en beschikbaarheid helpen de juiste klant jou te vinden.",
+      titel: "Discreet zoeken",
+      tekst: "Zoek op stad en categorie zonder opdringerige of expliciete uitstraling.",
     },
     {
-      titel: "Professioneel dashboard",
-      tekst: "Beheer concepten, vraag publicatie aan en houd je profiel commercieel sterk.",
+      titel: "Dashboard voor aanbieders",
+      tekst: "Beheer concepten, vraag publicatie aan en houd je listing up-to-date.",
     },
   ];
 
   return (
     <div>
-      {/* Hero — compact op desktop */}
-      <section className="relative overflow-hidden border-b border-border/20">
-        <div className="container relative py-8 sm:py-10 lg:py-12">
-          <div className="grid items-start gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:gap-10">
-            <div>
-              <p className="text-[0.6875rem] font-medium uppercase tracking-[0.12em] text-champagne/90 sm:text-xs">
-                Alleen 18+ · Discreet · Geverifieerde profielen · Mobiel eerst
+      {/* Hero */}
+      <section className="border-b border-white/10">
+        <div className="container py-8 sm:py-10 lg:py-12">
+          <div className="grid items-start gap-8 lg:grid-cols-2 lg:gap-12">
+            <div className="animate-fade-in">
+              <p className="text-[0.6875rem] font-medium uppercase tracking-[0.14em] text-veloura-soft sm:text-xs">
+                Alleen 18+ · Discreet · Professioneel · Mobiel eerst
               </p>
 
-              <h1 className="font-display mt-3 text-[1.75rem] font-medium leading-[1.12] tracking-tight text-foreground sm:text-4xl lg:text-[2.5rem]">
+              <h1 className="font-display mt-3 text-[1.65rem] font-medium leading-[1.15] text-veloura-ivory sm:text-4xl lg:text-[2.35rem]">
                 Ontdek{" "}
-                <span className="text-champagne">premium profielen</span> in
-                jouw regio
+                <span className="text-veloura-champagne">discrete profielen</span>{" "}
+                in jouw regio
               </h1>
 
-              <p className="mt-3 max-w-xl text-sm leading-relaxed text-muted-foreground sm:text-base">
-                Zoek discreet naar zelfstandige aanbieders, escort, privé
-                ontvangst en online diensten.
+              <p className="mt-3 max-w-lg text-sm leading-relaxed text-veloura-soft sm:text-base">
+                Veloura brengt zelfstandige aanbieders en bezoekers samen op een
+                stijlvol, veilig en professioneel advertentieplatform.
               </p>
 
-              <div className="mt-5 flex flex-col gap-2.5 sm:flex-row sm:gap-3">
+              <div className="mt-5 flex flex-col gap-2.5 sm:flex-row">
                 <Button asChild size="lg" className="w-full sm:w-auto">
                   <Link href="/zoeken">Bekijk advertenties</Link>
                 </Button>
                 <Button
                   asChild
-                  variant="bordeaux"
+                  variant="outline"
                   size="lg"
                   className="w-full sm:w-auto"
                 >
@@ -81,61 +81,48 @@ export default async function HomePage() {
                 </Button>
               </div>
 
-              <div className="premium-card mt-6 p-4 sm:p-5">
+              <div className="luxury-card mt-6 p-4 sm:p-5">
                 <MarketplaceHeroSearch />
               </div>
             </div>
 
-            <div className="hidden md:block">
+            <div className="lg:pt-2">
               <MarketplacePreview />
             </div>
-          </div>
-
-          <div className="mt-6 md:hidden">
-            <MarketplacePreview />
           </div>
         </div>
       </section>
 
       {/* Categorieën */}
-      <section className="section-spacing border-b border-border/20">
+      <section className="section-spacing border-b border-white/10">
         <div className="container">
-          <div className="mb-5 flex items-end justify-between gap-3">
-            <div>
-              <h2 className="section-title">Populaire categorieën</h2>
-              <p className="section-subtitle mt-1">
-                Kies een categorie en ontdek profielen
-              </p>
-            </div>
-            <Link
-              href="/zoeken"
-              className="shrink-0 text-xs text-champagne hover:text-champagne/80 sm:text-sm"
-            >
-              Alles →
-            </Link>
+          <h2 className="section-title">Populaire categorieën</h2>
+          <p className="section-subtitle mt-1">
+            Ontdek profielen per dienst
+          </p>
+          <div className="mt-5">
+            <CategoryGrid />
           </div>
-          <CategoryGrid />
         </div>
       </section>
 
-      {/* Waarom RedLight */}
-      <section className="section-spacing border-b border-border/20">
+      {/* Waarom Veloura */}
+      <section className="section-spacing border-b border-white/10">
         <div className="container">
-          <h2 className="section-title">Waarom RedLight beter werkt</h2>
+          <h2 className="section-title">Waarom Veloura?</h2>
           <p className="section-subtitle mt-1 max-w-lg">
-            Gebouwd voor aanbieders die serieus willen converteren — niet voor
-            lege pagina&apos;s.
+            Gebouwd voor aanbieders die kwaliteit en discretie serieus nemen.
           </p>
           <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
             {voordelen.map((v) => (
               <div
                 key={v.titel}
-                className="premium-card p-4 transition-colors hover:border-champagne/20 sm:p-5"
+                className="luxury-card p-4 transition-colors hover:border-veloura-rose/25 sm:p-5"
               >
-                <h3 className="font-display text-base font-medium text-foreground sm:text-lg">
+                <h3 className="font-display text-base font-medium text-veloura-ivory sm:text-lg">
                   {v.titel}
                 </h3>
-                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                <p className="mt-2 text-sm leading-relaxed text-veloura-soft">
                   {v.tekst}
                 </p>
               </div>
@@ -150,11 +137,11 @@ export default async function HomePage() {
           <div className="flex items-end justify-between gap-3">
             <div>
               <h2 className="section-title">Nieuwste advertenties</h2>
-              <p className="section-subtitle mt-1">Actief op het platform</p>
+              <p className="section-subtitle mt-1">Actief op Veloura</p>
             </div>
             <Link
               href="/zoeken"
-              className="hidden text-sm text-champagne hover:text-champagne/80 sm:inline"
+              className="hidden text-sm text-veloura-champagne hover:text-veloura-champagne/80 sm:inline"
             >
               Alles bekijken →
             </Link>
@@ -171,26 +158,23 @@ export default async function HomePage() {
               ))}
             </div>
           ) : (
-            <div className="premium-card relative mt-6 overflow-hidden p-8 text-center sm:p-12">
-              <div className="gradient-placeholder-gold absolute inset-0 opacity-15" />
-              <div className="relative">
-                <p className="font-display text-xl text-foreground">
-                  Nog geen actieve advertenties
-                </p>
-                <p className="mx-auto mt-2 max-w-sm text-sm text-muted-foreground">
-                  Wees de eerste op RedLight en bereik bezoekers in jouw regio.
-                </p>
-                <Button asChild size="lg" className="mt-5">
-                  <Link href="/dashboard/advertenties/nieuw">
-                    Plaats eerste advertentie
-                  </Link>
-                </Button>
-              </div>
+            <div className="luxury-card mt-6 p-8 text-center sm:p-12">
+              <p className="font-display text-xl text-veloura-ivory">
+                Er zijn nog geen actieve advertenties.
+              </p>
+              <p className="mx-auto mt-2 max-w-sm text-sm text-veloura-soft">
+                Wees de eerste op Veloura en bereik bezoekers in jouw regio.
+              </p>
+              <Button asChild size="lg" className="mt-5">
+                <Link href="/dashboard/advertenties/nieuw">
+                  Plaats eerste advertentie
+                </Link>
+              </Button>
             </div>
           )}
 
           <div className="mt-4 text-center sm:hidden">
-            <Link href="/zoeken" className="text-sm text-champagne">
+            <Link href="/zoeken" className="text-sm text-veloura-champagne">
               Alles bekijken →
             </Link>
           </div>

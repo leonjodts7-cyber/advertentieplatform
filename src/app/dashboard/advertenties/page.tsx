@@ -37,7 +37,7 @@ export default async function DashboardAdvertentiesPage() {
         <div className="container">
           <Link
             href="/dashboard"
-            className="text-sm text-muted-foreground hover:text-champagne"
+            className="text-sm text-veloura-soft hover:text-veloura-champagne"
           >
             ← Dashboard
           </Link>
@@ -67,12 +67,12 @@ export default async function DashboardAdvertentiesPage() {
             ))}
           </div>
         ) : (
-          <div className="premium-card p-8 text-center sm:p-12">
-            <p className="font-display text-xl text-foreground">
+          <div className="luxury-card p-8 text-center sm:p-12">
+            <p className="font-display text-xl text-veloura-ivory">
               Nog geen advertenties
             </p>
-            <p className="mt-2 text-sm text-muted-foreground">
-              Start met je eerste premium listing op RedLight.
+            <p className="mt-2 text-sm text-veloura-soft">
+              Start met je eerste profiel op Veloura.
             </p>
             <Button asChild className="mt-5">
               <Link href="/dashboard/advertenties/nieuw">Nieuwe advertentie</Link>

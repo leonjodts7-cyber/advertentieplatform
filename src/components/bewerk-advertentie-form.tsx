@@ -123,7 +123,11 @@ export function BewerkAdvertentieForm({ advertentie }: BewerkAdvertentieFormProp
     <div className="space-y-6">
       <div className="flex items-center gap-2">
         <span className="text-sm text-muted-foreground">Status:</span>
-        <Badge variant={status === "actief" ? "green" : "review"}>
+        <Badge
+          variant={
+            status === "actief" ? "green" : status === "in_review" ? "review" : "muted"
+          }
+        >
           {statusLabel(status)}
         </Badge>
       </div>

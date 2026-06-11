@@ -24,7 +24,7 @@ export default async function NieuweAdvertentiePage() {
         <div className="container">
           <Link
             href="/dashboard/advertenties"
-            className="text-sm text-muted-foreground transition-colors hover:text-champagne"
+            className="text-sm text-veloura-soft hover:text-veloura-champagne"
           >
             ← Mijn advertenties
           </Link>
@@ -37,7 +37,7 @@ export default async function NieuweAdvertentiePage() {
       </div>
 
       <div className="container py-8 sm:py-10">
-        <div className="card-premium mx-auto max-w-2xl p-6 sm:p-8">
+        <div className="luxury-card mx-auto max-w-2xl p-6 sm:p-8">
           <NieuweAdvertentieForm aanbiederId={user.id} />
         </div>
       </div>

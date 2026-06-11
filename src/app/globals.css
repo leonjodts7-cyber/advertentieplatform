@@ -3,42 +3,41 @@
 @tailwind utilities;
 
 :root {
-  /* Design tokens */
-  --achtergrond: 350 18% 3%;
-  --kaart: 350 14% 6%;
-  --rand: 350 10% 14%;
-  --goud: 43 62% 55%;
-  --bordeaux: 350 52% 28%;
-  --tekst: 38 18% 95%;
-  --muted: 38 6% 52%;
+  /* Veloura palette */
+  --veloura-bg: #120d10;
+  --veloura-card: rgba(255, 255, 255, 0.06);
+  --veloura-text: #fff8f1;
+  --veloura-text-soft: #c8b8ad;
+  --veloura-champagne: #d8b46a;
+  --veloura-rose: #b76e79;
+  --veloura-plum: #3a1f2d;
+  --veloura-border: rgba(255, 255, 255, 0.1);
 
-  /* Tailwind-compat aliases */
-  --background: 350 18% 3%;
-  --foreground: 38 18% 95%;
-  --card: 350 14% 6%;
-  --card-foreground: 38 18% 95%;
-  --popover: 350 14% 6%;
-  --popover-foreground: 38 18% 95%;
-  --primary: 43 62% 55%;
-  --primary-foreground: 350 20% 5%;
-  --secondary: 350 12% 10%;
-  --secondary-foreground: 38 15% 90%;
-  --muted-foreground: 38 6% 52%;
-  --accent: 350 45% 22%;
-  --accent-foreground: 43 40% 80%;
-  --bordeaux-light: 350 42% 38%;
-  --champagne: 43 62% 55%;
-  --champagne-muted: 43 25% 72%;
-  --destructive: 0 58% 42%;
-  --destructive-foreground: 0 0% 98%;
-  --border: 350 10% 14%;
-  --input: 350 12% 9%;
-  --ring: 43 62% 55%;
-  --radius: 0.875rem;
+  /* Tailwind compat */
+  --background: 345 22% 6%;
+  --foreground: 36 100% 97%;
+  --card: 0 0% 100% / 0.06;
+  --card-foreground: 36 100% 97%;
+  --popover: 345 20% 8%;
+  --popover-foreground: 36 100% 97%;
+  --primary: 38 58% 63%;
+  --primary-foreground: 345 22% 8%;
+  --secondary: 345 15% 12%;
+  --secondary-foreground: 36 60% 92%;
+  --muted: 345 12% 14%;
+  --muted-foreground: 24 18% 73%;
+  --accent: 350 28% 18%;
+  --accent-foreground: 36 80% 94%;
+  --destructive: 0 45% 48%;
+  --destructive-foreground: 36 100% 97%;
+  --border: 0 0% 100% / 0.1;
+  --input: 0 0% 100% / 0.05;
+  --ring: 38 58% 63%;
+  --radius: 1rem;
 }
 
 * {
-  border-color: hsl(var(--rand));
+  border-color: var(--veloura-border);
 }
 
 html {
@@ -49,88 +48,95 @@ html {
 body {
   min-height: 100vh;
   overflow-x: hidden;
-  color: hsl(var(--tekst));
+  color: var(--veloura-text);
   font-family: var(--font-sans), system-ui, sans-serif;
-  font-feature-settings: "rlig" 1, "calt" 1;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Premium achtergrond */
-.premium-bg {
-  background-color: hsl(var(--achtergrond));
+/* Luxury background */
+.luxury-bg {
+  background-color: var(--veloura-bg);
   background-image:
-    radial-gradient(ellipse 70% 55% at 0% 0%, hsl(var(--bordeaux) / 0.22), transparent 55%),
-    radial-gradient(ellipse 55% 45% at 100% 5%, hsl(32 40% 28% / 0.18), transparent 50%),
-    radial-gradient(ellipse 40% 30% at 50% 100%, hsl(var(--bordeaux) / 0.1), transparent 45%);
+    radial-gradient(ellipse 80% 50% at 0% 0%, rgba(58, 31, 45, 0.55), transparent 55%),
+    radial-gradient(ellipse 60% 45% at 100% 10%, rgba(183, 110, 121, 0.12), transparent 50%),
+    radial-gradient(ellipse 50% 40% at 50% 100%, rgba(216, 180, 106, 0.06), transparent 45%);
 }
 
-.subtle-grid {
-  background-image:
-    linear-gradient(hsl(var(--rand) / 0.35) 1px, transparent 1px),
-    linear-gradient(90deg, hsl(var(--rand) / 0.35) 1px, transparent 1px);
-  background-size: 48px 48px;
-  mask-image: radial-gradient(ellipse 80% 70% at 50% 30%, black 20%, transparent 75%);
+.luxury-bg::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.35;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  z-index: 0;
 }
 
-.premium-card {
+.luxury-card {
   border-radius: var(--radius);
-  border: 1px solid hsl(var(--rand) / 0.7);
+  border: 1px solid var(--veloura-border);
+  background: var(--veloura-card);
+  backdrop-filter: blur(20px);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.04) inset,
+    0 12px 40px rgba(0, 0, 0, 0.25);
+}
+
+.luxury-border {
+  border: 1px solid var(--veloura-border);
+}
+
+.luxury-glow {
+  box-shadow:
+    0 0 0 1px rgba(216, 180, 106, 0.08),
+    0 8px 32px rgba(0, 0, 0, 0.2),
+    0 0 48px rgba(183, 110, 121, 0.06);
+}
+
+.soft-gradient {
   background: linear-gradient(
-    160deg,
-    hsl(var(--kaart) / 0.92) 0%,
-    hsl(350 16% 4% / 0.88) 100%
+    145deg,
+    rgba(58, 31, 45, 0.9) 0%,
+    rgba(45, 28, 38, 0.85) 50%,
+    rgba(183, 110, 121, 0.25) 100%
   );
-  backdrop-filter: blur(16px);
-  box-shadow:
-    0 1px 0 hsl(var(--goud) / 0.07) inset,
-    0 0 0 1px hsl(0 0% 100% / 0.02) inset,
-    0 10px 40px hsl(0 0% 0% / 0.45);
 }
 
-.card-premium,
-.card-glass {
-  @apply premium-card;
-}
-
-.card-glass {
-  background: hsl(var(--kaart) / 0.55);
-  backdrop-filter: blur(24px) saturate(1.3);
-}
-
-.premium-glow {
-  box-shadow:
-    0 0 0 1px hsl(var(--goud) / 0.12),
-    0 0 48px hsl(var(--goud) / 0.12),
-    0 12px 40px hsl(0 0% 0% / 0.4);
-}
-
-.gold-gradient {
+.rose-gradient {
   background: linear-gradient(
     135deg,
-    hsl(var(--bordeaux)) 0%,
-    hsl(32 38% 32%) 45%,
-    hsl(var(--goud) / 0.85) 100%
+    rgba(58, 31, 45, 0.95) 0%,
+    rgba(183, 110, 121, 0.35) 60%,
+    rgba(216, 180, 106, 0.15) 100%
   );
 }
 
-.section-spacing {
-  @apply py-10 sm:py-12 lg:py-14;
+.champagne-text {
+  color: var(--veloura-champagne);
+}
+
+/* Legacy aliases */
+.premium-card,
+.card-premium,
+.card-glass {
+  @apply luxury-card;
+}
+
+.premium-bg {
+  @apply luxury-bg;
 }
 
 .container {
   width: 100%;
   max-width: 76rem;
-  margin-left: auto;
-  margin-right: auto;
-  padding-left: 1rem;
-  padding-right: 1rem;
+  margin-inline: auto;
+  padding-inline: 1rem;
 }
 
 @media (min-width: 640px) {
   .container {
-    padding-left: 1.25rem;
-    padding-right: 1.25rem;
+    padding-inline: 1.25rem;
   }
 }
 
@@ -143,8 +149,8 @@ body {
   font-size: 1.5rem;
   font-weight: 500;
   letter-spacing: -0.02em;
-  line-height: 1.15;
-  color: hsl(var(--tekst));
+  line-height: 1.2;
+  color: var(--veloura-text);
 }
 
 @media (min-width: 640px) {
@@ -155,35 +161,12 @@ body {
 
 .section-subtitle {
   font-size: 0.875rem;
-  line-height: 1.55;
-  color: hsl(var(--muted));
+  line-height: 1.6;
+  color: var(--veloura-text-soft);
 }
 
-.gradient-placeholder {
-  position: relative;
-  overflow: hidden;
-  background: linear-gradient(
-    135deg,
-    hsl(var(--bordeaux)) 0%,
-    hsl(350 40% 22%) 50%,
-    hsl(32 35% 28%) 100%
-  );
-}
-
-.gradient-placeholder::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to top, hsl(var(--achtergrond) / 0.75) 0%, transparent 55%);
-}
-
-.gradient-placeholder-gold {
-  background: linear-gradient(
-    145deg,
-    hsl(var(--bordeaux)) 0%,
-    hsl(32 38% 30%) 50%,
-    hsl(var(--goud) / 0.5) 100%
-  );
+.section-spacing {
+  @apply py-10 sm:py-12;
 }
 
 .form-label {
@@ -191,20 +174,20 @@ body {
   margin-bottom: 0.5rem;
   font-size: 0.6875rem;
   font-weight: 600;
-  letter-spacing: 0.08em;
-  color: hsl(var(--champagne-muted));
+  letter-spacing: 0.1em;
   text-transform: uppercase;
+  color: var(--veloura-text-soft);
 }
 
 .prose-advertentie {
-  color: hsl(var(--muted));
-  line-height: 1.75;
+  color: var(--veloura-text-soft);
+  line-height: 1.8;
   white-space: pre-wrap;
   font-size: 0.9375rem;
 }
 
 .stat-card {
-  @apply premium-card relative overflow-hidden p-5 sm:p-6;
+  @apply luxury-card relative overflow-hidden p-5 sm:p-6;
 }
 
 .stat-card::before {
@@ -214,44 +197,72 @@ body {
   left: 0;
   right: 0;
   height: 1px;
-  background: linear-gradient(90deg, transparent, hsl(var(--goud) / 0.45), transparent);
-}
-
-.mobile-contact-bar {
-  @apply fixed bottom-0 left-0 right-0 z-40 border-t border-border/50 p-3 backdrop-blur-xl lg:hidden;
-  background: hsl(var(--kaart) / 0.95);
-}
-
-.city-pill {
-  @apply inline-flex min-h-[44px] shrink-0 items-center rounded-full border border-border/50 px-3.5 py-2 text-xs text-muted-foreground transition-all sm:text-sm;
-  @apply hover:border-champagne/35 hover:bg-champagne/5 hover:text-champagne;
-  @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring;
-  background: hsl(var(--kaart) / 0.6);
-}
-
-.type-chip {
-  @apply inline-flex min-h-[40px] shrink-0 items-center rounded-lg border border-border/50 px-3 py-1.5 text-xs font-medium text-muted-foreground transition-all;
-  @apply hover:border-champagne/30 hover:text-foreground;
-  background: hsl(var(--input) / 0.8);
-}
-
-.type-chip-active {
-  @apply border-champagne/40 bg-champagne/10 text-champagne;
-}
-
-.category-card {
-  @apply premium-card flex min-h-[72px] items-center justify-center p-3 text-center text-sm font-medium text-muted-foreground transition-all;
-  @apply hover:border-champagne/30 hover:text-champagne hover:shadow-glow;
-}
-
-.divider-gold {
-  height: 1px;
-  background: linear-gradient(90deg, transparent, hsl(var(--goud) / 0.35), transparent);
+  background: linear-gradient(90deg, transparent, rgba(216, 180, 106, 0.35), transparent);
 }
 
 .page-header-band {
-  @apply relative overflow-hidden border-b border-border/30 py-8 sm:py-10;
-  background: linear-gradient(180deg, hsl(var(--bordeaux) / 0.1) 0%, transparent 100%);
+  @apply border-b py-8 sm:py-10;
+  border-color: var(--veloura-border);
+  background: linear-gradient(180deg, rgba(58, 31, 45, 0.25) 0%, transparent 100%);
+}
+
+.divider-soft {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--veloura-border), transparent);
+}
+
+.mobile-contact-bar {
+  @apply fixed bottom-0 left-0 right-0 z-40 p-3 backdrop-blur-xl lg:hidden;
+  border-top: 1px solid var(--veloura-border);
+  background: rgba(18, 13, 16, 0.92);
+}
+
+.city-pill {
+  @apply inline-flex min-h-[44px] shrink-0 items-center rounded-full px-3.5 py-2 text-xs transition-all sm:text-sm;
+  border: 1px solid var(--veloura-border);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--veloura-text-soft);
+}
+
+.city-pill:hover {
+  border-color: rgba(216, 180, 106, 0.3);
+  color: var(--veloura-champagne);
+  background: rgba(216, 180, 106, 0.06);
+}
+
+.type-chip {
+  @apply inline-flex min-h-[40px] shrink-0 items-center rounded-full px-3.5 py-1.5 text-xs font-medium transition-all;
+  border: 1px solid var(--veloura-border);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--veloura-text-soft);
+}
+
+.type-chip:hover {
+  border-color: rgba(183, 110, 121, 0.35);
+  color: var(--veloura-text);
+}
+
+.type-chip-active {
+  border-color: rgba(216, 180, 106, 0.4);
+  background: rgba(216, 180, 106, 0.1);
+  color: var(--veloura-champagne);
+}
+
+.category-card {
+  @apply luxury-card flex min-h-[72px] items-center justify-center p-3 text-center text-sm font-medium transition-all;
+  color: var(--veloura-text-soft);
+}
+
+.category-card:hover {
+  border-color: rgba(183, 110, 121, 0.35);
+  color: var(--veloura-text);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+.filter-bar-sticky {
+  @apply sticky top-14 z-30 py-3 backdrop-blur-xl sm:top-[3.75rem];
+  border-bottom: 1px solid var(--veloura-border);
+  background: rgba(18, 13, 16, 0.88);
 }
 
 .no-scrollbar {
@@ -263,7 +274,13 @@ body {
   display: none;
 }
 
-.filter-bar-sticky {
-  @apply sticky top-14 z-30 border-b border-border/40 py-3 backdrop-blur-xl sm:top-16;
-  background: hsl(var(--achtergrond) / 0.88);
+.thumbnail-gradient {
+  @apply soft-gradient relative overflow-hidden;
+}
+
+.thumbnail-gradient::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(18, 13, 16, 0.75) 0%, transparent 55%);
 }

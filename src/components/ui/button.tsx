@@ -3,24 +3,24 @@ import { Slot } from "@radix-ui/react-slot";
 import { forwardRef, type ButtonHTMLAttributes } from "react";
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: "primary" | "secondary" | "ghost" | "danger" | "outline" | "bordeaux";
+  variant?: "primary" | "secondary" | "ghost" | "danger" | "outline" | "rose";
   size?: "sm" | "md" | "lg";
   asChild?: boolean;
 }
 
 const variantClasses: Record<NonNullable<ButtonProps["variant"]>, string> = {
   primary:
-    "gold-gradient text-primary-foreground border border-champagne/25 shadow-glow hover:brightness-110",
+    "bg-veloura-champagne/90 text-veloura-bg border border-veloura-champagne/30 hover:bg-veloura-champagne hover:shadow-glow",
+  rose:
+    "bg-veloura-rose/85 text-veloura-ivory border border-veloura-rose/30 hover:bg-veloura-rose",
   secondary:
-    "bg-secondary/90 text-secondary-foreground border border-border/70 hover:bg-secondary hover:border-champagne/20",
+    "bg-white/[0.06] text-veloura-ivory border border-white/10 hover:bg-white/[0.1] hover:border-white/15",
   ghost:
-    "bg-transparent text-muted-foreground hover:bg-muted/40 hover:text-foreground border border-transparent",
+    "bg-transparent text-veloura-soft border border-transparent hover:bg-white/[0.05] hover:text-veloura-ivory",
   danger:
-    "bg-destructive/90 text-destructive-foreground border border-destructive/30 hover:bg-destructive",
+    "bg-destructive/80 text-veloura-ivory border border-destructive/30 hover:bg-destructive",
   outline:
-    "border border-border/70 bg-transparent text-foreground hover:border-champagne/35 hover:bg-champagne/5",
-  bordeaux:
-    "bg-gradient-to-b from-bordeaux to-bordeaux/85 text-white border border-bordeaux-light/25 hover:brightness-110",
+    "border border-white/12 bg-transparent text-veloura-ivory hover:border-veloura-champagne/35 hover:bg-veloura-champagne/5",
 };
 
 const sizeClasses: Record<NonNullable<ButtonProps["size"]>, string> = {
@@ -50,8 +50,8 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         type={asChild ? undefined : type}
         disabled={disabled}
         className={cn(
-          "inline-flex items-center justify-center gap-2 rounded-xl font-semibold tracking-wide transition-all duration-200",
-          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+          "inline-flex items-center justify-center gap-2 rounded-full font-medium tracking-wide transition-all duration-200",
+          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-veloura-champagne/50 focus-visible:ring-offset-2 focus-visible:ring-offset-veloura-bg",
           "disabled:pointer-events-none disabled:opacity-50",
           "active:scale-[0.98]",
           variantClasses[variant],

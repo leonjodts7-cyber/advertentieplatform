@@ -3,64 +3,83 @@ import { cn } from "@/lib/utils";
 
 const PREVIEWS = [
   {
-    label: "Geverifieerd profiel",
+    label: "Geverifieerd",
     badge: "Geverifieerd",
-    badgeVariant: "green" as const,
-    gradient: "from-bordeaux via-bordeaux-light/80 to-champagne/40",
-    className: "left-0 top-0 z-10 w-[48%] -rotate-3",
+    variant: "champagne" as const,
+    gradient: "soft-gradient",
+    className: "left-0 top-0 z-10 w-[46%] -rotate-2 md:-rotate-3",
   },
   {
     label: "Beschikbaar vandaag",
     badge: "Live",
-    badgeVariant: "gold" as const,
-    gradient: "from-champagne/50 via-bordeaux/70 to-background",
-    className: "right-0 top-4 z-20 w-[52%] rotate-2",
+    variant: "rose" as const,
+    gradient: "rose-gradient",
+    className: "right-0 top-3 z-20 w-[50%] rotate-2",
   },
   {
     label: "Video mogelijk",
     badge: "Video",
-    badgeVariant: "bordeaux" as const,
-    gradient: "from-bordeaux-light/90 via-bordeaux/60 to-champagne/25",
-    className: "left-[8%] bottom-0 z-30 w-[46%] rotate-1",
+    variant: "muted" as const,
+    gradient: "soft-gradient",
+    className: "left-[6%] bottom-0 z-30 w-[44%] rotate-1 md:absolute",
   },
   {
     label: "Premium listing",
     badge: "Premium",
-    badgeVariant: "gold" as const,
-    gradient: "from-champagne/60 via-bordeaux/80 to-bordeaux-light/50",
-    className: "right-[6%] bottom-2 z-40 w-[50%] -rotate-2",
+    variant: "champagne" as const,
+    gradient: "rose-gradient",
+    className: "right-[4%] bottom-1 z-40 w-[48%] -rotate-1 md:absolute",
   },
 ];
 
 export function MarketplacePreview() {
   return (
-    <div className="relative mx-auto h-[280px] w-full max-w-md sm:h-[300px] lg:h-[320px]">
-      <div className="premium-glow absolute inset-4 rounded-3xl bg-champagne/5 blur-2xl" />
-      {PREVIEWS.map((preview) => (
-        <div
-          key={preview.label}
-          className={cn(
-            "premium-card absolute overflow-hidden shadow-premium transition-transform duration-300 hover:z-50 hover:scale-[1.02]",
-            preview.className
-          )}
-        >
+    <>
+      {/* Desktop: overlapping collage */}
+      <div className="relative mx-auto hidden h-[280px] max-w-sm md:block lg:h-[300px] lg:max-w-md">
+        <div className="absolute inset-6 rounded-3xl bg-veloura-rose/5 blur-3xl" />
+        {PREVIEWS.map((preview) => (
           <div
+            key={preview.label}
             className={cn(
-              "gradient-placeholder relative aspect-[3/4] bg-gradient-to-br",
-              preview.gradient
+              "luxury-card absolute overflow-hidden transition-transform duration-300 hover:z-50 hover:scale-[1.02]",
+              preview.className
             )}
           >
-            <div className="relative z-10 flex h-full flex-col justify-end p-3">
-              <Badge variant={preview.badgeVariant} className="mb-1.5 w-fit">
-                {preview.badge}
-              </Badge>
-              <p className="font-display text-xs font-medium text-foreground/95 sm:text-sm">
-                {preview.label}
-              </p>
+            <div
+              className={cn(
+                "thumbnail-gradient relative aspect-[3/4]",
+                preview.gradient
+              )}
+            >
+              <div className="relative z-10 flex h-full flex-col justify-end p-3">
+                <Badge variant={preview.variant} className="mb-1.5 w-fit">
+                  {preview.badge}
+                </Badge>
+                <p className="font-display text-xs text-veloura-ivory/95 sm:text-sm">
+                  {preview.label}
+                </p>
+              </div>
             </div>
           </div>
-        </div>
-      ))}
-    </div>
+        ))}
+      </div>
+
+      {/* Mobile: stacked grid */}
+      <div className="grid grid-cols-2 gap-2.5 md:hidden">
+        {PREVIEWS.map((preview) => (
+          <div key={preview.label} className="luxury-card overflow-hidden">
+            <div className={cn("thumbnail-gradient relative aspect-[4/5]", preview.gradient)}>
+              <div className="relative z-10 flex h-full flex-col justify-end p-3">
+                <Badge variant={preview.variant} className="mb-1 w-fit text-[0.6rem]">
+                  {preview.badge}
+                </Badge>
+                <p className="font-display text-xs text-veloura-ivory">{preview.label}</p>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </>
   );
 }

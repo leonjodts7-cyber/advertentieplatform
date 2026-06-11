@@ -36,21 +36,20 @@ export default function LoginPage() {
   return (
     <div className="flex min-h-[70vh] items-center py-10">
       <div className="container">
-        <div className="premium-card relative mx-auto max-w-md overflow-hidden p-6 sm:p-8">
-          <div className="gradient-placeholder-gold absolute inset-0 opacity-10" />
+        <div className="luxury-card relative mx-auto max-w-md overflow-hidden p-6 sm:p-8">
           <div className="relative">
-            <p className="text-[0.6875rem] uppercase tracking-wider text-champagne">
-              RedLight Account
+            <p className="text-[0.6875rem] uppercase tracking-wider text-veloura-soft">
+              Veloura Account
             </p>
-            <h1 className="font-display mt-2 text-2xl text-foreground">Inloggen</h1>
-            <p className="mt-2 text-sm text-muted-foreground">
+            <h1 className="font-display mt-2 text-2xl text-veloura-ivory">Inloggen</h1>
+            <p className="mt-2 text-sm text-veloura-soft">
               Ontvang een magic link om in te loggen op jouw dashboard.
             </p>
 
             {verzonden ? (
-              <div className="mt-5 rounded-xl border border-champagne/25 bg-champagne/5 p-4 text-sm">
+              <div className="mt-5 rounded-xl border border-veloura-champagne/20 bg-veloura-champagne/5 p-4 text-sm text-veloura-ivory">
                 Link verstuurd naar{" "}
-                <strong className="text-champagne">{email.trim()}</strong>
+                <strong className="text-veloura-champagne">{email.trim()}</strong>
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="mt-5 space-y-4">
@@ -78,9 +77,9 @@ export default function LoginPage() {
               </form>
             )}
 
-            <p className="mt-5 text-center text-sm text-muted-foreground">
-              <Link href="/" className="text-champagne hover:text-champagne/80">
-                ← Terug naar RedLight
+            <p className="mt-5 text-center text-sm text-veloura-soft">
+              <Link href="/" className="text-veloura-champagne hover:underline">
+                ← Terug naar Veloura
               </Link>
             </p>
           </div>
