@@ -2,46 +2,36 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { CompanionAvatar } from "@/components/ai/companion-avatar";
 import { Button } from "@/components/ui/button";
-import type { AiBericht } from "@/lib/ai-types";
+import type { AiCompanion } from "@/lib/ai-companions";
 import { cn } from "@/lib/utils";
-import { Send } from "lucide-react";
+import { Coins, Send } from "lucide-react";
 
 interface ChatBericht {
-  id?: string;
-  rol: "user" | "assistant";
+  id: string;
+  rol: "user" | "assistant" | "system";
   inhoud: string;
-  credits_gebruikt?: number;
-  aangemaakt_op?: string;
 }
 
 interface AiChatInterfaceProps {
-  personageSlug: string;
-  personageNaam: string;
-  initialBerichten: AiBericht[];
-  initialSaldo: number;
-  creditsPerBericht: number;
+  companion: AiCompanion;
+  /** UI-preview: geen API/credits backend */
+  previewMode?: boolean;
 }
 
 export function AiChatInterface({
-  personageSlug,
-  personageNaam,
-  initialBerichten,
-  initialSaldo,
-  creditsPerBericht,
+  companion,
+  previewMode = true,
 }: AiChatInterfaceProps) {
-  const [berichten, setBerichten] = useState<ChatBericht[]>(
-    initialBerichten.map((b) => ({
-      id: b.id,
-      rol: b.rol,
-      inhoud: b.inhoud,
-      credits_gebruikt: b.credits_gebruikt,
-      aangemaakt_op: b.aangemaakt_op,
-    }))
-  );
+  const [berichten, setBerichten] = useState<ChatBericht[]>([
+    {
+      id: "intro",
+      rol: "assistant",
+      inhoud: companion.voorbeeldBericht,
+    },
+  ]);
   const [input, setInput] = useState("");
-  const [saldo, setSaldo] = useState(initialSaldo);
-  const [laden, setLaden] = useState(false);
   const [fout, setFout] = useState<string | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -51,122 +41,104 @@ export function AiChatInterface({
       top: scrollRef.current.scrollHeight,
       behavior: "smooth",
     });
-  }, [berichten, laden]);
+  }, [berichten]);
 
-  async function handleVersturen(e: React.FormEvent) {
+  function handleVersturen(e: React.FormEvent) {
     e.preventDefault();
     const tekst = input.trim();
-    if (!tekst || laden) return;
+    if (!tekst) return;
 
-    if (saldo < creditsPerBericht) {
-      setFout("Onvoldoende credits. Koop credits om verder te chatten.");
+    setFout(null);
+    setInput("");
+
+    const userBericht: ChatBericht = {
+      id: `user-${Date.now()}`,
+      rol: "user",
+      inhoud: tekst,
+    };
+
+    if (previewMode) {
+      setBerichten((prev) => [
+        ...prev,
+        userBericht,
+        {
+          id: `system-${Date.now()}`,
+          rol: "system",
+          inhoud:
+            "Creditsysteem wordt gekoppeld. Binnenkort kun je dit gesprek starten.",
+        },
+      ]);
       return;
     }
 
-    setFout(null);
-    setLaden(true);
-    setInput("");
-
-    const optimistisch: ChatBericht = { rol: "user", inhoud: tekst };
-    setBerichten((prev) => [...prev, optimistisch]);
-
-    try {
-      const res = await fetch("/api/ai/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ personageSlug, bericht: tekst }),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        setBerichten((prev) => prev.slice(0, -1));
-        setInput(tekst);
-        if (res.status === 402) {
-          setSaldo(data.saldo ?? saldo);
-          setFout("Onvoldoende credits. Koop credits om verder te chatten.");
-        } else {
-          setFout(data.error ?? "Bericht versturen mislukt.");
-        }
-        return;
-      }
-
-      setSaldo(data.saldo);
-      setBerichten((prev) => {
-        const zonderOptimistisch = prev.slice(0, -1);
-        return [
-          ...zonderOptimistisch,
-          { rol: "user", inhoud: tekst, credits_gebruikt: creditsPerBericht },
-          {
-            id: data.assistantBericht?.id,
-            rol: "assistant",
-            inhoud: data.assistantBericht?.inhoud ?? "",
-          },
-        ];
-      });
-    } catch {
-      setBerichten((prev) => prev.slice(0, -1));
-      setInput(tekst);
-      setFout("Verbinding mislukt. Probeer opnieuw.");
-    } finally {
-      setLaden(false);
-      inputRef.current?.focus();
-    }
+    // Backend flow blijft beschikbaar voor latere activatie
+    setBerichten((prev) => [...prev, userBericht]);
   }
-
-  const onvoldoendeCredits = saldo < creditsPerBericht;
 
   return (
     <>
+      {/* Credits statusblok */}
+      <div className="border-b border-white/10 bg-[#100b10]/80 px-4 py-3 sm:px-6">
+        <div className="mx-auto flex max-w-2xl flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-center gap-2 text-sm">
+            <Coins className="h-4 w-4 text-champagne" />
+            <span className="text-muted-foreground">
+              Berichten kosten{" "}
+              <strong className="text-champagne-light">
+                {companion.kostenPerBericht} credits
+              </strong>
+            </span>
+          </div>
+          <Link
+            href="/credits"
+            className="text-sm font-medium text-champagne-light hover:underline"
+          >
+            Koop credits om te chatten →
+          </Link>
+        </div>
+      </div>
+
       <div
         ref={scrollRef}
         className="flex-1 overflow-y-auto px-4 py-4 sm:px-6"
       >
-        {berichten.length === 0 && (
-          <div className="mx-auto max-w-md py-8 text-center">
-            <p className="font-display text-lg text-foreground">
-              Start jouw gesprek met {personageNaam}
-            </p>
-            <p className="mt-2 text-sm text-muted-foreground">
-              Fictieve AI Companion · 21+ · {creditsPerBericht} credits per
-              bericht
-            </p>
-          </div>
-        )}
-
         <div className="mx-auto flex max-w-2xl flex-col gap-3">
-          {berichten.map((b, i) => (
+          {berichten.map((b) => (
             <div
-              key={b.id ?? i}
+              key={b.id}
               className={cn(
                 "flex",
-                b.rol === "user" ? "justify-end" : "justify-start"
+                b.rol === "user"
+                  ? "justify-end"
+                  : b.rol === "system"
+                    ? "justify-center"
+                    : "justify-start"
               )}
             >
+              {b.rol === "assistant" && (
+                <div className="mr-2 mt-1 shrink-0">
+                  <CompanionAvatar
+                    companion={companion}
+                    size="sm"
+                    showInitials
+                  />
+                </div>
+              )}
               <div
                 className={cn(
                   "max-w-[85%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed sm:max-w-[75%]",
-                  b.rol === "user"
-                    ? "rounded-br-md bg-wine/60 text-foreground"
-                    : "rounded-bl-md border border-white/10 bg-white/[0.06] text-foreground"
+                  b.rol === "user" &&
+                    "rounded-br-md bg-wine/50 text-foreground shadow-sm",
+                  b.rol === "assistant" &&
+                    "rounded-bl-md border border-white/10 bg-white/[0.06] text-foreground",
+                  b.rol === "system" &&
+                    "max-w-full rounded-xl border border-champagne/20 bg-champagne/5 px-4 py-2 text-center text-xs text-champagne-light"
                 )}
               >
                 {b.inhoud}
               </div>
             </div>
           ))}
-
-          {laden && (
-            <div className="flex justify-start">
-              <div className="rounded-2xl rounded-bl-md border border-white/10 bg-white/[0.06] px-4 py-3">
-                <span className="inline-flex gap-1">
-                  <span className="h-2 w-2 animate-pulse rounded-full bg-champagne/60" />
-                  <span className="h-2 w-2 animate-pulse rounded-full bg-champagne/40 [animation-delay:150ms]" />
-                  <span className="h-2 w-2 animate-pulse rounded-full bg-champagne/20 [animation-delay:300ms]" />
-                </span>
-              </div>
-            </div>
-          )}
         </div>
       </div>
 
@@ -175,26 +147,12 @@ export function AiChatInterface({
           {fout && (
             <div className="mb-2 rounded-lg border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-red-300">
               {fout}
-              {onvoldoendeCredits && (
-                <Link
-                  href="/credits"
-                  className="ml-2 font-medium text-champagne-light underline"
-                >
-                  Credits kopen
-                </Link>
-              )}
             </div>
           )}
 
-          <div className="mb-2 flex items-center justify-between text-xs text-muted-foreground">
-            <span>
-              {creditsPerBericht} credits per bericht · saldo:{" "}
-              <span className="text-champagne-light">{saldo}</span>
-            </span>
-            <Link href="/credits" className="text-champagne hover:underline">
-              + Credits
-            </Link>
-          </div>
+          <p className="mb-2 text-center text-[0.6875rem] uppercase tracking-wider text-muted-foreground">
+            Fictief AI · 21+ · {companion.kostenPerBericht} credits per bericht
+          </p>
 
           <form onSubmit={handleVersturen} className="flex gap-2">
             <textarea
@@ -207,20 +165,15 @@ export function AiChatInterface({
                   handleVersturen(e);
                 }
               }}
-              placeholder={
-                onvoldoendeCredits
-                  ? "Koop credits om te chatten..."
-                  : "Typ jouw bericht..."
-              }
-              disabled={laden || onvoldoendeCredits}
+              placeholder="Typ jouw bericht..."
               rows={1}
-              className="min-h-[44px] flex-1 resize-none rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-champagne/20 disabled:opacity-50"
+              className="min-h-[44px] flex-1 resize-none rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-champagne/20"
             />
             <Button
               type="submit"
-              disabled={laden || !input.trim() || onvoldoendeCredits}
+              disabled={!input.trim()}
               className="h-11 w-11 shrink-0 rounded-full p-0"
-              aria-label="Versturen"
+              aria-label="Verstuur"
             >
               <Send className="h-4 w-4" />
             </Button>

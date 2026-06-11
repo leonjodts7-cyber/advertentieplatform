@@ -389,6 +389,41 @@ body {
   }
 }
 
+.companion-avatar {
+  border-radius: 0;
+}
+
+.companion-avatar__grid {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+.companion-avatar[data-companion="valentina"] .companion-avatar__silhouette {
+  filter: drop-shadow(0 0 24px rgba(123, 46, 73, 0.4));
+}
+
+.companion-avatar[data-companion="mila"] .companion-avatar__silhouette {
+  filter: drop-shadow(0 0 24px rgba(202, 164, 93, 0.35));
+}
+
+.companion-avatar[data-companion="scarlett"] .companion-avatar__silhouette {
+  filter: drop-shadow(0 0 24px rgba(139, 48, 80, 0.45));
+}
+
+.companion-avatar[data-companion="sophia"] .companion-avatar__silhouette {
+  filter: drop-shadow(0 0 24px rgba(224, 189, 115, 0.3));
+}
+
+.companion-avatar[data-companion="victoria"] .companion-avatar__silhouette {
+  filter: drop-shadow(0 0 24px rgba(90, 58, 85, 0.45));
+}
+
+.companion-avatar[data-companion="isabella"] .companion-avatar__silhouette {
+  filter: drop-shadow(0 0 24px rgba(201, 149, 80, 0.4));
+}
+
 .animate-fade-in {
   animation: fadeIn 0.4s ease-out;
 }

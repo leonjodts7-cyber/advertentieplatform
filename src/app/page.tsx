@@ -4,6 +4,7 @@ import { CategoryGrid } from "@/components/category-grid";
 import { MarketplaceHeroSearch } from "@/components/marketplace-hero-search";
 import { MarketplacePreview } from "@/components/marketplace-preview";
 import { PopularSearches } from "@/components/popular-searches";
+import { AiLoungeHomeSection } from "@/components/ai/ai-lounge-home-section";
 import { Button } from "@/components/ui/button";
 import { haalEersteFotos } from "@/lib/advertentie-fotos";
 import type { Advertentie } from "@/lib/types";
@@ -139,6 +140,8 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
+
+      <AiLoungeHomeSection />
 
       <section className="section-spacing">
         <div className="container">

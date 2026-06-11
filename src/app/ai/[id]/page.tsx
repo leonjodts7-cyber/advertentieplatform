@@ -1,15 +1,10 @@
 import Link from "next/link";
-import { redirect, notFound } from "next/navigation";
+import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { AiChatInterface } from "@/components/ai/ai-chat-interface";
-import {
-  haalAiPersonage,
-  haalGesprekBerichten,
-  haalOfMaakGesprek,
-} from "@/lib/ai/queries";
-import { haalCreditSaldo, CREDITS_PER_BERICHT } from "@/lib/credits";
-import { createClient } from "@/lib/supabase/server";
-import { zorgProfielBestaat } from "@/lib/profiel";
+import { CompanionAvatar } from "@/components/ai/companion-avatar";
+import { Badge } from "@/components/ui/badge";
+import { getCompanionById } from "@/lib/ai-companions";
 
 interface AiChatPageProps {
   params: Promise<{ id: string }>;
@@ -19,69 +14,62 @@ export async function generateMetadata({
   params,
 }: AiChatPageProps): Promise<Metadata> {
   const { id } = await params;
-  const personage = await haalAiPersonage(id);
-  if (!personage) return { title: "AI Companion" };
+  const companion = getCompanionById(id);
+  if (!companion) return { title: "AI Companion" };
   return {
-    title: `Chat met ${personage.naam}`,
-    description: `Chat met ${personage.naam} (${personage.leeftijd}+) — fictieve AI Companion op Veloura.`,
+    title: `Chat met ${companion.naam}`,
+    description: `Chat met ${companion.naam} (${companion.leeftijd}) — fictieve AI Companion op Veloura.`,
   };
 }
 
 export default async function AiChatPage({ params }: AiChatPageProps) {
   const { id } = await params;
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    redirect(`/login?redirect=/ai/${id}`);
-  }
-
-  await zorgProfielBestaat(user.id, user.email ?? "");
-
-  const personage = await haalAiPersonage(id);
-  if (!personage) notFound();
-
-  const gesprek = await haalOfMaakGesprek(user.id, personage.id);
-  const berichten = gesprek ? await haalGesprekBerichten(gesprek.id) : [];
-  const saldo = await haalCreditSaldo(user.id);
+  const companion = getCompanionById(id);
+  if (!companion) notFound();
 
   return (
     <div className="flex min-h-[calc(100vh-3.5rem)] flex-col sm:min-h-[calc(100vh-3.75rem)]">
       <div className="glass-nav border-b border-white/10">
-        <div className="container flex h-14 items-center gap-3">
+        <div className="container flex items-center gap-3 py-3">
           <Link
             href="/ai-lounge"
             className="shrink-0 text-sm text-muted-foreground hover:text-champagne-light"
           >
             ← Lounge
           </Link>
+
+          <CompanionAvatar
+            companion={companion}
+            size="md"
+            showInitials
+            className="shrink-0 rounded-xl"
+          />
+
           <div className="min-w-0 flex-1">
-            <p className="truncate font-display text-base text-foreground">
-              {personage.naam}
-              <span className="ml-2 text-sm text-muted-foreground">
-                {personage.leeftijd} · fictief AI
-              </span>
-            </p>
-            <p className="truncate text-xs text-muted-foreground">
-              {personage.persoonlijkheid}
+            <div className="flex flex-wrap items-center gap-2">
+              <p className="font-display text-base text-foreground sm:text-lg">
+                {companion.naam}
+                <span className="ml-1.5 text-sm font-normal text-muted-foreground">
+                  {companion.leeftijd}
+                </span>
+              </p>
+              <Badge variant="green">
+                <span className="mr-1 inline-block h-1.5 w-1.5 animate-pulse rounded-full bg-success" />
+                Online
+              </Badge>
+            </div>
+            <p className="truncate text-xs text-champagne-light sm:text-sm">
+              {companion.type}
             </p>
           </div>
-          <div className="shrink-0 text-right">
-            <p className="text-xs text-muted-foreground">Credits</p>
-            <p className="font-display text-lg text-champagne-light">{saldo}</p>
-          </div>
+
+          <Badge variant="muted" className="hidden shrink-0 sm:inline-flex">
+            Fictief 21+
+          </Badge>
         </div>
       </div>
 
-      <AiChatInterface
-        personageSlug={personage.slug}
-        personageNaam={personage.naam}
-        initialBerichten={berichten}
-        initialSaldo={saldo}
-        creditsPerBericht={CREDITS_PER_BERICHT}
-      />
+      <AiChatInterface companion={companion} previewMode />
     </div>
   );
 }
