@@ -1,46 +1,55 @@
 import Link from "next/link";
+import { MobileNav } from "@/components/mobile-nav";
 import { UitloggenKnop } from "@/components/uitloggen-knop";
+import { Button } from "@/components/ui/button";
 import type { User } from "@supabase/supabase-js";
 
 interface HeaderProps {
   user: User | null;
 }
 
+const navLinks = [
+  { href: "/zoeken", label: "Advertenties" },
+  { href: "/dashboard", label: "Dashboard" },
+];
+
 export function Header({ user }: HeaderProps) {
   return (
-    <header className="sticky top-0 z-50 border-b border-border/60 bg-background/90 backdrop-blur-md">
-      <div className="container flex h-16 items-center justify-between gap-4">
+    <header className="sticky top-0 z-50 border-b border-border/40 bg-background/70 backdrop-blur-xl backdrop-saturate-150">
+      <div className="container flex h-14 items-center justify-between gap-3 sm:h-16">
         <Link
           href="/"
-          className="text-lg font-semibold tracking-tight text-foreground transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded-sm"
+          className="font-display text-lg font-medium tracking-tight text-foreground transition-colors hover:text-champagne focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm sm:text-xl"
         >
           Privé Ontvangst
         </Link>
 
-        <nav className="flex items-center gap-2 sm:gap-4">
-          <Link
-            href="/zoeken"
-            className="text-sm text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm px-1"
-          >
-            Zoeken
-          </Link>
-          <Link
-            href="/dashboard"
-            className="text-sm text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm px-1"
-          >
-            Dashboard
-          </Link>
+        <nav className="hidden items-center gap-1 md:flex">
+          {navLinks.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              className="rounded-lg px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-muted/40 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            >
+              {link.label}
+            </Link>
+          ))}
           {user ? (
             <UitloggenKnop />
           ) : (
             <Link
               href="/login"
-              className="rounded-lg border border-border bg-card px-3 py-1.5 text-sm font-medium text-foreground transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              className="rounded-lg px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-muted/40 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
               Login
             </Link>
           )}
+          <Button asChild size="sm" className="ml-2">
+            <Link href="/dashboard/advertenties/nieuw">Plaats advertentie</Link>
+          </Button>
         </nav>
+
+        <MobileNav user={user} />
       </div>
     </header>
   );

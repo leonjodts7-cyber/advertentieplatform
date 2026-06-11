@@ -3,26 +3,30 @@
 @tailwind utilities;
 
 :root {
-  --background: 240 10% 4%;
-  --foreground: 0 0% 98%;
-  --card: 240 8% 8%;
-  --card-foreground: 0 0% 98%;
-  --popover: 240 8% 8%;
-  --popover-foreground: 0 0% 98%;
-  --primary: 43 74% 55%;
-  --primary-foreground: 240 10% 4%;
-  --secondary: 240 6% 14%;
-  --secondary-foreground: 0 0% 98%;
-  --muted: 240 6% 14%;
-  --muted-foreground: 240 5% 65%;
-  --accent: 43 40% 20%;
-  --accent-foreground: 43 74% 70%;
+  --background: 350 20% 4%;
+  --foreground: 40 20% 96%;
+  --card: 350 15% 7%;
+  --card-foreground: 40 20% 96%;
+  --popover: 350 15% 7%;
+  --popover-foreground: 40 20% 96%;
+  --primary: 42 65% 58%;
+  --primary-foreground: 350 25% 6%;
+  --secondary: 350 12% 12%;
+  --secondary-foreground: 40 15% 90%;
+  --muted: 350 10% 14%;
+  --muted-foreground: 40 8% 58%;
+  --accent: 350 45% 28%;
+  --accent-foreground: 40 30% 92%;
+  --bordeaux: 350 55% 32%;
+  --bordeaux-light: 350 40% 42%;
+  --champagne: 42 65% 58%;
+  --champagne-muted: 42 30% 75%;
   --destructive: 0 62% 45%;
   --destructive-foreground: 0 0% 98%;
-  --border: 240 6% 18%;
-  --input: 240 6% 18%;
-  --ring: 43 74% 55%;
-  --radius: 0.75rem;
+  --border: 350 12% 16%;
+  --input: 350 12% 14%;
+  --ring: 42 65% 58%;
+  --radius: 0.875rem;
 }
 
 * {
@@ -31,14 +35,19 @@
 
 html {
   scroll-behavior: smooth;
+  overflow-x: hidden;
 }
 
 body {
   min-height: 100vh;
-  background:
-    radial-gradient(ellipse 80% 50% at 50% -20%, hsl(43 74% 55% / 0.08), transparent),
-    hsl(var(--background));
+  overflow-x: hidden;
+  background-color: hsl(var(--background));
+  background-image:
+    radial-gradient(ellipse 90% 60% at 50% -15%, hsl(42 65% 58% / 0.09), transparent 55%),
+    radial-gradient(ellipse 50% 40% at 100% 0%, hsl(350 55% 32% / 0.12), transparent 50%),
+    radial-gradient(ellipse 40% 35% at 0% 100%, hsl(350 45% 20% / 0.15), transparent 45%);
   color: hsl(var(--foreground));
+  font-family: var(--font-sans), system-ui, sans-serif;
   font-feature-settings: "rlig" 1, "calt" 1;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -46,7 +55,7 @@ body {
 
 .container {
   width: 100%;
-  max-width: 72rem;
+  max-width: 76rem;
   margin-left: auto;
   margin-right: auto;
   padding-left: 1rem;
@@ -60,34 +69,164 @@ body {
   }
 }
 
-.card-premium {
-  border-radius: var(--radius);
-  border: 1px solid hsl(var(--border));
-  background: linear-gradient(
-    145deg,
-    hsl(var(--card)) 0%,
-    hsl(240 8% 6%) 100%
-  );
-  box-shadow:
-    0 1px 0 hsl(0 0% 100% / 0.03) inset,
-    0 4px 24px hsl(0 0% 0% / 0.25);
+/* Typography */
+.font-display {
+  font-family: var(--font-display), Georgia, serif;
 }
 
 .section-title {
-  font-size: 1.5rem;
-  font-weight: 600;
-  letter-spacing: -0.025em;
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 1.625rem;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
   color: hsl(var(--foreground));
 }
 
 @media (min-width: 640px) {
   .section-title {
-    font-size: 1.875rem;
+    font-size: 2.125rem;
   }
 }
 
+.section-subtitle {
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: hsl(var(--muted-foreground));
+}
+
+/* Premium cards */
+.card-premium {
+  border-radius: var(--radius);
+  border: 1px solid hsl(var(--border) / 0.8);
+  background: linear-gradient(
+    155deg,
+    hsl(var(--card) / 0.95) 0%,
+    hsl(350 18% 5% / 0.9) 100%
+  );
+  backdrop-filter: blur(12px);
+  box-shadow:
+    0 1px 0 hsl(42 65% 58% / 0.06) inset,
+    0 0 0 1px hsl(0 0% 100% / 0.02) inset,
+    0 8px 32px hsl(0 0% 0% / 0.35);
+}
+
+.card-glass {
+  border-radius: var(--radius);
+  border: 1px solid hsl(var(--border) / 0.5);
+  background: hsl(var(--card) / 0.6);
+  backdrop-filter: blur(20px) saturate(1.2);
+  box-shadow: 0 4px 24px hsl(0 0% 0% / 0.2);
+}
+
+/* Gradient placeholders */
+.gradient-placeholder {
+  background: linear-gradient(
+    135deg,
+    hsl(350 45% 22%) 0%,
+    hsl(350 55% 32%) 40%,
+    hsl(42 40% 35%) 100%
+  );
+  position: relative;
+  overflow: hidden;
+}
+
+.gradient-placeholder::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    hsl(350 20% 4% / 0.7) 0%,
+    transparent 50%
+  );
+}
+
+.gradient-placeholder-gold {
+  background: linear-gradient(
+    145deg,
+    hsl(350 50% 28%) 0%,
+    hsl(42 45% 38%) 50%,
+    hsl(350 40% 22%) 100%
+  );
+}
+
+/* Hero glow */
+.hero-glow {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  pointer-events: none;
+}
+
+/* Form labels */
+.form-label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: hsl(var(--champagne-muted));
+  text-transform: uppercase;
+}
+
+/* Prose */
 .prose-advertentie {
   color: hsl(var(--muted-foreground));
-  line-height: 1.75;
+  line-height: 1.8;
   white-space: pre-wrap;
+  font-size: 0.9375rem;
+}
+
+/* Stat cards */
+.stat-card {
+  @apply card-premium relative overflow-hidden p-6;
+}
+
+.stat-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    hsl(var(--champagne) / 0.4),
+    transparent
+  );
+}
+
+/* Mobile sticky contact */
+.mobile-contact-bar {
+  @apply fixed bottom-0 left-0 right-0 z-40 border-t border-border/60 bg-card/95 p-4 backdrop-blur-xl lg:hidden;
+}
+
+/* Quick city pills */
+.city-pill {
+  @apply inline-flex min-h-[44px] items-center rounded-full border border-border/60 bg-card/50 px-4 py-2 text-sm text-muted-foreground transition-all;
+  @apply hover:border-primary/40 hover:bg-primary/5 hover:text-primary;
+  @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring;
+}
+
+/* Divider with gold accent */
+.divider-gold {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    hsl(var(--champagne) / 0.3),
+    transparent
+  );
+}
+
+/* Page header band */
+.page-header-band {
+  @apply relative overflow-hidden border-b border-border/40 py-10 sm:py-14;
+  background: linear-gradient(
+    180deg,
+    hsl(350 45% 28% / 0.08) 0%,
+    transparent 100%
+  );
 }

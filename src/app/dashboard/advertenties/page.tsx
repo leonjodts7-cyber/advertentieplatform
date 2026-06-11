@@ -29,48 +29,59 @@ export default async function DashboardAdvertentiesPage() {
   const advertenties = (advertentiesRaw ?? []) as Advertentie[];
 
   return (
-    <div className="container py-8 sm:py-12">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
+    <div>
+      <div className="page-header-band">
+        <div className="container">
           <Link
             href="/dashboard"
-            className="text-sm text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm"
+            className="text-sm text-muted-foreground transition-colors hover:text-champagne"
           >
             ← Dashboard
           </Link>
-          <h1 className="section-title mt-2">Mijn advertenties</h1>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Beheer al jouw concepten, advertenties in beoordeling en actieve
-            listings.
+          <h1 className="section-title mt-3">Mijn advertenties</h1>
+          <p className="section-subtitle mt-2">
+            Beheer concepten, advertenties in beoordeling en actieve listings.
           </p>
         </div>
-        <Button asChild>
-          <Link href="/dashboard/advertenties/nieuw">Nieuwe advertentie</Link>
-        </Button>
       </div>
 
-      {advertenties.length > 0 ? (
-        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {advertenties.map((advertentie) => (
-            <AdvertentieCard
-              key={advertentie.id}
-              advertentie={advertentie}
-              dashboard
-            />
-          ))}
-        </div>
-      ) : (
-        <div className="card-premium mt-8 p-8 text-center">
-          <p className="text-muted-foreground">
-            Je hebt nog geen advertenties. Maak je eerste advertentie aan.
-          </p>
-          <Button asChild className="mt-4">
-            <Link href="/dashboard/advertenties/nieuw">
-              Nieuwe advertentie
-            </Link>
+      <div className="container py-8 sm:py-10">
+        <div className="mb-8 flex justify-end">
+          <Button asChild>
+            <Link href="/dashboard/advertenties/nieuw">+ Nieuwe advertentie</Link>
           </Button>
         </div>
-      )}
+
+        {advertenties.length > 0 ? (
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {advertenties.map((advertentie) => (
+              <AdvertentieCard
+                key={advertentie.id}
+                advertentie={advertentie}
+                dashboard
+              />
+            ))}
+          </div>
+        ) : (
+          <div className="card-premium relative overflow-hidden p-10 text-center sm:p-14">
+            <div className="gradient-placeholder-gold absolute inset-0 opacity-15" />
+            <div className="relative">
+              <p className="font-display text-xl text-foreground">
+                Nog geen advertenties
+              </p>
+              <p className="mx-auto mt-2 max-w-sm text-sm text-muted-foreground">
+                Maak je eerste premium profiel aan en bereik bezoekers in jouw
+                regio.
+              </p>
+              <Button asChild className="mt-6">
+                <Link href="/dashboard/advertenties/nieuw">
+                  Nieuwe advertentie
+                </Link>
+              </Button>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

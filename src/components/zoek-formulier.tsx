@@ -8,11 +8,13 @@ import { FormEvent, useState } from "react";
 interface ZoekFormulierProps {
   standaardStad?: string;
   compact?: boolean;
+  inputId?: string;
 }
 
 export function ZoekFormulier({
   standaardStad = "",
   compact = false,
+  inputId = "stad",
 }: ZoekFormulierProps) {
   const router = useRouter();
   const [stad, setStad] = useState(standaardStad);
@@ -31,28 +33,25 @@ export function ZoekFormulier({
       onSubmit={handleSubmit}
       className={
         compact
-          ? "flex flex-col gap-3 sm:flex-row sm:items-center"
+          ? "flex flex-col gap-3 sm:flex-row sm:items-stretch"
           : "flex flex-col gap-4 sm:flex-row sm:items-end"
       }
     >
       <div className={compact ? "flex-1" : "w-full sm:flex-1"}>
         {!compact && (
-          <label
-            htmlFor="stad"
-            className="mb-2 block text-sm font-medium text-foreground"
-          >
+          <label htmlFor={inputId} className="form-label">
             Stad
           </label>
         )}
         <Input
-          id="stad"
+          id={inputId}
           name="stad"
-          placeholder="Bijv. Amsterdam"
+          placeholder="Bijv. Antwerpen"
           value={stad}
           onChange={(e) => setStad(e.target.value)}
         />
       </div>
-      <Button type="submit" size={compact ? "md" : "lg"} className="shrink-0">
+      <Button type="submit" size={compact ? "md" : "lg"} className="shrink-0 sm:min-w-[120px]">
         Zoeken
       </Button>
     </form>

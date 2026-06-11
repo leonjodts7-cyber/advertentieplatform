@@ -9,6 +9,10 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ["var(--font-sans)", "system-ui", "sans-serif"],
+        display: ["var(--font-display)", "Georgia", "serif"],
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -35,6 +39,14 @@ const config: Config = {
           DEFAULT: "hsl(var(--accent))",
           foreground: "hsl(var(--accent-foreground))",
         },
+        bordeaux: {
+          DEFAULT: "hsl(var(--bordeaux))",
+          light: "hsl(var(--bordeaux-light))",
+        },
+        champagne: {
+          DEFAULT: "hsl(var(--champagne))",
+          muted: "hsl(var(--champagne-muted))",
+        },
         popover: {
           DEFAULT: "hsl(var(--popover))",
           foreground: "hsl(var(--popover-foreground))",
@@ -48,6 +60,25 @@ const config: Config = {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
+      },
+      boxShadow: {
+        premium:
+          "0 1px 0 hsl(42 65% 58% / 0.08) inset, 0 8px 32px hsl(0 0% 0% / 0.4)",
+        glow: "0 0 40px hsl(42 65% 58% / 0.15)",
+      },
+      animation: {
+        "fade-in": "fadeIn 0.5s ease-out",
+        shimmer: "shimmer 2.5s infinite",
+      },
+      keyframes: {
+        fadeIn: {
+          from: { opacity: "0", transform: "translateY(8px)" },
+          to: { opacity: "1", transform: "translateY(0)" },
+        },
+        shimmer: {
+          "0%, 100%": { opacity: "0.4" },
+          "50%": { opacity: "0.8" },
+        },
       },
     },
   },

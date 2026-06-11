@@ -72,7 +72,7 @@ export function NieuweAdvertentieForm({ aanbiederId }: NieuweAdvertentieFormProp
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
       <div>
-        <label htmlFor="titel" className="mb-2 block text-sm font-medium">
+        <label htmlFor="titel" className="form-label">
           Titel
         </label>
         <Input
@@ -85,7 +85,7 @@ export function NieuweAdvertentieForm({ aanbiederId }: NieuweAdvertentieFormProp
       </div>
 
       <div>
-        <label htmlFor="beschrijving" className="mb-2 block text-sm font-medium">
+        <label htmlFor="beschrijving" className="form-label">
           Beschrijving
         </label>
         <Textarea
@@ -99,7 +99,7 @@ export function NieuweAdvertentieForm({ aanbiederId }: NieuweAdvertentieFormProp
 
       <div className="grid gap-5 sm:grid-cols-2">
         <div>
-          <label htmlFor="stad" className="mb-2 block text-sm font-medium">
+          <label htmlFor="stad" className="form-label">
             Stad
           </label>
           <Input
@@ -107,11 +107,11 @@ export function NieuweAdvertentieForm({ aanbiederId }: NieuweAdvertentieFormProp
             required
             value={stad}
             onChange={(e) => setStad(e.target.value)}
-            placeholder="Bijv. Rotterdam"
+            placeholder="Bijv. Antwerpen"
           />
         </div>
         <div>
-          <label htmlFor="leeftijd" className="mb-2 block text-sm font-medium">
+          <label htmlFor="leeftijd" className="form-label">
             Leeftijd (min. 18)
           </label>
           <Input
@@ -127,7 +127,7 @@ export function NieuweAdvertentieForm({ aanbiederId }: NieuweAdvertentieFormProp
 
       <div className="grid gap-5 sm:grid-cols-2">
         <div>
-          <label htmlFor="prijs_vanaf" className="mb-2 block text-sm font-medium">
+          <label htmlFor="prijs_vanaf" className="form-label">
             Prijs vanaf (€)
           </label>
           <Input
@@ -141,7 +141,7 @@ export function NieuweAdvertentieForm({ aanbiederId }: NieuweAdvertentieFormProp
           />
         </div>
         <div>
-          <label htmlFor="telefoon" className="mb-2 block text-sm font-medium">
+          <label htmlFor="telefoon" className="form-label">
             Telefoon (optioneel)
           </label>
           <Input
