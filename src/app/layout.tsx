@@ -19,11 +19,11 @@ const sans = DM_Sans({
 
 export const metadata: Metadata = {
   title: {
-    default: "Privé Ontvangst — Premium advertentieplatform",
-    template: "%s | Privé Ontvangst",
+    default: "RedLight — Premium Adult Marketplace",
+    template: "%s | RedLight",
   },
   description:
-    "Premium advertentieplatform voor zelfstandige aanbieders. Vind en plaats advertenties — alleen 18+.",
+    "Premium adult marketplace voor zelfstandige aanbieders. Zoek discreet in jouw regio — alleen 18+.",
   metadataBase: new URL(
     process.env.NEXT_PUBLIC_SITE_URL ??
       process.env.NEXT_PUBLIC_APP_URL ??
@@ -43,7 +43,7 @@ export default async function RootLayout({
 
   return (
     <html lang="nl" className={`${display.variable} ${sans.variable}`}>
-      <body className="flex min-h-screen flex-col antialiased">
+      <body className="premium-bg subtle-grid flex min-h-screen flex-col antialiased">
         <Header user={user} />
         <main className="flex-1">{children}</main>
         <Footer />

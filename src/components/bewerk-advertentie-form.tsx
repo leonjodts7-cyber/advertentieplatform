@@ -123,7 +123,7 @@ export function BewerkAdvertentieForm({ advertentie }: BewerkAdvertentieFormProp
     <div className="space-y-6">
       <div className="flex items-center gap-2">
         <span className="text-sm text-muted-foreground">Status:</span>
-        <Badge variant={status === "actief" ? "success" : "warning"}>
+        <Badge variant={status === "actief" ? "green" : "review"}>
           {statusLabel(status)}
         </Badge>
       </div>
@@ -254,7 +254,7 @@ export function BewerkAdvertentieForm({ advertentie }: BewerkAdvertentieFormProp
         </p>
         <Button
           type="button"
-          variant="destructive"
+          variant="danger"
           className="mt-3"
           disabled={laden}
           onClick={handleVerwijderen}

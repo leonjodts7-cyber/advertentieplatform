@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import type { Metadata } from "next";
 import { AdvertentieCard } from "@/components/advertentie-card";
 import { Button } from "@/components/ui/button";
+import { haalEersteFotos } from "@/lib/advertentie-fotos";
 import type { Advertentie } from "@/lib/types";
 import { createClient } from "@/lib/supabase/server";
 
@@ -16,9 +17,7 @@ export default async function DashboardAdvertentiesPage() {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user) {
-    redirect("/login");
-  }
+  if (!user) redirect("/login");
 
   const { data: advertentiesRaw } = await supabase
     .from("advertenties")
@@ -27,6 +26,10 @@ export default async function DashboardAdvertentiesPage() {
     .order("aangemaakt_op", { ascending: false });
 
   const advertenties = (advertentiesRaw ?? []) as Advertentie[];
+  const fotos = await haalEersteFotos(
+    supabase,
+    advertenties.map((a) => a.id)
+  );
 
   return (
     <div>
@@ -34,51 +37,46 @@ export default async function DashboardAdvertentiesPage() {
         <div className="container">
           <Link
             href="/dashboard"
-            className="text-sm text-muted-foreground transition-colors hover:text-champagne"
+            className="text-sm text-muted-foreground hover:text-champagne"
           >
             ← Dashboard
           </Link>
-          <h1 className="section-title mt-3">Mijn advertenties</h1>
-          <p className="section-subtitle mt-2">
-            Beheer concepten, advertenties in beoordeling en actieve listings.
+          <h1 className="section-title mt-2">Mijn advertenties</h1>
+          <p className="section-subtitle mt-1">
+            Concept · In beoordeling · Actief
           </p>
         </div>
       </div>
 
-      <div className="container py-8 sm:py-10">
-        <div className="mb-8 flex justify-end">
+      <div className="container py-6 sm:py-8">
+        <div className="mb-5 flex justify-end">
           <Button asChild>
             <Link href="/dashboard/advertenties/nieuw">+ Nieuwe advertentie</Link>
           </Button>
         </div>
 
         {advertenties.length > 0 ? (
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
             {advertenties.map((advertentie) => (
               <AdvertentieCard
                 key={advertentie.id}
                 advertentie={advertentie}
                 dashboard
+                afbeeldingUrl={fotos.get(advertentie.id)}
               />
             ))}
           </div>
         ) : (
-          <div className="card-premium relative overflow-hidden p-10 text-center sm:p-14">
-            <div className="gradient-placeholder-gold absolute inset-0 opacity-15" />
-            <div className="relative">
-              <p className="font-display text-xl text-foreground">
-                Nog geen advertenties
-              </p>
-              <p className="mx-auto mt-2 max-w-sm text-sm text-muted-foreground">
-                Maak je eerste premium profiel aan en bereik bezoekers in jouw
-                regio.
-              </p>
-              <Button asChild className="mt-6">
-                <Link href="/dashboard/advertenties/nieuw">
-                  Nieuwe advertentie
-                </Link>
-              </Button>
-            </div>
+          <div className="premium-card p-8 text-center sm:p-12">
+            <p className="font-display text-xl text-foreground">
+              Nog geen advertenties
+            </p>
+            <p className="mt-2 text-sm text-muted-foreground">
+              Start met je eerste premium listing op RedLight.
+            </p>
+            <Button asChild className="mt-5">
+              <Link href="/dashboard/advertenties/nieuw">Nieuwe advertentie</Link>
+            </Button>
           </div>
         )}
       </div>

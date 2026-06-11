@@ -18,52 +18,42 @@ export default function LoginPage() {
     setFout(null);
 
     const supabase = createClient();
-    const redirectTo = `${window.location.origin}/auth/callback`;
-
     const { error } = await supabase.auth.signInWithOtp({
       email: email.trim(),
       options: {
-        emailRedirectTo: redirectTo,
+        emailRedirectTo: `${window.location.origin}/auth/callback`,
       },
     });
 
     setLaden(false);
-
     if (error) {
       setFout(error.message);
       return;
     }
-
     setVerzonden(true);
   }
 
   return (
-    <div className="flex min-h-[70vh] items-center py-12 sm:py-16">
+    <div className="flex min-h-[70vh] items-center py-10">
       <div className="container">
-        <div className="card-premium relative mx-auto max-w-md overflow-hidden p-6 sm:p-8">
+        <div className="premium-card relative mx-auto max-w-md overflow-hidden p-6 sm:p-8">
           <div className="gradient-placeholder-gold absolute inset-0 opacity-10" />
           <div className="relative">
-            <p className="text-xs font-medium uppercase tracking-[0.2em] text-champagne">
-              Account
+            <p className="text-[0.6875rem] uppercase tracking-wider text-champagne">
+              RedLight Account
             </p>
-            <h1 className="font-display mt-2 text-2xl font-medium text-foreground sm:text-3xl">
-              Inloggen
-            </h1>
+            <h1 className="font-display mt-2 text-2xl text-foreground">Inloggen</h1>
             <p className="mt-2 text-sm text-muted-foreground">
-              Ontvang een magic link per e-mail om in te loggen op jouw
-              dashboard.
+              Ontvang een magic link om in te loggen op jouw dashboard.
             </p>
 
             {verzonden ? (
-              <div className="mt-6 rounded-xl border border-champagne/25 bg-champagne/5 p-4">
-                <p className="text-sm text-foreground">
-                  We hebben een inloglink gestuurd naar{" "}
-                  <strong className="text-champagne">{email.trim()}</strong>.
-                  Open de link in je e-mail om verder te gaan.
-                </p>
+              <div className="mt-5 rounded-xl border border-champagne/25 bg-champagne/5 p-4 text-sm">
+                Link verstuurd naar{" "}
+                <strong className="text-champagne">{email.trim()}</strong>
               </div>
             ) : (
-              <form onSubmit={handleSubmit} className="mt-6 space-y-5">
+              <form onSubmit={handleSubmit} className="mt-5 space-y-4">
                 <div>
                   <label htmlFor="email" className="form-label">
                     E-mailadres
@@ -75,29 +65,22 @@ export default function LoginPage() {
                     placeholder="jij@voorbeeld.be"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    autoComplete="email"
                   />
                 </div>
-
                 {fout && (
                   <p className="text-sm text-destructive" role="alert">
                     {fout}
                   </p>
                 )}
-
                 <Button type="submit" className="w-full" size="lg" disabled={laden}>
                   {laden ? "Versturen..." : "Stuur magic link"}
                 </Button>
               </form>
             )}
 
-            <p className="mt-6 text-center text-sm text-muted-foreground">
-              Nog geen account?{" "}
-              <Link
-                href="/login"
-                className="text-champagne transition-colors hover:text-champagne/80"
-              >
-                Registreren via magic link
+            <p className="mt-5 text-center text-sm text-muted-foreground">
+              <Link href="/" className="text-champagne hover:text-champagne/80">
+                ← Terug naar RedLight
               </Link>
             </p>
           </div>

@@ -1,9 +1,10 @@
 import Link from "next/link";
 import { AdvertentieCard } from "@/components/advertentie-card";
-import { HeroPreviewCards } from "@/components/hero-preview-cards";
-import { QuickCityLinks } from "@/components/quick-city-links";
-import { ZoekFormulier } from "@/components/zoek-formulier";
+import { CategoryGrid } from "@/components/category-grid";
+import { MarketplaceHeroSearch } from "@/components/marketplace-hero-search";
+import { MarketplacePreview } from "@/components/marketplace-preview";
 import { Button } from "@/components/ui/button";
+import { haalEersteFotos } from "@/lib/advertentie-fotos";
 import type { Advertentie } from "@/lib/types";
 import { createClient } from "@/lib/supabase/server";
 
@@ -18,115 +19,124 @@ export default async function HomePage() {
     .limit(6);
 
   const advertenties = (advertentiesRaw ?? []) as Advertentie[];
+  const fotos = await haalEersteFotos(
+    supabase,
+    advertenties.map((a) => a.id)
+  );
 
   const voordelen = [
     {
-      titel: "Mobiel eerst",
-      beschrijving:
-        "Jouw profiel ziet er op elke smartphone perfect uit — waar je klanten je ook vinden.",
-      icon: "◆",
+      titel: "Sneller gevonden",
+      tekst: "Jouw profiel verschijnt direct in relevante zoekresultaten per stad en regio.",
     },
     {
-      titel: "Geverifieerde profielen",
-      beschrijving:
-        "Vertrouwen begint bij authenticiteit. Geverifieerde aanbieders vallen positief op.",
-      icon: "◇",
+      titel: "Mobiel-first profielpagina's",
+      tekst: "Bezoekers browsen op hun telefoon — jouw listing is daarop geoptimaliseerd.",
     },
     {
-      titel: "Slim zoeken",
-      beschrijving:
-        "Bezoekers vinden jou snel op stad en regio — precies wanneer ze zoeken.",
-      icon: "◈",
+      titel: "Slimme zoekfilters",
+      tekst: "Categorieën, stad en beschikbaarheid helpen de juiste klant jou te vinden.",
     },
     {
       titel: "Professioneel dashboard",
-      beschrijving:
-        "Beheer concepten, vraag publicatie aan en houd alles overzichtelijk bij.",
-      icon: "◎",
+      tekst: "Beheer concepten, vraag publicatie aan en houd je profiel commercieel sterk.",
     },
   ];
 
   return (
     <div>
-      {/* Hero */}
-      <section className="relative overflow-hidden">
-        <div className="hero-glow -left-20 top-0 h-64 w-64 bg-bordeaux/20" />
-        <div className="hero-glow -right-20 top-20 h-48 w-48 bg-champagne/10" />
-
-        <div className="container relative py-10 sm:py-16 lg:py-20">
-          <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
-            <div className="animate-fade-in">
-              <p className="mb-3 text-xs font-medium uppercase tracking-[0.2em] text-champagne">
-                Alleen 18+ · Discreet & professioneel
+      {/* Hero — compact op desktop */}
+      <section className="relative overflow-hidden border-b border-border/20">
+        <div className="container relative py-8 sm:py-10 lg:py-12">
+          <div className="grid items-start gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:gap-10">
+            <div>
+              <p className="text-[0.6875rem] font-medium uppercase tracking-[0.12em] text-champagne/90 sm:text-xs">
+                Alleen 18+ · Discreet · Geverifieerde profielen · Mobiel eerst
               </p>
-              <h1 className="font-display text-3xl font-medium leading-tight tracking-tight text-foreground sm:text-4xl lg:text-5xl">
-                Premium advertenties,{" "}
-                <span className="text-champagne">lokaal vindbaar</span>
+
+              <h1 className="font-display mt-3 text-[1.75rem] font-medium leading-[1.12] tracking-tight text-foreground sm:text-4xl lg:text-[2.5rem]">
+                Ontdek{" "}
+                <span className="text-champagne">premium profielen</span> in
+                jouw regio
               </h1>
-              <p className="mt-4 max-w-lg text-base leading-relaxed text-muted-foreground sm:text-lg">
-                Ontdek zelfstandige aanbieders in jouw regio of plaats jouw
-                profiel professioneel online.
+
+              <p className="mt-3 max-w-xl text-sm leading-relaxed text-muted-foreground sm:text-base">
+                Zoek discreet naar zelfstandige aanbieders, escort, privé
+                ontvangst en online diensten.
               </p>
 
-              <div className="card-premium mt-8 p-5 sm:p-6">
-                <ZoekFormulier inputId="hero-stad" />
-                <p className="mt-4 text-xs text-muted-foreground">
-                  Populaire steden:
-                </p>
-                <QuickCityLinks className="mt-2" size="sm" />
-              </div>
-
-              <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+              <div className="mt-5 flex flex-col gap-2.5 sm:flex-row sm:gap-3">
                 <Button asChild size="lg" className="w-full sm:w-auto">
                   <Link href="/zoeken">Bekijk advertenties</Link>
                 </Button>
                 <Button
                   asChild
-                  variant="outline"
+                  variant="bordeaux"
                   size="lg"
                   className="w-full sm:w-auto"
                 >
                   <Link href="/dashboard/advertenties/nieuw">
-                    Plaats advertentie
+                    Plaats jouw advertentie
                   </Link>
                 </Button>
               </div>
+
+              <div className="premium-card mt-6 p-4 sm:p-5">
+                <MarketplaceHeroSearch />
+              </div>
             </div>
 
-            <div className="hidden sm:block lg:pl-4">
-              <HeroPreviewCards />
+            <div className="hidden md:block">
+              <MarketplacePreview />
             </div>
           </div>
 
-          <div className="mt-8 sm:hidden">
-            <HeroPreviewCards />
+          <div className="mt-6 md:hidden">
+            <MarketplacePreview />
           </div>
         </div>
       </section>
 
-      {/* Waarom */}
-      <section className="border-t border-border/40 py-12 sm:py-16">
+      {/* Categorieën */}
+      <section className="section-spacing border-b border-border/20">
         <div className="container">
-          <div className="mx-auto max-w-2xl text-center">
-            <h2 className="section-title">
-              Waarom kiezen voor Privé Ontvangst?
-            </h2>
-            <p className="section-subtitle mt-3">
-              Een stijlvol platform dat jouw professionaliteit weerspiegelt.
-            </p>
+          <div className="mb-5 flex items-end justify-between gap-3">
+            <div>
+              <h2 className="section-title">Populaire categorieën</h2>
+              <p className="section-subtitle mt-1">
+                Kies een categorie en ontdek profielen
+              </p>
+            </div>
+            <Link
+              href="/zoeken"
+              className="shrink-0 text-xs text-champagne hover:text-champagne/80 sm:text-sm"
+            >
+              Alles →
+            </Link>
           </div>
-          <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {voordelen.map((voordeel) => (
+          <CategoryGrid />
+        </div>
+      </section>
+
+      {/* Waarom RedLight */}
+      <section className="section-spacing border-b border-border/20">
+        <div className="container">
+          <h2 className="section-title">Waarom RedLight beter werkt</h2>
+          <p className="section-subtitle mt-1 max-w-lg">
+            Gebouwd voor aanbieders die serieus willen converteren — niet voor
+            lege pagina&apos;s.
+          </p>
+          <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            {voordelen.map((v) => (
               <div
-                key={voordeel.titel}
-                className="card-premium group p-6 transition-colors hover:border-champagne/20"
+                key={v.titel}
+                className="premium-card p-4 transition-colors hover:border-champagne/20 sm:p-5"
               >
-                <span className="text-lg text-champagne/60">{voordeel.icon}</span>
-                <h3 className="mt-3 font-display text-lg font-medium text-foreground">
-                  {voordeel.titel}
+                <h3 className="font-display text-base font-medium text-foreground sm:text-lg">
+                  {v.titel}
                 </h3>
                 <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                  {voordeel.beschrijving}
+                  {v.tekst}
                 </p>
               </div>
             ))}
@@ -135,57 +145,52 @@ export default async function HomePage() {
       </section>
 
       {/* Nieuwste advertenties */}
-      <section className="border-t border-border/40 py-12 sm:py-16">
+      <section className="section-spacing">
         <div className="container">
-          <div className="flex items-end justify-between gap-4">
+          <div className="flex items-end justify-between gap-3">
             <div>
               <h2 className="section-title">Nieuwste advertenties</h2>
-              <p className="section-subtitle mt-1">
-                Actieve profielen in jouw regio
-              </p>
+              <p className="section-subtitle mt-1">Actief op het platform</p>
             </div>
             <Link
               href="/zoeken"
-              className="hidden shrink-0 text-sm text-champagne transition-colors hover:text-champagne/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm sm:inline"
+              className="hidden text-sm text-champagne hover:text-champagne/80 sm:inline"
             >
               Alles bekijken →
             </Link>
           </div>
 
           {advertenties.length > 0 ? (
-            <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
               {advertenties.map((advertentie) => (
                 <AdvertentieCard
                   key={advertentie.id}
                   advertentie={advertentie}
+                  afbeeldingUrl={fotos.get(advertentie.id)}
                 />
               ))}
             </div>
           ) : (
-            <div className="card-premium relative mt-8 overflow-hidden p-10 text-center sm:p-14">
-              <div className="gradient-placeholder-gold absolute inset-0 opacity-20" />
+            <div className="premium-card relative mt-6 overflow-hidden p-8 text-center sm:p-12">
+              <div className="gradient-placeholder-gold absolute inset-0 opacity-15" />
               <div className="relative">
-                <p className="font-display text-xl text-foreground sm:text-2xl">
-                  Nog geen advertenties live
+                <p className="font-display text-xl text-foreground">
+                  Nog geen actieve advertenties
                 </p>
-                <p className="mx-auto mt-3 max-w-md text-sm text-muted-foreground">
-                  Wees de eerste die een premium profiel plaatst en bereik
-                  bezoekers in jouw regio.
+                <p className="mx-auto mt-2 max-w-sm text-sm text-muted-foreground">
+                  Wees de eerste op RedLight en bereik bezoekers in jouw regio.
                 </p>
-                <Button asChild size="lg" className="mt-6">
+                <Button asChild size="lg" className="mt-5">
                   <Link href="/dashboard/advertenties/nieuw">
-                    Plaats jouw advertentie
+                    Plaats eerste advertentie
                   </Link>
                 </Button>
               </div>
             </div>
           )}
 
-          <div className="mt-6 text-center sm:hidden">
-            <Link
-              href="/zoeken"
-              className="text-sm text-champagne hover:text-champagne/80"
-            >
+          <div className="mt-4 text-center sm:hidden">
+            <Link href="/zoeken" className="text-sm text-champagne">
               Alles bekijken →
             </Link>
           </div>
