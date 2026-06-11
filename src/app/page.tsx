@@ -46,17 +46,17 @@ export default async function HomePage() {
   return (
     <div>
       {/* Hero */}
-      <section className="border-b border-white/10">
+      <section className="border-b border-white/[0.08]">
         <div className="container py-8 sm:py-10 lg:py-12">
           <div className="grid items-start gap-8 lg:grid-cols-2 lg:gap-12">
             <div className="animate-fade-in">
-              <p className="text-[0.6875rem] font-medium uppercase tracking-[0.14em] text-veloura-soft sm:text-xs">
+              <p className="trustline-text text-[0.6875rem] font-medium uppercase tracking-[0.14em] sm:text-xs">
                 Alleen 18+ · Discreet · Professioneel · Mobiel eerst
               </p>
 
               <h1 className="font-display mt-3 text-[1.65rem] font-medium leading-[1.15] text-veloura-ivory sm:text-4xl lg:text-[2.35rem]">
                 Ontdek{" "}
-                <span className="text-veloura-champagne">discrete profielen</span>{" "}
+                <span className="text-gradient-hero">discrete profielen</span>{" "}
                 in jouw regio
               </h1>
 
@@ -81,7 +81,7 @@ export default async function HomePage() {
                 </Button>
               </div>
 
-              <div className="luxury-card mt-6 p-4 sm:p-5">
+              <div className="luxury-card-elevated mt-6 p-4 sm:p-5">
                 <MarketplaceHeroSearch />
               </div>
             </div>
@@ -94,7 +94,7 @@ export default async function HomePage() {
       </section>
 
       {/* Categorieën */}
-      <section className="section-spacing border-b border-white/10">
+      <section className="section-spacing border-b border-white/[0.08]">
         <div className="container">
           <h2 className="section-title">Populaire categorieën</h2>
           <p className="section-subtitle mt-1">
@@ -107,7 +107,7 @@ export default async function HomePage() {
       </section>
 
       {/* Waarom Veloura */}
-      <section className="section-spacing border-b border-white/10">
+      <section className="section-spacing border-b border-white/[0.08]">
         <div className="container">
           <h2 className="section-title">Waarom Veloura?</h2>
           <p className="section-subtitle mt-1 max-w-lg">

@@ -10,17 +10,17 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 const variantClasses: Record<NonNullable<ButtonProps["variant"]>, string> = {
   primary:
-    "bg-veloura-champagne/90 text-veloura-bg border border-veloura-champagne/30 hover:bg-veloura-champagne hover:shadow-glow",
+    "bg-gradient-to-b from-[#e8c982] to-[#d6ad5f] text-[#160f13] border border-[#e8c982]/25 shadow-champagne hover:from-[#f0d49a] hover:to-[#e0b96a] hover:shadow-glow",
   rose:
-    "bg-veloura-rose/85 text-veloura-ivory border border-veloura-rose/30 hover:bg-veloura-rose",
+    "bg-gradient-to-b from-veloura-rose/90 to-veloura-rose-deep/90 text-veloura-ivory border border-veloura-rose/25 hover:brightness-110",
   secondary:
-    "bg-white/[0.06] text-veloura-ivory border border-white/10 hover:bg-white/[0.1] hover:border-white/15",
+    "bg-white/[0.04] text-veloura-ivory border border-white/[0.12] backdrop-blur-sm hover:bg-white/[0.08] hover:border-veloura-champagne/20",
   ghost:
-    "bg-transparent text-veloura-soft border border-transparent hover:bg-white/[0.05] hover:text-veloura-ivory",
+    "bg-transparent text-veloura-muted border border-transparent hover:bg-white/[0.04] hover:text-veloura-ivory",
   danger:
-    "bg-destructive/80 text-veloura-ivory border border-destructive/30 hover:bg-destructive",
+    "bg-veloura-rose-deep/70 text-veloura-ivory border border-veloura-rose/25 hover:bg-veloura-rose-deep/85",
   outline:
-    "border border-white/12 bg-transparent text-veloura-ivory hover:border-veloura-champagne/35 hover:bg-veloura-champagne/5",
+    "border border-white/[0.12] bg-transparent text-veloura-ivory hover:border-veloura-champagne/28 hover:bg-veloura-champagne/[0.06]",
 };
 
 const sizeClasses: Record<NonNullable<ButtonProps["size"]>, string> = {
@@ -51,7 +51,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         disabled={disabled}
         className={cn(
           "inline-flex items-center justify-center gap-2 rounded-full font-medium tracking-wide transition-all duration-200",
-          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-veloura-champagne/50 focus-visible:ring-offset-2 focus-visible:ring-offset-veloura-bg",
+          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-veloura-champagne/40 focus-visible:ring-offset-2 focus-visible:ring-offset-veloura-bg",
           "disabled:pointer-events-none disabled:opacity-50",
           "active:scale-[0.98]",
           variantClasses[variant],

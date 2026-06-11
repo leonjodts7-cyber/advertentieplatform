@@ -37,7 +37,7 @@ export function MarketplacePreview() {
     <>
       {/* Desktop: overlapping collage */}
       <div className="relative mx-auto hidden h-[280px] max-w-sm md:block lg:h-[300px] lg:max-w-md">
-        <div className="absolute inset-6 rounded-3xl bg-veloura-rose/5 blur-3xl" />
+        <div className="absolute inset-6 rounded-3xl bg-veloura-rose/[0.08] blur-3xl" />
         {PREVIEWS.map((preview) => (
           <div
             key={preview.label}

@@ -66,7 +66,7 @@ export default async function AdvertentieDetailPage({
       <a href={`tel:${advertentie.telefoon}`}>Contacteer aanbieder</a>
     </Button>
   ) : (
-    <p className="rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3 text-center text-sm text-veloura-soft">
+    <p className="rounded-xl border border-white/[0.1] bg-white/[0.03] px-4 py-3 text-center text-sm text-veloura-soft">
       Geen contactgegevens beschikbaar
     </p>
   );
@@ -85,7 +85,7 @@ export default async function AdvertentieDetailPage({
       <div className="container">
         {fotos.length > 0 ? (
           <div className="grid gap-2 sm:grid-cols-3">
-            <div className="relative aspect-[16/9] overflow-hidden rounded-2xl border border-white/10 sm:col-span-2 sm:aspect-auto sm:min-h-[300px]">
+            <div className="relative aspect-[16/9] overflow-hidden rounded-2xl border border-white/[0.1] sm:col-span-2 sm:aspect-auto sm:min-h-[300px]">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={fotos[0].url}
@@ -99,7 +99,7 @@ export default async function AdvertentieDetailPage({
                 {fotos.slice(1, 3).map((foto) => (
                   <div
                     key={foto.id}
-                    className="relative aspect-[4/3] overflow-hidden rounded-xl border border-white/10"
+                    className="relative aspect-[4/3] overflow-hidden rounded-xl border border-white/[0.1]"
                   >
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src={foto.url} alt="" className="h-full w-full object-cover" />
@@ -109,7 +109,7 @@ export default async function AdvertentieDetailPage({
             )}
           </div>
         ) : (
-          <div className="thumbnail-gradient relative aspect-[16/9] overflow-hidden rounded-2xl border border-white/10 soft-gradient sm:aspect-[21/9]" />
+          <div className="thumbnail-gradient relative aspect-[16/9] overflow-hidden rounded-2xl border border-white/[0.1] profile-gradient sm:aspect-[21/9]" />
         )}
 
         <div className="mt-4 flex flex-wrap gap-2">

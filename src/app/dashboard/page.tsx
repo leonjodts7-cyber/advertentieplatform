@@ -56,7 +56,7 @@ export default async function DashboardPage() {
           </div>
           <div className="stat-card">
             <p className="text-xs uppercase tracking-wider text-veloura-soft">Actief</p>
-            <p className="mt-1 font-display text-3xl text-emerald-300/90">{actief}</p>
+            <p className="mt-1 font-display text-3xl text-veloura-green">{actief}</p>
           </div>
           <div className="stat-card">
             <p className="text-xs uppercase tracking-wider text-veloura-soft">

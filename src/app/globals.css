@@ -3,36 +3,51 @@
 @tailwind utilities;
 
 :root {
-  /* Veloura palette */
-  --veloura-bg: #120d10;
-  --veloura-card: rgba(255, 255, 255, 0.06);
-  --veloura-text: #fff8f1;
-  --veloura-text-soft: #c8b8ad;
-  --veloura-champagne: #d8b46a;
-  --veloura-rose: #b76e79;
-  --veloura-plum: #3a1f2d;
-  --veloura-border: rgba(255, 255, 255, 0.1);
+  /* Veloura — luxury nightlife palette */
+  --veloura-bg-deep: #140b12;
+  --veloura-bg-mid: #1a1017;
+  --veloura-bg-surface: #21131d;
+
+  --veloura-card: rgba(255, 248, 241, 0.055);
+  --veloura-card-elevated: rgba(255, 248, 241, 0.075);
+  --veloura-border: rgba(255, 248, 241, 0.12);
+
+  --veloura-ivory: #fff7ef;
+  --veloura-soft: #cbb9ad;
+  --veloura-muted: #9f8f86;
+
+  --veloura-champagne: #e8c982;
+  --veloura-champagne-deep: #d6ad5f;
+  --veloura-rose: #c47a8a;
+  --veloura-rose-deep: #8f3a55;
+  --veloura-plum: #3a1b2e;
+  --veloura-plum-light: #4b2239;
+  --veloura-green: #67d391;
+
+  --veloura-bg: var(--veloura-bg-deep);
+  --veloura-text: var(--veloura-ivory);
+  --veloura-text-soft: var(--veloura-soft);
 
   /* Tailwind compat */
-  --background: 345 22% 6%;
-  --foreground: 36 100% 97%;
-  --card: 0 0% 100% / 0.06;
-  --card-foreground: 36 100% 97%;
-  --popover: 345 20% 8%;
-  --popover-foreground: 36 100% 97%;
-  --primary: 38 58% 63%;
-  --primary-foreground: 345 22% 8%;
-  --secondary: 345 15% 12%;
-  --secondary-foreground: 36 60% 92%;
-  --muted: 345 12% 14%;
-  --muted-foreground: 24 18% 73%;
-  --accent: 350 28% 18%;
-  --accent-foreground: 36 80% 94%;
-  --destructive: 0 45% 48%;
-  --destructive-foreground: 36 100% 97%;
-  --border: 0 0% 100% / 0.1;
-  --input: 0 0% 100% / 0.05;
-  --ring: 38 58% 63%;
+  --background: 330 28% 7%;
+  --foreground: 33 100% 97%;
+  --card: 33 100% 97% / 0.055;
+  --card-foreground: 33 100% 97%;
+  --popover: 330 24% 9%;
+  --popover-foreground: 33 100% 97%;
+  --primary: 42 68% 71%;
+  --primary-foreground: 330 24% 7%;
+  --secondary: 33 100% 97% / 0.06;
+  --secondary-foreground: 33 100% 97%;
+  --muted: 33 100% 97% / 0.05;
+  --muted-foreground: 22 14% 64%;
+  --accent: 322 36% 17%;
+  --accent-foreground: 33 100% 97%;
+  --destructive: 350 42% 42%;
+  --destructive-foreground: 33 100% 97%;
+  --border: 33 100% 97% / 0.12;
+  --input: 33 100% 97% / 0.055;
+  --ring: 42 68% 71%;
   --radius: 1rem;
 }
 
@@ -48,19 +63,20 @@ html {
 body {
   min-height: 100vh;
   overflow-x: hidden;
-  color: var(--veloura-text);
+  color: var(--veloura-ivory);
   font-family: var(--font-sans), system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Luxury background */
+/* Luxury background — no pure black */
 .luxury-bg {
-  background-color: var(--veloura-bg);
+  background-color: var(--veloura-bg-deep);
   background-image:
-    radial-gradient(ellipse 80% 50% at 0% 0%, rgba(58, 31, 45, 0.55), transparent 55%),
-    radial-gradient(ellipse 60% 45% at 100% 10%, rgba(183, 110, 121, 0.12), transparent 50%),
-    radial-gradient(ellipse 50% 40% at 50% 100%, rgba(216, 180, 106, 0.06), transparent 45%);
+    radial-gradient(ellipse 75% 55% at 0% 0%, rgba(143, 58, 85, 0.28), transparent 52%),
+    radial-gradient(ellipse 55% 45% at 100% 0%, rgba(232, 201, 130, 0.1), transparent 48%),
+    radial-gradient(ellipse 70% 50% at 50% 100%, rgba(58, 27, 46, 0.45), transparent 55%),
+    linear-gradient(180deg, var(--veloura-bg-mid) 0%, var(--veloura-bg-deep) 45%, var(--veloura-bg-surface) 100%);
 }
 
 .luxury-bg::before {
@@ -68,19 +84,42 @@ body {
   position: fixed;
   inset: 0;
   pointer-events: none;
-  opacity: 0.35;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
   z-index: 0;
+  opacity: 0.22;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+}
+
+.luxury-bg::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(ellipse 90% 70% at 50% 50%, transparent 40%, rgba(20, 11, 18, 0.55) 100%);
 }
 
 .luxury-card {
   border-radius: var(--radius);
   border: 1px solid var(--veloura-border);
   background: var(--veloura-card);
-  backdrop-filter: blur(20px);
+  backdrop-filter: blur(22px) saturate(1.15);
   box-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.04) inset,
-    0 12px 40px rgba(0, 0, 0, 0.25);
+    0 1px 0 rgba(255, 248, 241, 0.06) inset,
+    0 0 0 1px rgba(255, 248, 241, 0.02) inset,
+    0 12px 40px rgba(58, 27, 46, 0.22),
+    0 4px 16px rgba(143, 58, 85, 0.08);
+}
+
+.luxury-card-elevated {
+  border-radius: var(--radius);
+  border: 1px solid rgba(255, 248, 241, 0.14);
+  background: var(--veloura-card-elevated);
+  backdrop-filter: blur(24px) saturate(1.2);
+  box-shadow:
+    0 1px 0 rgba(255, 248, 241, 0.08) inset,
+    0 16px 48px rgba(75, 34, 57, 0.18),
+    0 0 32px rgba(232, 201, 130, 0.04);
 }
 
 .luxury-border {
@@ -89,26 +128,38 @@ body {
 
 .luxury-glow {
   box-shadow:
-    0 0 0 1px rgba(216, 180, 106, 0.08),
-    0 8px 32px rgba(0, 0, 0, 0.2),
-    0 0 48px rgba(183, 110, 121, 0.06);
+    0 0 0 1px rgba(232, 201, 130, 0.1),
+    0 8px 32px rgba(75, 34, 57, 0.2),
+    0 0 48px rgba(196, 122, 138, 0.1);
 }
 
 .soft-gradient {
   background: linear-gradient(
     145deg,
-    rgba(58, 31, 45, 0.9) 0%,
-    rgba(45, 28, 38, 0.85) 50%,
-    rgba(183, 110, 121, 0.25) 100%
+    var(--veloura-plum) 0%,
+    var(--veloura-plum-light) 42%,
+    rgba(196, 122, 138, 0.35) 78%,
+    rgba(232, 201, 130, 0.18) 100%
   );
 }
 
 .rose-gradient {
   background: linear-gradient(
     135deg,
-    rgba(58, 31, 45, 0.95) 0%,
-    rgba(183, 110, 121, 0.35) 60%,
-    rgba(216, 180, 106, 0.15) 100%
+    var(--veloura-rose-deep) 0%,
+    var(--veloura-plum-light) 45%,
+    rgba(196, 122, 138, 0.5) 72%,
+    rgba(232, 201, 130, 0.22) 100%
+  );
+}
+
+.profile-gradient {
+  background: linear-gradient(
+    160deg,
+    var(--veloura-plum) 0%,
+    var(--veloura-rose-deep) 38%,
+    rgba(196, 122, 138, 0.45) 68%,
+    rgba(232, 201, 130, 0.28) 100%
   );
 }
 
@@ -116,7 +167,22 @@ body {
   color: var(--veloura-champagne);
 }
 
-/* Legacy aliases */
+.trustline-text {
+  color: rgba(232, 201, 130, 0.72);
+}
+
+.text-gradient-hero {
+  background: linear-gradient(
+    120deg,
+    var(--veloura-champagne) 0%,
+    #f0d9a8 40%,
+    var(--veloura-rose) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
 .premium-card,
 .card-premium,
 .card-glass {
@@ -150,7 +216,7 @@ body {
   font-weight: 500;
   letter-spacing: -0.02em;
   line-height: 1.2;
-  color: var(--veloura-text);
+  color: var(--veloura-ivory);
 }
 
 @media (min-width: 640px) {
@@ -162,7 +228,7 @@ body {
 .section-subtitle {
   font-size: 0.875rem;
   line-height: 1.6;
-  color: var(--veloura-text-soft);
+  color: var(--veloura-soft);
 }
 
 .section-spacing {
@@ -176,11 +242,11 @@ body {
   font-weight: 600;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--veloura-text-soft);
+  color: var(--veloura-muted);
 }
 
 .prose-advertentie {
-  color: var(--veloura-text-soft);
+  color: var(--veloura-soft);
   line-height: 1.8;
   white-space: pre-wrap;
   font-size: 0.9375rem;
@@ -197,13 +263,13 @@ body {
   left: 0;
   right: 0;
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(216, 180, 106, 0.35), transparent);
+  background: linear-gradient(90deg, transparent, rgba(232, 201, 130, 0.28), transparent);
 }
 
 .page-header-band {
-  @apply border-b py-8 sm:py-10;
-  border-color: var(--veloura-border);
-  background: linear-gradient(180deg, rgba(58, 31, 45, 0.25) 0%, transparent 100%);
+  border-bottom: 1px solid var(--veloura-border);
+  background: linear-gradient(180deg, rgba(75, 34, 57, 0.2) 0%, transparent 100%);
+  @apply py-8 sm:py-10;
 }
 
 .divider-soft {
@@ -214,55 +280,56 @@ body {
 .mobile-contact-bar {
   @apply fixed bottom-0 left-0 right-0 z-40 p-3 backdrop-blur-xl lg:hidden;
   border-top: 1px solid var(--veloura-border);
-  background: rgba(18, 13, 16, 0.92);
+  background: rgba(20, 11, 18, 0.9);
 }
 
 .city-pill {
   @apply inline-flex min-h-[44px] shrink-0 items-center rounded-full px-3.5 py-2 text-xs transition-all sm:text-sm;
   border: 1px solid var(--veloura-border);
-  background: rgba(255, 255, 255, 0.04);
-  color: var(--veloura-text-soft);
+  background: var(--veloura-card);
+  color: var(--veloura-soft);
 }
 
 .city-pill:hover {
-  border-color: rgba(216, 180, 106, 0.3);
+  border-color: rgba(232, 201, 130, 0.28);
   color: var(--veloura-champagne);
-  background: rgba(216, 180, 106, 0.06);
+  background: rgba(232, 201, 130, 0.06);
 }
 
 .type-chip {
   @apply inline-flex min-h-[40px] shrink-0 items-center rounded-full px-3.5 py-1.5 text-xs font-medium transition-all;
   border: 1px solid var(--veloura-border);
-  background: rgba(255, 255, 255, 0.03);
-  color: var(--veloura-text-soft);
+  background: var(--veloura-card);
+  color: var(--veloura-soft);
 }
 
 .type-chip:hover {
-  border-color: rgba(183, 110, 121, 0.35);
-  color: var(--veloura-text);
+  border-color: rgba(196, 122, 138, 0.32);
+  color: var(--veloura-ivory);
 }
 
 .type-chip-active {
-  border-color: rgba(216, 180, 106, 0.4);
-  background: rgba(216, 180, 106, 0.1);
+  border-color: rgba(232, 201, 130, 0.35);
+  background: rgba(232, 201, 130, 0.08);
   color: var(--veloura-champagne);
+  box-shadow: 0 0 20px rgba(232, 201, 130, 0.06);
 }
 
 .category-card {
   @apply luxury-card flex min-h-[72px] items-center justify-center p-3 text-center text-sm font-medium transition-all;
-  color: var(--veloura-text-soft);
+  color: var(--veloura-soft);
 }
 
 .category-card:hover {
-  border-color: rgba(183, 110, 121, 0.35);
-  color: var(--veloura-text);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  border-color: rgba(196, 122, 138, 0.3);
+  color: var(--veloura-ivory);
+  box-shadow: 0 8px 28px rgba(75, 34, 57, 0.2), 0 0 24px rgba(196, 122, 138, 0.08);
 }
 
 .filter-bar-sticky {
   @apply sticky top-14 z-30 py-3 backdrop-blur-xl sm:top-[3.75rem];
   border-bottom: 1px solid var(--veloura-border);
-  background: rgba(18, 13, 16, 0.88);
+  background: rgba(20, 11, 18, 0.82);
 }
 
 .no-scrollbar {
@@ -275,12 +342,12 @@ body {
 }
 
 .thumbnail-gradient {
-  @apply soft-gradient relative overflow-hidden;
+  @apply profile-gradient relative overflow-hidden;
 }
 
 .thumbnail-gradient::after {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(to top, rgba(18, 13, 16, 0.75) 0%, transparent 55%);
+  background: linear-gradient(to top, rgba(20, 11, 18, 0.72) 0%, transparent 55%);
 }

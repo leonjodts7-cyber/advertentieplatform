@@ -40,9 +40,9 @@ export function AdvertentieCard({
     <Link
       href={linkHref}
       className={cn(
-        "group block w-full overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04] transition-all duration-300",
-        "hover:border-veloura-champagne/25 hover:shadow-luxury md:hover:-translate-y-0.5",
-        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-veloura-champagne/40"
+        "group block w-full overflow-hidden rounded-2xl border border-white/[0.1] bg-white/[0.045] transition-all duration-300",
+        "hover:border-veloura-rose/25 hover:shadow-glow md:hover:-translate-y-0.5",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-veloura-champagne/35"
       )}
     >
       <div className="relative aspect-[4/3] overflow-hidden">
@@ -54,9 +54,9 @@ export function AdvertentieCard({
             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
           />
         ) : (
-          <div className="thumbnail-gradient h-full w-full soft-gradient" />
+          <div className="thumbnail-gradient h-full w-full profile-gradient" />
         )}
-        <div className="absolute inset-0 bg-gradient-to-t from-veloura-bg/90 via-veloura-bg/20 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#140b12]/85 via-[#140b12]/15 to-transparent" />
         <div className="absolute left-2.5 top-2.5 flex flex-wrap gap-1">
           {advertentie.beschikbaar && (
             <Badge variant="green">Beschikbaar</Badge>
@@ -71,7 +71,7 @@ export function AdvertentieCard({
       </div>
 
       <div className="p-4">
-        <h3 className="font-display text-lg font-medium leading-snug text-veloura-ivory line-clamp-2 group-hover:text-veloura-champagne">
+        <h3 className="font-display text-lg font-medium leading-snug text-veloura-ivory line-clamp-2 transition-colors group-hover:text-veloura-champagne/95">
           {advertentie.titel}
         </h3>
 
@@ -80,7 +80,7 @@ export function AdvertentieCard({
           <span aria-hidden="true">·</span>
           <span>{advertentie.leeftijd} jaar</span>
           <span aria-hidden="true">·</span>
-          <span className="font-medium text-veloura-champagne">
+          <span className="font-medium text-veloura-champagne/90">
             {formatPrijs(advertentie.prijs_vanaf)}
           </span>
         </div>
@@ -91,7 +91,7 @@ export function AdvertentieCard({
               {statusLabel(advertentie.status)}
             </Badge>
           ) : (
-            <span className="text-xs font-medium tracking-wide text-veloura-champagne/80 group-hover:text-veloura-champagne">
+            <span className="text-xs font-medium tracking-wide text-veloura-soft transition-colors group-hover:text-veloura-rose">
               Bekijk profiel →
             </span>
           )}
