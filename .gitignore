@@ -29,9 +29,13 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files
+# env files (lokaal — nooit committen)
 .env
-.env*.local
+.env.local
+.env.*.local
+
+# env template wél committen
+!.env.example
 
 # vercel
 .vercel

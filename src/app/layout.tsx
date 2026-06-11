@@ -12,7 +12,9 @@ export const metadata: Metadata = {
   description:
     "Professioneel advertentieplatform voor zelfstandige aanbieders. Vind en plaats advertenties — alleen 18+.",
   metadataBase: new URL(
-    process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"
+    process.env.NEXT_PUBLIC_SITE_URL ??
+      process.env.NEXT_PUBLIC_APP_URL ??
+      "http://localhost:3000"
   ),
 };
 
