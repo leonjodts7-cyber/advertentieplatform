@@ -3,6 +3,7 @@ import { AdvertentieCard } from "@/components/advertentie-card";
 import { CategoryGrid } from "@/components/category-grid";
 import { MarketplaceHeroSearch } from "@/components/marketplace-hero-search";
 import { MarketplacePreview } from "@/components/marketplace-preview";
+import { PopularSearches } from "@/components/popular-searches";
 import { Button } from "@/components/ui/button";
 import { haalEersteFotos } from "@/lib/advertentie-fotos";
 import type { Advertentie } from "@/lib/types";
@@ -24,127 +25,85 @@ export default async function HomePage() {
     advertenties.map((a) => a.id)
   );
 
-  const voordelen = [
-    {
-      titel: "Premium presentatie",
-      tekst: "Jouw profiel oogt verzorgd en professioneel — de eerste indruk telt.",
-    },
-    {
-      titel: "Mobiel-first ervaring",
-      tekst: "Bezoekers browsen op hun telefoon. Veloura is daar volledig op gebouwd.",
-    },
-    {
-      titel: "Discreet zoeken",
-      tekst: "Zoek op stad en categorie zonder opdringerige of expliciete uitstraling.",
-    },
-    {
-      titel: "Dashboard voor aanbieders",
-      tekst: "Beheer concepten, vraag publicatie aan en houd je listing up-to-date.",
-    },
-  ];
-
   return (
     <div>
-      <section className="border-b border-border">
-        <div className="container py-8 sm:py-10 lg:py-14">
-          <div className="grid items-start gap-8 lg:grid-cols-2 lg:gap-12">
-            <div className="animate-fade-in">
-              <p className="trustline-text text-[0.6875rem] font-medium uppercase tracking-[0.14em] sm:text-xs">
-                Alleen 18+ · Discreet · Professioneel · Veilig
+      <section className="border-b border-white/10">
+        <div className="container py-6 sm:py-8 lg:py-10">
+          <div className="grid items-start gap-6 lg:grid-cols-2 lg:gap-10">
+            <div className="order-2 lg:order-1 animate-fade-in">
+              <p className="trustline-text text-[0.625rem] font-medium uppercase sm:text-[0.6875rem]">
+                Alleen 18+ · Discreet · Geverifieerd · Direct contact
               </p>
 
-              <h1 className="font-display mt-3 text-[1.75rem] font-medium leading-[1.15] text-foreground sm:text-4xl lg:text-[2.5rem]">
-                Ontdek{" "}
+              <h1 className="font-display mt-3 text-[1.625rem] font-medium leading-[1.12] text-foreground sm:text-4xl lg:text-[2.375rem]">
+                Vind{" "}
                 <span className="text-gradient-hero">discrete profielen</span>{" "}
-                in jouw regio
+                bij jou in de buurt
               </h1>
 
               <p className="mt-3 max-w-lg text-sm leading-relaxed text-muted-foreground sm:text-base">
-                Veloura brengt zelfstandige aanbieders en bezoekers samen op een
-                stijlvol, veilig en professioneel advertentieplatform.
+                Ontdek zelfstandige aanbieders voor privé ontvangst, escort,
+                video en meer. Veilig, discreet en mobiel-first.
               </p>
 
-              <div className="mt-6 flex flex-col gap-2.5 sm:flex-row">
+              <div className="mt-5 flex flex-col gap-2.5 sm:flex-row">
                 <Button asChild size="lg" variant="primary" className="w-full sm:w-auto">
-                  <Link href="/zoeken">Bekijk advertenties</Link>
+                  <Link href="/zoeken">Zoek profielen</Link>
                 </Button>
                 <Button
                   asChild
-                  variant="premium"
+                  variant="secondary"
                   size="lg"
                   className="w-full sm:w-auto"
                 >
                   <Link href="/dashboard/advertenties/nieuw">
-                    Plaats jouw advertentie
+                    Plaats advertentie
                   </Link>
                 </Button>
               </div>
+            </div>
 
-              <div className="luxury-card-elevated mt-6 border-primary/10 p-4 sm:p-5">
+            <div className="order-1 lg:order-2">
+              <div className="glass-panel p-4 sm:p-5">
                 <MarketplaceHeroSearch />
               </div>
             </div>
+          </div>
 
-            <div className="lg:pt-2">
-              <MarketplacePreview />
-            </div>
+          <div className="mt-6 hidden lg:block">
+            <MarketplacePreview />
           </div>
         </div>
       </section>
 
-      <section className="section-spacing border-b border-border bg-surface-soft/40">
+      <section className="border-b border-white/10 py-6 sm:py-8">
         <div className="container">
-          <h2 className="section-title">Populaire categorieën</h2>
-          <p className="section-subtitle mt-1">
-            Ontdek profielen per dienst
-          </p>
-          <div className="mt-5">
-            <CategoryGrid />
+          <h2 className="section-title text-lg sm:text-xl">
+            Populaire zoekopdrachten
+          </h2>
+          <div className="mt-4">
+            <PopularSearches />
           </div>
         </div>
       </section>
 
-      <section className="section-spacing border-b border-border">
-        <div className="container">
-          <h2 className="section-title">Waarom Veloura?</h2>
-          <p className="section-subtitle mt-1 max-w-lg">
-            Gebouwd voor aanbieders die kwaliteit en discretie serieus nemen.
-          </p>
-          <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-            {voordelen.map((v) => (
-              <div
-                key={v.titel}
-                className="luxury-card p-4 transition-all hover:border-primary/25 hover:shadow-card sm:p-5"
-              >
-                <h3 className="font-display text-base font-medium text-foreground sm:text-lg">
-                  {v.titel}
-                </h3>
-                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                  {v.tekst}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="section-spacing">
+      <section className="section-spacing border-b border-white/10">
         <div className="container">
           <div className="flex items-end justify-between gap-3">
             <div>
-              <h2 className="section-title">Nieuwste advertenties</h2>
+              <h2 className="section-title">Nieuwste profielen</h2>
               <p className="section-subtitle mt-1">Actief op Veloura</p>
             </div>
             <Link
               href="/zoeken"
-              className="hidden text-sm font-medium text-primary-dark hover:text-primary sm:inline"
+              className="hidden text-sm font-medium text-champagne-light hover:text-champagne sm:inline"
             >
               Alles bekijken →
             </Link>
           </div>
 
           {advertenties.length > 0 ? (
-            <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {advertenties.map((advertentie) => (
                 <AdvertentieCard
                   key={advertentie.id}
@@ -154,14 +113,15 @@ export default async function HomePage() {
               ))}
             </div>
           ) : (
-            <div className="luxury-card mt-6 p-8 text-center sm:p-12">
+            <div className="velvet-card mt-5 p-8 text-center sm:p-12">
               <p className="font-display text-xl text-foreground">
-                Er zijn nog geen actieve advertenties.
+                Er zijn nog geen actieve profielen.
               </p>
               <p className="mx-auto mt-2 max-w-sm text-sm text-muted-foreground">
-                Wees de eerste op Veloura en bereik bezoekers in jouw regio.
+                Wees de eerste aanbieder op Veloura en bereik bezoekers in jouw
+                regio.
               </p>
-              <Button asChild size="lg" variant="premium" className="mt-5">
+              <Button asChild size="lg" variant="primary" className="mt-5">
                 <Link href="/dashboard/advertenties/nieuw">
                   Plaats eerste advertentie
                 </Link>
@@ -172,10 +132,22 @@ export default async function HomePage() {
           <div className="mt-4 text-center sm:hidden">
             <Link
               href="/zoeken"
-              className="text-sm font-medium text-primary-dark"
+              className="text-sm font-medium text-champagne-light"
             >
               Alles bekijken →
             </Link>
+          </div>
+        </div>
+      </section>
+
+      <section className="section-spacing">
+        <div className="container">
+          <h2 className="section-title">Populaire categorieën</h2>
+          <p className="section-subtitle mt-1">
+            Zoek profielen per type dienst
+          </p>
+          <div className="mt-5">
+            <CategoryGrid />
           </div>
         </div>
       </section>

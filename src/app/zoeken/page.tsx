@@ -12,7 +12,7 @@ import type { Advertentie } from "@/lib/types";
 import { createClient } from "@/lib/supabase/server";
 
 export const metadata: Metadata = {
-  title: "Advertenties zoeken",
+  title: "Profielen zoeken",
   description: "Zoek discrete profielen op Veloura. Alleen 18+.",
 };
 
@@ -23,6 +23,10 @@ interface ZoekenPageProps {
     beschikbaar?: string;
     geverifieerd?: string;
   }>;
+}
+
+function isTruthyFilter(value?: string) {
+  return value === "1" || value === "true";
 }
 
 export default async function ZoekenPage({ searchParams }: ZoekenPageProps) {
@@ -36,8 +40,8 @@ export default async function ZoekenPage({ searchParams }: ZoekenPageProps) {
     .order("aangemaakt_op", { ascending: false });
 
   if (stad?.trim()) query = query.ilike("stad", `%${stad.trim()}%`);
-  if (beschikbaar === "1") query = query.eq("beschikbaar", true);
-  if (geverifieerd === "1") query = query.eq("geverifieerd", true);
+  if (isTruthyFilter(beschikbaar)) query = query.eq("beschikbaar", true);
+  if (isTruthyFilter(geverifieerd)) query = query.eq("geverifieerd", true);
 
   const { data: advertentiesRaw } = await query;
   const advertenties = (advertentiesRaw ?? []) as Advertentie[];
@@ -58,7 +62,7 @@ export default async function ZoekenPage({ searchParams }: ZoekenPageProps) {
           <p className="text-[0.6875rem] uppercase tracking-wider text-muted-foreground">
             Veloura
           </p>
-          <h1 className="section-title mt-1">Advertenties zoeken</h1>
+          <h1 className="section-title mt-1">Profielen zoeken</h1>
           <p className="section-subtitle mt-1.5 max-w-lg">
             Vind discrete profielen in jouw regio. Alleen 18+.
           </p>
@@ -69,7 +73,7 @@ export default async function ZoekenPage({ searchParams }: ZoekenPageProps) {
         <div className="container">
           <Suspense
             fallback={
-              <div className="h-11 animate-pulse rounded-xl bg-surface-soft" />
+              <div className="h-11 animate-pulse rounded-xl bg-white/[0.04]" />
             }
           >
             <ZoekMobileBar />
@@ -83,7 +87,7 @@ export default async function ZoekenPage({ searchParams }: ZoekenPageProps) {
             <div className="sticky top-[5.5rem]">
               <Suspense
                 fallback={
-                  <div className="h-64 animate-pulse rounded-2xl bg-surface-soft" />
+                  <div className="h-64 animate-pulse rounded-2xl bg-white/[0.04]" />
                 }
               >
                 <ZoekFilterBar />
@@ -97,15 +101,17 @@ export default async function ZoekenPage({ searchParams }: ZoekenPageProps) {
                 <span className="font-medium text-foreground">
                   {advertenties.length}
                 </span>{" "}
-                resultaten
+                profielen
                 {stad?.trim() ? ` in ${stad.trim()}` : ""}
               </p>
               {categorieLabel && (
-                <Badge variant="rose">Categorie: {categorieLabel}</Badge>
+                <Badge variant="wine">Categorie: {categorieLabel}</Badge>
               )}
-              {beschikbaar === "1" && <Badge variant="green">Beschikbaar</Badge>}
-              {geverifieerd === "1" && (
-                <Badge variant="premium">Geverifieerd</Badge>
+              {isTruthyFilter(beschikbaar) && (
+                <Badge variant="green">Beschikbaar</Badge>
+              )}
+              {isTruthyFilter(geverifieerd) && (
+                <Badge variant="champagne">Geverifieerd</Badge>
               )}
             </div>
 
@@ -120,14 +126,14 @@ export default async function ZoekenPage({ searchParams }: ZoekenPageProps) {
                 ))}
               </div>
             ) : (
-              <div className="luxury-card mx-auto max-w-md p-8 text-center sm:p-10">
+              <div className="velvet-card mx-auto max-w-md p-8 text-center sm:p-10">
                 <p className="font-display text-xl text-foreground">
-                  Geen advertenties gevonden
+                  Geen profielen gevonden
                 </p>
                 <p className="mt-2 text-sm text-muted-foreground">
-                  Pas je filters aan of plaats zelf een profiel.
+                  Pas je filters aan of plaats zelf een profiel als aanbieder.
                 </p>
-                <Button asChild variant="premium" className="mt-5">
+                <Button asChild variant="primary" className="mt-5">
                   <Link href="/dashboard/advertenties/nieuw">
                     Plaats advertentie
                   </Link>

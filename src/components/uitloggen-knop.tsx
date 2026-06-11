@@ -19,7 +19,7 @@ export function UitloggenKnop() {
 
   return (
     <Button
-      variant="outline"
+      variant="ghost"
       size="sm"
       onClick={handleUitloggen}
       disabled={laden}

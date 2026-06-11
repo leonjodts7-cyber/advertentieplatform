@@ -36,63 +36,61 @@ export default function LoginPage() {
   return (
     <div className="flex min-h-[70vh] items-center py-10">
       <div className="container">
-        <div className="luxury-card-elevated relative mx-auto max-w-md overflow-hidden p-6 sm:p-8">
-          <div className="relative">
-            <p className="text-[0.6875rem] uppercase tracking-wider text-muted-foreground">
-              Veloura Account
-            </p>
-            <h1 className="font-display mt-2 text-2xl text-foreground">
-              Inloggen
-            </h1>
-            <p className="mt-2 text-sm text-muted-foreground">
-              Ontvang een magic link om in te loggen op jouw dashboard.
-            </p>
+        <div className="glass-panel relative mx-auto max-w-md overflow-hidden p-6 sm:p-8">
+          <p className="text-[0.6875rem] uppercase tracking-wider text-muted-foreground">
+            Veloura Account
+          </p>
+          <h1 className="font-display mt-2 text-2xl text-foreground">
+            Inloggen
+          </h1>
+          <p className="mt-2 text-sm text-muted-foreground">
+            Ontvang een magic link om in te loggen op jouw aanbieder-dashboard.
+          </p>
 
-            {verzonden ? (
-              <div className="mt-5 rounded-xl border border-accent/30 bg-accent-soft p-4 text-sm text-foreground">
-                Link verstuurd naar{" "}
-                <strong className="text-primary-dark">{email.trim()}</strong>
+          {verzonden ? (
+            <div className="mt-5 rounded-xl border border-champagne/25 bg-champagne/10 p-4 text-sm text-foreground">
+              Link verstuurd naar{" "}
+              <strong className="text-champagne-light">{email.trim()}</strong>
+            </div>
+          ) : (
+            <form onSubmit={handleSubmit} className="mt-5 space-y-4">
+              <div>
+                <label htmlFor="email" className="form-label">
+                  E-mailadres
+                </label>
+                <Input
+                  id="email"
+                  type="email"
+                  required
+                  placeholder="jij@voorbeeld.be"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
               </div>
-            ) : (
-              <form onSubmit={handleSubmit} className="mt-5 space-y-4">
-                <div>
-                  <label htmlFor="email" className="form-label">
-                    E-mailadres
-                  </label>
-                  <Input
-                    id="email"
-                    type="email"
-                    required
-                    placeholder="jij@voorbeeld.be"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                  />
-                </div>
-                {fout && (
-                  <p className="text-sm text-destructive" role="alert">
-                    {fout}
-                  </p>
-                )}
-                <Button
-                  type="submit"
-                  className="w-full"
-                  size="lg"
-                  disabled={laden}
-                >
-                  {laden ? "Versturen..." : "Stuur magic link"}
-                </Button>
-              </form>
-            )}
-
-            <p className="mt-5 text-center text-sm text-muted-foreground">
-              <Link
-                href="/"
-                className="font-medium text-primary-dark hover:underline"
+              {fout && (
+                <p className="text-sm text-destructive" role="alert">
+                  {fout}
+                </p>
+              )}
+              <Button
+                type="submit"
+                className="w-full"
+                size="lg"
+                disabled={laden}
               >
-                ← Terug naar Veloura
-              </Link>
-            </p>
-          </div>
+                {laden ? "Versturen..." : "Stuur magic link"}
+              </Button>
+            </form>
+          )}
+
+          <p className="mt-5 text-center text-sm text-muted-foreground">
+            <Link
+              href="/"
+              className="font-medium text-champagne-light hover:underline"
+            >
+              ← Terug naar Veloura
+            </Link>
+          </p>
         </div>
       </div>
     </div>

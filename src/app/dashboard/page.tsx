@@ -43,7 +43,7 @@ export default async function DashboardPage() {
           </p>
           <h1 className="section-title mt-1">Welkom terug</h1>
           <p className="section-subtitle mt-1">
-            Beheer jouw profielen en advertenties.
+            Beheer jouw profielen als aanbieder.
           </p>
         </div>
       </div>
@@ -68,27 +68,29 @@ export default async function DashboardPage() {
             <p className="text-xs uppercase tracking-wider text-muted-foreground">
               In beoordeling
             </p>
-            <p className="mt-1 font-display text-3xl text-accent">{inReview}</p>
+            <p className="mt-1 font-display text-3xl text-champagne">
+              {inReview}
+            </p>
           </div>
         </div>
 
         <div className="mt-6 grid gap-3 sm:grid-cols-2">
           <Link
             href="/dashboard/advertenties"
-            className="luxury-card group p-5 transition-all hover:border-primary/25 hover:shadow-card"
+            className="luxury-card group p-5 transition-all hover:border-champagne/25 hover:shadow-glow"
           >
-            <p className="font-display text-lg text-foreground group-hover:text-primary-dark">
+            <p className="font-display text-lg text-foreground group-hover:text-champagne-light">
               Mijn advertenties
             </p>
             <p className="mt-1 text-sm text-muted-foreground">
-              Bekijk en bewerk al jouw listings
+              Bekijk en bewerk al jouw profielen
             </p>
           </Link>
           <Link
             href="/dashboard/advertenties/nieuw"
-            className="luxury-card group border-accent/25 bg-accent-soft/30 p-5 hover:border-accent/40 hover:shadow-card"
+            className="velvet-card group p-5 transition-all hover:border-champagne/20 hover:shadow-glow"
           >
-            <p className="font-display text-lg text-primary-dark">
+            <p className="font-display text-lg text-champagne-light">
               + Nieuwe advertentie
             </p>
             <p className="mt-1 text-sm text-muted-foreground">
@@ -98,7 +100,7 @@ export default async function DashboardPage() {
         </div>
 
         <div className="mt-6 flex flex-col gap-2.5 sm:flex-row">
-          <Button asChild size="lg" variant="premium" className="w-full sm:w-auto">
+          <Button asChild size="lg" variant="primary" className="w-full sm:w-auto">
             <Link href="/dashboard/advertenties/nieuw">Plaats advertentie</Link>
           </Button>
           <Button

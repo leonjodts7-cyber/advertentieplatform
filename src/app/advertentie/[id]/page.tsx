@@ -63,10 +63,10 @@ export default async function AdvertentieDetailPage({
 
   const contactKnop = advertentie.telefoon ? (
     <Button asChild size="lg" variant="primary" className="w-full">
-      <a href={`tel:${advertentie.telefoon}`}>Contacteer aanbieder</a>
+      <a href={`tel:${advertentie.telefoon}`}>Neem contact op</a>
     </Button>
   ) : (
-    <p className="rounded-xl border border-border bg-surface-soft px-4 py-3 text-center text-sm text-muted-foreground">
+    <p className="rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 text-center text-sm text-muted-foreground">
       Geen contactgegevens beschikbaar
     </p>
   );
@@ -76,30 +76,30 @@ export default async function AdvertentieDetailPage({
       <div className="container py-4">
         <Link
           href="/zoeken"
-          className="text-sm text-muted-foreground hover:text-primary-dark"
+          className="text-sm text-muted-foreground hover:text-champagne-light"
         >
-          ← Terug naar advertenties
+          ← Terug naar profielen
         </Link>
       </div>
 
       <div className="container">
         {fotos.length > 0 ? (
           <div className="grid gap-2 sm:grid-cols-3">
-            <div className="relative aspect-[16/9] overflow-hidden rounded-2xl border border-border sm:col-span-2 sm:aspect-auto sm:min-h-[300px]">
+            <div className="relative aspect-[16/9] overflow-hidden rounded-2xl border border-white/10 sm:col-span-2 sm:aspect-auto sm:min-h-[320px]">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={fotos[0].url}
                 alt={`Profiel ${advertentie.titel}`}
                 className="h-full w-full object-cover"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#241718]/10 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#08070a]/85 via-[#08070a]/25 to-transparent" />
             </div>
             {fotos.length > 1 && (
               <div className="hidden gap-2 sm:grid">
                 {fotos.slice(1, 3).map((foto) => (
                   <div
                     key={foto.id}
-                    className="relative aspect-[4/3] overflow-hidden rounded-xl border border-border"
+                    className="relative aspect-[4/3] overflow-hidden rounded-xl border border-white/10"
                   >
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src={foto.url} alt="" className="h-full w-full object-cover" />
@@ -109,19 +109,19 @@ export default async function AdvertentieDetailPage({
             )}
           </div>
         ) : (
-          <div className="thumbnail-gradient relative aspect-[16/9] overflow-hidden rounded-2xl border border-border sm:aspect-[21/9]" />
+          <div className="thumbnail-gradient relative aspect-[16/9] overflow-hidden rounded-2xl border border-white/10 sm:aspect-[21/9]" />
         )}
 
         <div className="mt-4 flex flex-wrap gap-2">
-          <Badge variant="rose">{advertentie.stad}</Badge>
+          <Badge variant="wine">{advertentie.stad}</Badge>
           <Badge variant={advertentie.beschikbaar ? "green" : "muted"}>
             {beschikbaarLabel(advertentie.beschikbaar)}
           </Badge>
           {advertentie.geverifieerd && (
-            <Badge variant="success">Geverifieerd</Badge>
+            <Badge variant="green">Geverifieerd</Badge>
           )}
           {advertentie.geverifieerd && (
-            <Badge variant="premium">Premium</Badge>
+            <Badge variant="champagne">Premium</Badge>
           )}
           <Badge variant="muted">18+</Badge>
         </div>
@@ -135,7 +135,7 @@ export default async function AdvertentieDetailPage({
             </h1>
             <p className="mt-2 text-sm text-muted-foreground">
               {advertentie.leeftijd} jaar · {advertentie.stad} ·{" "}
-              <span className="font-semibold text-primary-dark">
+              <span className="font-semibold text-champagne-light">
                 {formatPrijs(advertentie.prijs_vanaf)}
               </span>
             </p>
@@ -152,13 +152,13 @@ export default async function AdvertentieDetailPage({
           </article>
 
           <aside className="mt-6 lg:mt-0">
-            <div className="luxury-card lg:sticky lg:top-[4.5rem] p-5 sm:p-6">
+            <div className="glass-panel lg:sticky lg:top-[4.5rem] p-5 sm:p-6">
               <p className="font-display text-lg text-foreground">Contact</p>
               <p className="mt-1 text-sm text-muted-foreground">
-                Neem discreet contact op met de aanbieder.
+                Neem discreet contact op voor een afspraak.
               </p>
               {advertentie.telefoon && (
-                <p className="mt-4 font-display text-2xl text-primary-dark">
+                <p className="mt-4 font-display text-2xl text-champagne-light">
                   {advertentie.telefoon}
                 </p>
               )}
@@ -175,7 +175,7 @@ export default async function AdvertentieDetailPage({
                 </div>
                 <div className="flex justify-between gap-4">
                   <dt className="text-muted-foreground">Prijs vanaf</dt>
-                  <dd className="font-semibold text-primary-dark">
+                  <dd className="font-semibold text-champagne-light">
                     {formatPrijs(advertentie.prijs_vanaf)}
                   </dd>
                 </div>

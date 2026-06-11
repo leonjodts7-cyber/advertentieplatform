@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export function Footer() {
   return (
-    <footer className="mt-auto border-t border-border bg-surface-soft/50">
+    <footer className="mt-auto border-t border-white/10 bg-[#08070a]/80">
       <div className="container py-10 sm:py-12">
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
           <div className="sm:col-span-2">
@@ -10,7 +10,7 @@ export function Footer() {
               Veloura
             </p>
             <p className="mt-2 max-w-sm text-sm leading-relaxed text-muted-foreground">
-              Premium platform voor discrete, professionele advertenties.
+              Premium adult marketplace voor discrete, professionele profielen.
               Alleen 18+.
             </p>
           </div>
@@ -22,15 +22,15 @@ export function Footer() {
               <li>
                 <Link
                   href="/zoeken"
-                  className="text-muted-foreground hover:text-primary-dark"
+                  className="text-muted-foreground hover:text-champagne-light"
                 >
-                  Advertenties
+                  Profielen
                 </Link>
               </li>
               <li>
                 <Link
                   href="/dashboard/advertenties/nieuw"
-                  className="text-muted-foreground hover:text-primary-dark"
+                  className="text-muted-foreground hover:text-champagne-light"
                 >
                   Plaats advertentie
                 </Link>
@@ -38,7 +38,7 @@ export function Footer() {
               <li>
                 <Link
                   href="/dashboard"
-                  className="text-muted-foreground hover:text-primary-dark"
+                  className="text-muted-foreground hover:text-champagne-light"
                 >
                   Dashboard
                 </Link>

@@ -14,7 +14,7 @@ export default function NotFound() {
         De pagina die je zoekt bestaat niet of is niet meer beschikbaar.
       </p>
       <Button asChild className="mt-8" size="lg">
-        <Link href="/zoeken">Naar advertenties</Link>
+        <Link href="/zoeken">Naar profielen</Link>
       </Button>
     </div>
   );

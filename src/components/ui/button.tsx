@@ -10,18 +10,19 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 const variantClasses: Record<NonNullable<ButtonProps["variant"]>, string> = {
   primary:
-    "bg-primary text-white border border-primary-dark/15 shadow-sm hover:bg-primary-dark hover:shadow-md",
+    "champagne-gradient text-background border border-champagne/30 shadow-sm hover:brightness-110 hover:shadow-glow",
   premium:
-    "bg-gradient-to-b from-accent to-[#c99550] text-foreground border border-accent/25 shadow-sm hover:from-[#e8c982] hover:to-[#d6ad5f] hover:shadow-card",
-  rose: "bg-primary text-white border border-primary-dark/15 hover:bg-primary-dark",
+    "champagne-gradient text-background border border-champagne/25 shadow-sm hover:brightness-110",
+  rose:
+    "bg-wine text-foreground border border-wine-light/40 hover:bg-wine-light",
   secondary:
-    "bg-transparent text-foreground border border-border hover:bg-surface-soft hover:border-primary/25",
+    "bg-white/[0.04] text-foreground border border-white/10 hover:bg-white/[0.08] hover:border-champagne/30 backdrop-blur-sm",
   ghost:
-    "bg-transparent text-muted-foreground border border-transparent hover:bg-surface-soft hover:text-foreground",
+    "bg-transparent text-muted-foreground border border-transparent hover:bg-white/[0.05] hover:text-foreground",
   danger:
-    "bg-destructive text-white border border-destructive/20 hover:opacity-90",
+    "bg-destructive text-foreground border border-destructive/40 hover:opacity-90",
   outline:
-    "border border-border bg-white text-foreground hover:bg-surface-soft hover:border-primary/20",
+    "border border-white/10 bg-transparent text-foreground hover:bg-white/[0.05] hover:border-champagne/25",
 };
 
 const sizeClasses: Record<NonNullable<ButtonProps["size"]>, string> = {
@@ -52,7 +53,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         disabled={disabled}
         className={cn(
           "inline-flex items-center justify-center gap-2 rounded-full font-medium tracking-wide transition-all duration-200",
-          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/35 focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-champagne/40 focus-visible:ring-offset-2 focus-visible:ring-offset-background",
           "disabled:pointer-events-none disabled:opacity-50",
           "active:scale-[0.98]",
           variantClasses[variant],

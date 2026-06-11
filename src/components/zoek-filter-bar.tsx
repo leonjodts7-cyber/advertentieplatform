@@ -171,12 +171,12 @@ export function ZoekFilterBar({ variant = "inline" }: { variant?: "inline" | "dr
         <button
           type="button"
           onClick={() => setDrawerOpen(true)}
-          className="inline-flex min-h-[44px] items-center gap-2 rounded-full border border-border bg-white px-4 text-sm font-medium text-foreground shadow-sm"
+          className="inline-flex min-h-[44px] items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-4 text-sm font-medium text-foreground"
         >
-          <SlidersHorizontal className="h-4 w-4 text-primary" />
+          <SlidersHorizontal className="h-4 w-4 text-champagne" />
           Filters
           {activeFilterCount > 0 && (
-            <span className="flex h-5 min-w-[20px] items-center justify-center rounded-full bg-primary-soft px-1.5 text-xs font-semibold text-primary-dark">
+            <span className="flex h-5 min-w-[20px] items-center justify-center rounded-full bg-champagne/15 px-1.5 text-xs font-semibold text-champagne-light">
               {activeFilterCount}
             </span>
           )}

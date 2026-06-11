@@ -37,7 +37,7 @@ export default async function DashboardAdvertentiesPage() {
         <div className="container">
           <Link
             href="/dashboard"
-            className="text-sm text-muted-foreground hover:text-primary-dark"
+            className="text-sm text-muted-foreground hover:text-champagne-light"
           >
             ← Dashboard
           </Link>
@@ -50,7 +50,7 @@ export default async function DashboardAdvertentiesPage() {
 
       <div className="container py-6 sm:py-8">
         <div className="mb-5 flex justify-end">
-          <Button asChild variant="premium">
+          <Button asChild variant="primary">
             <Link href="/dashboard/advertenties/nieuw">+ Nieuwe advertentie</Link>
           </Button>
         </div>
@@ -67,14 +67,14 @@ export default async function DashboardAdvertentiesPage() {
             ))}
           </div>
         ) : (
-          <div className="luxury-card p-8 text-center sm:p-12">
+          <div className="velvet-card p-8 text-center sm:p-12">
             <p className="font-display text-xl text-foreground">
               Nog geen advertenties
             </p>
             <p className="mt-2 text-sm text-muted-foreground">
-              Start met je eerste profiel op Veloura.
+              Start met je eerste profiel als aanbieder op Veloura.
             </p>
-            <Button asChild variant="premium" className="mt-5">
+            <Button asChild variant="primary" className="mt-5">
               <Link href="/dashboard/advertenties/nieuw">Nieuwe advertentie</Link>
             </Button>
           </div>

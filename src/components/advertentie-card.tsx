@@ -3,7 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { formatPrijs, statusLabel } from "@/lib/helpers";
 import type { Advertentie } from "@/lib/types";
 import { cn } from "@/lib/utils";
-import { MapPin, Sparkles } from "lucide-react";
+import { MapPin } from "lucide-react";
 
 interface AdvertentieCardProps {
   advertentie: Advertentie;
@@ -46,29 +46,28 @@ export function AdvertentieCard({
       href={linkHref}
       className={cn(
         "group luxury-card flex flex-col overflow-hidden transition-all duration-300",
-        "hover:-translate-y-1 hover:border-primary/35 hover:shadow-glow",
-        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/25"
+        "hover:-translate-y-1 hover:border-champagne/25 hover:shadow-glow",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-champagne/25"
       )}
     >
-      <div className="relative m-3 mb-0 aspect-[4/5] overflow-hidden rounded-2xl sm:aspect-[3/4]">
+      <div className="relative aspect-[4/5] overflow-hidden sm:aspect-[3/4]">
         {afbeeldingUrl ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
             src={afbeeldingUrl}
             alt={advertentie.titel}
-            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"
+            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
           />
         ) : (
-          <div className="thumbnail-gradient flex h-full w-full items-center justify-center rounded-2xl">
-            <Sparkles className="h-8 w-8 text-primary/35" />
-          </div>
+          <div className="thumbnail-gradient h-full w-full" />
         )}
+        <div className="absolute inset-0 bg-gradient-to-t from-[#08070a]/90 via-[#08070a]/20 to-transparent" />
         <div className="absolute inset-x-0 top-0 flex flex-wrap gap-1.5 p-3">
           {advertentie.geverifieerd && (
-            <Badge variant="success">Verifieerd</Badge>
+            <Badge variant="green">Geverifieerd</Badge>
           )}
           {isPremium && !dashboard && (
-            <Badge variant="premium">Premium</Badge>
+            <Badge variant="champagne">Premium</Badge>
           )}
           {advertentie.beschikbaar && (
             <Badge variant="green">Beschikbaar</Badge>
@@ -76,14 +75,14 @@ export function AdvertentieCard({
         </div>
       </div>
 
-      <div className="flex flex-1 flex-col gap-2 p-4 pt-3">
-        <h3 className="font-display line-clamp-2 text-base font-medium leading-snug text-foreground transition-colors group-hover:text-primary-dark sm:text-lg">
+      <div className="flex flex-1 flex-col gap-2 p-4">
+        <h3 className="font-display line-clamp-2 text-base font-medium leading-snug text-foreground transition-colors group-hover:text-champagne-light sm:text-lg">
           {advertentie.titel}
         </h3>
 
         <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted-foreground">
           <span className="inline-flex items-center gap-1">
-            <MapPin className="h-3.5 w-3.5 shrink-0 text-primary/50" />
+            <MapPin className="h-3.5 w-3.5 shrink-0 text-champagne/60" />
             {advertentie.stad}
           </span>
           {advertentie.leeftijd != null && (
@@ -92,7 +91,7 @@ export function AdvertentieCard({
         </div>
 
         {advertentie.prijs_vanaf != null && (
-          <p className="text-sm font-semibold text-primary-dark">
+          <p className="text-sm font-semibold text-champagne-light">
             Vanaf {formatPrijs(advertentie.prijs_vanaf)}
           </p>
         )}
@@ -103,7 +102,7 @@ export function AdvertentieCard({
               {statusLabel(advertentie.status)}
             </Badge>
           ) : (
-            <span className="text-xs font-medium tracking-wide text-muted-foreground transition-colors group-hover:text-primary">
+            <span className="text-xs font-medium tracking-wide text-muted-foreground transition-colors group-hover:text-champagne">
               Bekijk profiel →
             </span>
           )}

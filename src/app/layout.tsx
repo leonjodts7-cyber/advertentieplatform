@@ -19,11 +19,11 @@ const sans = DM_Sans({
 
 export const metadata: Metadata = {
   title: {
-    default: "Veloura — Premium platform voor discrete advertenties",
+    default: "Veloura — Premium adult marketplace",
     template: "%s | Veloura",
   },
   description:
-    "Ontdek en plaats discrete advertenties op een stijlvol, professioneel en mobiel-first platform.",
+    "Ontdek en plaats discrete profielen op een stijlvol, professioneel adult marketplace platform.",
   metadataBase: new URL(
     process.env.NEXT_PUBLIC_SITE_URL ??
       process.env.NEXT_PUBLIC_APP_URL ??
