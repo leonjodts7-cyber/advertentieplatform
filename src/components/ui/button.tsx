@@ -3,26 +3,36 @@ import { Slot } from "@radix-ui/react-slot";
 import { forwardRef, type ButtonHTMLAttributes } from "react";
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: "primary" | "premium" | "secondary" | "ghost" | "danger" | "outline" | "rose";
+  variant?:
+    | "primary"
+    | "premium"
+    | "secondary"
+    | "secondary-light"
+    | "ghost"
+    | "danger"
+    | "outline"
+    | "rose";
   size?: "sm" | "md" | "lg";
   asChild?: boolean;
 }
 
 const variantClasses: Record<NonNullable<ButtonProps["variant"]>, string> = {
   primary:
-    "bg-gradient-to-r from-wine-deep via-wine to-wine-light/90 text-foreground border border-champagne/15 shadow-sm hover:brightness-[1.04] hover:shadow-warm-glow",
+    "bg-gradient-to-r from-[#5a2338] via-[#7a2f49] to-[#9a6848] text-[#fff7ef] border border-[#d8b46a]/20 shadow-sm hover:brightness-[1.04] hover:shadow-warm-glow",
   premium:
-    "bg-gradient-to-r from-wine-deep to-wine text-foreground border border-wine-light/30 hover:brightness-110",
+    "bg-gradient-to-r from-[#5a2338] to-[#7a2f49] text-[#fff7ef] border border-[#7a2f49]/40 hover:brightness-105",
   rose:
-    "bg-wine text-foreground border border-wine-light/40 hover:bg-wine-light",
+    "bg-[#7a2f49] text-[#fff7ef] border border-[#b76d78]/40 hover:bg-[#8a3a55]",
   secondary:
-    "bg-white/[0.05] text-foreground border border-white/12 hover:bg-white/[0.08] hover:border-champagne/25 backdrop-blur-sm",
+    "bg-white/[0.06] text-[#fff7ef] border border-white/14 hover:bg-white/[0.1] hover:border-[#d8b46a]/25",
+  "secondary-light":
+    "bg-white text-[#211a20] border border-[#eadfd8] hover:border-[#7a2f49]/30 hover:bg-[#faf7f4]",
   ghost:
-    "bg-transparent text-muted-foreground border border-transparent hover:bg-white/[0.05] hover:text-foreground",
+    "bg-transparent text-[#b7aaa2] border border-transparent hover:bg-white/[0.05] hover:text-[#fff7ef]",
   danger:
-    "bg-destructive text-foreground border border-destructive/40 hover:opacity-90",
+    "bg-[#8b3040] text-[#fff7ef] border border-[#8b3040]/40 hover:opacity-90",
   outline:
-    "border border-white/12 bg-transparent text-foreground hover:bg-white/[0.05] hover:border-champagne/25",
+    "border border-white/14 bg-transparent text-[#fff7ef] hover:bg-white/[0.05] hover:border-[#d8b46a]/25",
 };
 
 const sizeClasses: Record<NonNullable<ButtonProps["size"]>, string> = {
@@ -53,7 +63,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         disabled={disabled}
         className={cn(
           "inline-flex items-center justify-center gap-2 rounded-full font-medium tracking-wide transition-all duration-200",
-          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-champagne/35 focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d8b46a]/35 focus-visible:ring-offset-2",
           "disabled:pointer-events-none disabled:opacity-50",
           "active:scale-[0.98]",
           variantClasses[variant],

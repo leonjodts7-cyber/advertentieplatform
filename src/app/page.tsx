@@ -2,14 +2,103 @@ import Link from "next/link";
 import { AdvertentieCard } from "@/components/advertentie-card";
 import { MarketplaceHeroSearch } from "@/components/marketplace-hero-search";
 import { ProfilePreviewCard } from "@/components/profile-preview-card";
-import { PopularCitiesGrid } from "@/components/popular-cities-grid";
-import { WhyVeloura } from "@/components/why-veloura";
 import { Button } from "@/components/ui/button";
 import { haalEersteFotos } from "@/lib/advertentie-fotos";
 import { HOME_PREVIEW_PROFIELEN } from "@/lib/home-preview-profielen";
-import { MARKETPLACE_CATEGORIEEN } from "@/lib/marketplace";
 import type { Advertentie } from "@/lib/types";
 import { createClient } from "@/lib/supabase/server";
+import { cn } from "@/lib/utils";
+
+const NAV_CATEGORIEEN = [
+  { slug: "prive-huizen", label: "Privéhuizen" },
+  { slug: "prive-ontvangst", label: "Privé ontvangst" },
+  { slug: "escort", label: "Escort" },
+  { slug: "massagesalons", label: "Massagesalons" },
+  { slug: "bars-priveclubs", label: "Bars & privéclubs" },
+  { slug: "rendez-vous-hotels", label: "Rendez-vous hotels" },
+  { slug: "prive-saunas", label: "Privé sauna's" },
+  { slug: "parenclubs", label: "Parenclubs" },
+  { slug: "video", label: "Video" },
+  { slug: "koppels", label: "Koppels" },
+  { slug: "trans", label: "Trans" },
+  { slug: "mannen", label: "Mannen" },
+  { slug: "vrouwen", label: "Vrouwen" },
+] as const;
+
+const LOCATIE_CARDS = [
+  {
+    slug: "prive-huizen",
+    label: "Privéhuizen",
+    beschrijving: "Discrete privélocaties voor ontmoetingen in jouw regio.",
+  },
+  {
+    slug: "massagesalons",
+    label: "Massagesalons",
+    beschrijving: "Professionele massagesalons en wellness-adressen.",
+  },
+  {
+    slug: "bars-priveclubs",
+    label: "Bars & privéclubs",
+    beschrijving: "Stijlvolle bars en privéclubs voor avondbezoek.",
+  },
+  {
+    slug: "rendez-vous-hotels",
+    label: "Rendez-vous hotels",
+    beschrijving: "Hotels en suites voor discrete afspraken.",
+  },
+  {
+    slug: "prive-saunas",
+    label: "Privé sauna's",
+    beschrijving: "Privé sauna's en wellness met discrete sfeer.",
+  },
+  {
+    slug: "parenclubs",
+    label: "Parenclubs",
+    beschrijving: "Clubs en locaties voor koppels en swingers.",
+  },
+] as const;
+
+const WAAROM_VELOURA = [
+  {
+    titel: "Discreet zoeken",
+    tekst: "Zoek op stad en categorie zonder opdringerige uitstraling. Jij bepaalt wat je deelt.",
+  },
+  {
+    titel: "Direct contact",
+    tekst: "Neem rechtstreeks contact op met aanbieders. Geen tussenpersonen, geen gedoe.",
+  },
+  {
+    titel: "Geverifieerde profielen",
+    tekst: "Herken betrouwbare aanbieders via verificatie en duidelijke profielinformatie.",
+  },
+  {
+    titel: "Mobiel-first ervaring",
+    tekst: "Veloura is gebouwd voor je telefoon — snel browsen, duidelijke profielkaarten.",
+  },
+];
+
+function CategoryNav({ activeSlug }: { activeSlug?: string }) {
+  return (
+    <nav className="category-nav" aria-label="Categorieën">
+      <div className="container px-0 sm:px-5">
+        <div className="category-nav__scroll no-scrollbar">
+          {NAV_CATEGORIEEN.map((cat) => (
+            <Link
+              key={cat.slug}
+              href={`/zoeken?categorie=${cat.slug}`}
+              className={cn(
+                "category-nav__link",
+                activeSlug === cat.slug && "category-nav__link--active"
+              )}
+            >
+              {cat.label}
+            </Link>
+          ))}
+        </div>
+      </div>
+    </nav>
+  );
+}
 
 export default async function HomePage() {
   const supabase = await createClient();
@@ -29,8 +118,8 @@ export default async function HomePage() {
 
   return (
     <div>
-      {/* A. Hero + zoekfunctie */}
-      <section className="marketplace-section border-b border-white/10">
+      {/* A. Hero */}
+      <section className="section-dark marketplace-section border-b border-white/10">
         <div className="container">
           <div className="grid items-start gap-6 lg:grid-cols-2 lg:gap-10">
             <div className="order-2 lg:order-1 animate-fade-in">
@@ -38,11 +127,11 @@ export default async function HomePage() {
                 Alleen 18+ · Discreet · Geverifieerd · Direct contact
               </p>
 
-              <h1 className="font-display mt-3 text-[1.75rem] font-medium leading-[1.1] sm:text-4xl lg:text-[2.5rem]">
+              <h1 className="font-display mt-3 text-[1.75rem] font-medium leading-[1.1] text-[#fff7ef] sm:text-4xl lg:text-[2.5rem]">
                 Vind discrete profielen in jouw regio
               </h1>
 
-              <p className="mt-3 max-w-lg text-sm leading-relaxed text-muted-foreground sm:text-base">
+              <p className="mt-3 max-w-lg text-sm leading-relaxed text-[#b7aaa2] sm:text-base">
                 Zoek privé ontvangst, escort, video en meer. Direct contact met
                 zelfstandige aanbieders, discreet en mobiel-first.
               </p>
@@ -65,7 +154,7 @@ export default async function HomePage() {
             </div>
 
             <div className="order-1 lg:order-2">
-              <div className="glass-card p-4 sm:p-5">
+              <div className="hero-search-panel glass-card p-4 sm:p-5">
                 <MarketplaceHeroSearch />
               </div>
             </div>
@@ -73,8 +162,11 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* B. Online nu */}
-      <section className="marketplace-section border-b border-white/10 bg-white/[0.02]">
+      {/* B. Categorie navigatie */}
+      <CategoryNav />
+
+      {/* C. Online profielen */}
+      <section className="section-dark marketplace-section border-b border-white/10">
         <div className="container">
           <h2 className="section-title text-lg sm:text-xl">Online nu</h2>
           <p className="section-subtitle mt-1">
@@ -89,38 +181,30 @@ export default async function HomePage() {
               />
             ))}
           </div>
-          <p className="mt-3 text-center text-xs text-muted-foreground/80">
-            Voorbeeldweergave — geen echte personen
-          </p>
         </div>
       </section>
 
-      {/* C. Populaire steden */}
-      <section className="marketplace-section border-b border-white/10">
-        <div className="container">
-          <h2 className="section-title text-lg sm:text-xl">Populaire steden</h2>
-          <p className="section-subtitle mt-1">Zoek profielen per locatie</p>
-          <div className="mt-5">
-            <PopularCitiesGrid />
-          </div>
-        </div>
-      </section>
-
-      {/* D. Populaire categorieën */}
-      <section className="marketplace-section border-b border-white/10 bg-white/[0.02]">
+      {/* D. Adressen & locaties */}
+      <section className="section-light marketplace-section">
         <div className="container">
           <h2 className="section-title text-lg sm:text-xl">
-            Populaire categorieën
+            Populaire locaties
           </h2>
-          <p className="section-subtitle mt-1">Vind wat bij jou past</p>
-          <div className="mt-5 grid grid-cols-2 gap-2 sm:grid-cols-4 sm:gap-3">
-            {MARKETPLACE_CATEGORIEEN.map((cat) => (
+          <p className="section-subtitle mt-1">
+            Ontdek adressen en diensten per categorie.
+          </p>
+          <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {LOCATIE_CARDS.map((loc) => (
               <Link
-                key={cat.slug}
-                href={`/zoeken?categorie=${cat.slug}`}
-                className="category-card"
+                key={loc.slug}
+                href={`/zoeken?categorie=${loc.slug}`}
+                className="location-card group"
               >
-                {cat.label}
+                <p className="location-card__title group-hover:text-[#7a2f49]">
+                  {loc.label}
+                </p>
+                <p className="location-card__desc">{loc.beschrijving}</p>
+                <span className="location-card__cta">Bekijk →</span>
               </Link>
             ))}
           </div>
@@ -128,7 +212,7 @@ export default async function HomePage() {
       </section>
 
       {/* E. Nieuwste advertenties */}
-      <section className="marketplace-section border-b border-white/10">
+      <section className="section-light marketplace-section border-t border-[#eadfd8]">
         <div className="container">
           <div className="flex items-end justify-between gap-3">
             <div>
@@ -137,7 +221,7 @@ export default async function HomePage() {
             </div>
             <Link
               href="/zoeken"
-              className="hidden text-sm font-medium text-soft-champagne hover:text-champagne sm:inline"
+              className="hidden text-sm font-medium text-[#7a2f49] hover:underline sm:inline"
             >
               Alles bekijken →
             </Link>
@@ -150,15 +234,16 @@ export default async function HomePage() {
                   key={advertentie.id}
                   advertentie={advertentie}
                   afbeeldingUrl={fotos.get(advertentie.id)}
+                  theme="light"
                 />
               ))}
             </div>
           ) : (
-            <div className="profile-card mt-5 p-8 text-center sm:p-12">
-              <p className="font-display text-xl text-foreground">
+            <div className="light-card mt-5 p-8 text-center sm:p-12">
+              <p className="font-display text-xl text-[#211a20]">
                 Nog geen actieve advertenties
               </p>
-              <p className="mx-auto mt-2 max-w-sm text-sm text-muted-foreground">
+              <p className="mx-auto mt-2 max-w-sm text-sm text-[#756760]">
                 Plaats jouw profiel en word als eerste zichtbaar.
               </p>
               <Button asChild size="lg" className="mt-5">
@@ -172,7 +257,7 @@ export default async function HomePage() {
           <div className="mt-4 text-center sm:hidden">
             <Link
               href="/zoeken"
-              className="text-sm font-medium text-soft-champagne"
+              className="text-sm font-medium text-[#7a2f49]"
             >
               Alles bekijken →
             </Link>
@@ -181,16 +266,36 @@ export default async function HomePage() {
       </section>
 
       {/* F. Waarom Veloura */}
-      <WhyVeloura />
+      <section className="section-light marketplace-section border-t border-[#eadfd8]">
+        <div className="container">
+          <h2 className="section-title">Waarom Veloura?</h2>
+          <p className="section-subtitle mt-1 max-w-lg">
+            Premium marketplace voor volwassenen die discretie en kwaliteit
+            waarderen.
+          </p>
+          <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            {WAAROM_VELOURA.map((v) => (
+              <div key={v.titel} className="light-card p-4 sm:p-5">
+                <h3 className="font-display text-base font-medium text-[#211a20] sm:text-lg">
+                  {v.titel}
+                </h3>
+                <p className="mt-2 text-sm leading-relaxed text-[#756760]">
+                  {v.tekst}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
-      {/* G. Voor aanbieders */}
-      <section className="marketplace-section border-t border-white/10 bg-white/[0.02]">
+      {/* G. CTA aanbieders */}
+      <section className="section-dark marketplace-section border-t border-white/10">
         <div className="container">
           <div className="profile-card mx-auto max-w-2xl p-8 text-center sm:p-10">
-            <h2 className="font-display text-xl text-foreground sm:text-2xl">
+            <h2 className="font-display text-xl text-[#fff7ef] sm:text-2xl">
               Word zichtbaar bij bezoekers in jouw regio
             </h2>
-            <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-muted-foreground sm:text-base">
+            <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-[#b7aaa2] sm:text-base">
               Plaats jouw advertentie, beheer je profiel en bereik sneller
               geïnteresseerde bezoekers.
             </p>

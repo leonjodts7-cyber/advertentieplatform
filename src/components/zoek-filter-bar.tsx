@@ -212,8 +212,8 @@ export function ZoekFilterBar({ variant = "inline" }: { variant?: "inline" | "dr
   }
 
   return (
-    <div className="filter-panel">
-      <h2 className="font-display mb-4 text-lg font-medium text-foreground">
+    <div className="filter-panel filter-panel-light">
+      <h2 className="font-display mb-4 text-lg font-medium text-[#211a20]">
         Filters
       </h2>
       <FilterContent {...contentProps} />

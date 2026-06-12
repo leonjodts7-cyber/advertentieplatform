@@ -13,7 +13,7 @@ function badgeVariant(v: HomePreviewProfiel["badges"][0]["variant"]) {
     case "premium":
       return "premium" as const;
     case "new":
-      return "review" as const;
+      return "new" as const;
     case "popular":
       return "premium" as const;
   }
@@ -51,14 +51,15 @@ export function ProfilePreviewCard({
             </Badge>
           ))}
         </div>
-        <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[var(--background)]/95 via-[var(--background)]/50 to-transparent p-4 pt-12">
-          <p className="font-display text-lg font-medium text-foreground">
+        <div className="profile-card__overlay absolute inset-0" />
+        <div className="absolute inset-x-0 bottom-0 p-4 pt-12">
+          <p className="profile-card__overlay-text font-display text-lg font-medium">
             {profiel.naam}
-            <span className="ml-2 text-base font-normal text-soft-champagne">
+            <span className="profile-card__overlay-accent ml-2 text-base font-normal">
               {profiel.leeftijd}
             </span>
           </p>
-          <p className="mt-0.5 text-sm text-muted-foreground">
+          <p className="profile-card__overlay-muted mt-0.5 text-sm">
             {profiel.stad} · {profiel.type}
           </p>
         </div>

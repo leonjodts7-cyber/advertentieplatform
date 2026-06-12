@@ -11,16 +11,17 @@ interface AdvertentieCardProps {
   href?: string;
   afbeeldingUrl?: string | null;
   showPremium?: boolean;
+  theme?: "dark" | "light";
 }
 
 function statusVariant(
   status: Advertentie["status"]
-): "green" | "review" | "muted" {
+): "green" | "new" | "muted" {
   switch (status) {
     case "actief":
       return "green";
     case "in_review":
-      return "review";
+      return "new";
     default:
       return "muted";
   }
@@ -32,6 +33,7 @@ export function AdvertentieCard({
   href,
   afbeeldingUrl,
   showPremium = false,
+  theme = "dark",
 }: AdvertentieCardProps) {
   const linkHref =
     href ??
@@ -40,14 +42,18 @@ export function AdvertentieCard({
       : `/advertentie/${advertentie.id}`);
 
   const isPremium = showPremium || advertentie.geverifieerd;
+  const isLight = theme === "light" && !dashboard;
 
   return (
     <Link
       href={linkHref}
       className={cn(
-        "profile-card group block overflow-hidden transition-all duration-300",
+        "group block overflow-hidden rounded-2xl transition-all duration-300",
         "hover:-translate-y-0.5 hover:shadow-warm-glow",
-        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-champagne/25"
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-champagne/25",
+        isLight
+          ? "border border-[#eadfd8] bg-white shadow-sm"
+          : "profile-card"
       )}
     >
       <div className="relative aspect-[3/4] overflow-hidden">
@@ -61,6 +67,8 @@ export function AdvertentieCard({
         ) : (
           <ProfilePhotoPlaceholder variant="warm-wine" className="!aspect-auto h-full" />
         )}
+
+        <div className="profile-card__overlay absolute inset-0" />
 
         <div className="absolute inset-x-0 top-0 flex flex-wrap gap-1.5 p-3">
           {advertentie.beschikbaar && (
@@ -77,17 +85,17 @@ export function AdvertentieCard({
           )}
         </div>
 
-        <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[var(--background)]/95 via-[var(--background)]/55 to-transparent p-4 pt-16">
-          <h3 className="font-display line-clamp-2 text-base font-medium leading-snug text-foreground transition-colors group-hover:text-soft-champagne sm:text-lg">
+        <div className="absolute inset-x-0 bottom-0 p-4 pt-14">
+          <h3 className="profile-card__overlay-text font-display line-clamp-2 text-base font-medium leading-snug sm:text-lg">
             {advertentie.titel}
           </h3>
-          <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-0.5 text-sm text-muted-foreground">
+          <div className="profile-card__overlay-muted mt-1 flex flex-wrap items-center gap-x-3 gap-y-0.5 text-sm">
             <span>{advertentie.stad}</span>
             {advertentie.leeftijd != null && (
               <span>{advertentie.leeftijd} jaar</span>
             )}
             {advertentie.prijs_vanaf != null && (
-              <span className="font-semibold text-soft-champagne">
+              <span className="profile-card__overlay-accent font-semibold">
                 Vanaf {formatPrijs(advertentie.prijs_vanaf)}
               </span>
             )}
@@ -95,13 +103,25 @@ export function AdvertentieCard({
         </div>
       </div>
 
-      <div className="flex items-center justify-between gap-2 px-4 py-3">
+      <div
+        className={cn(
+          "flex items-center justify-between gap-2 px-4 py-3",
+          isLight ? "text-[#756760]" : ""
+        )}
+      >
         {dashboard ? (
           <Badge variant={statusVariant(advertentie.status)}>
             {statusLabel(advertentie.status)}
           </Badge>
         ) : (
-          <span className="text-xs font-medium tracking-wide text-muted-foreground transition-colors group-hover:text-champagne">
+          <span
+            className={cn(
+              "text-xs font-medium tracking-wide transition-colors",
+              isLight
+                ? "text-[#756760] group-hover:text-[#7a2f49]"
+                : "text-[#b7aaa2] group-hover:text-[#d8b46a]"
+            )}
+          >
             Bekijk profiel →
           </span>
         )}

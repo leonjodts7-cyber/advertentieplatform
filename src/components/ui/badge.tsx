@@ -6,6 +6,7 @@ export interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {
     | "online"
     | "verified"
     | "premium"
+    | "new"
     | "fictief"
     | "credits"
     | "champagne"
@@ -22,22 +23,23 @@ export interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {
 }
 
 const variantClasses: Record<NonNullable<BadgeProps["variant"]>, string> = {
-  default: "bg-champagne/12 text-soft-champagne border-champagne/25",
-  online: "bg-success/12 text-success border-success/30",
-  verified: "bg-success/12 text-success border-success/30",
-  premium: "bg-champagne/12 text-soft-champagne border-champagne/30",
-  fictief: "bg-white/[0.05] text-muted-foreground border-white/12",
-  credits: "bg-wine/30 text-soft-champagne border-wine-light/35",
-  champagne: "bg-champagne/12 text-soft-champagne border-champagne/30",
-  gold: "bg-champagne/12 text-soft-champagne border-champagne/30",
-  wine: "bg-wine/35 text-foreground border-wine-light/40",
-  rose: "bg-wine/25 text-foreground border-rose-nude/35",
-  bordeaux: "bg-wine/35 text-foreground border-wine-light/40",
-  green: "bg-success/12 text-success border-success/30",
-  success: "bg-success/12 text-success border-success/30",
-  muted: "bg-white/[0.06] text-muted-foreground border-white/12",
-  review: "bg-champagne/12 text-soft-champagne border-champagne/22",
-  danger: "bg-destructive/20 text-red-300 border-destructive/30",
+  default: "bg-[#d8b46a]/15 text-[#ecd89a] border-[#d8b46a]/28",
+  online: "bg-[#4db87a]/14 text-[#62d490] border-[#4db87a]/30",
+  verified: "bg-[#4db87a]/14 text-[#62d490] border-[#4db87a]/30",
+  premium: "bg-[#d8b46a]/14 text-[#ecd89a] border-[#d8b46a]/30",
+  new: "bg-[#7a2f49]/25 text-[#f0d0d8] border-[#b76d78]/35",
+  fictief: "bg-white/[0.06] text-[#b7aaa2] border-white/12",
+  credits: "bg-[#7a2f49]/30 text-[#ecd89a] border-[#b76d78]/35",
+  champagne: "bg-[#d8b46a]/14 text-[#ecd89a] border-[#d8b46a]/30",
+  gold: "bg-[#d8b46a]/14 text-[#ecd89a] border-[#d8b46a]/30",
+  wine: "bg-[#7a2f49]/30 text-[#fff7ef] border-[#b76d78]/35",
+  rose: "bg-[#b76d78]/20 text-[#fff7ef] border-[#b76d78]/35",
+  bordeaux: "bg-[#7a2f49]/30 text-[#fff7ef] border-[#b76d78]/35",
+  green: "bg-[#4db87a]/14 text-[#62d490] border-[#4db87a]/30",
+  success: "bg-[#4db87a]/14 text-[#62d490] border-[#4db87a]/30",
+  muted: "bg-black/25 text-[#d4ccc6] border-white/12 backdrop-blur-sm",
+  review: "bg-[#d8b46a]/12 text-[#ecd89a] border-[#d8b46a]/22",
+  danger: "bg-[#8b3040]/25 text-red-300 border-[#8b3040]/35",
 };
 
 export function Badge({
