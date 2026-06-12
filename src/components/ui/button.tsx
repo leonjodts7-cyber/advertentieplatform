@@ -18,17 +18,17 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 const variantClasses: Record<NonNullable<ButtonProps["variant"]>, string> = {
   primary:
-    "bg-gradient-to-r from-[#5a2338] via-[#7a2f49] to-[#9a6848] text-[#fff7ef] border border-[#d8b46a]/20 shadow-sm hover:brightness-[1.04] hover:shadow-warm-glow",
+    "bg-gradient-to-r from-[#4a1d2f] via-[#7b2f49] to-[#b87955] text-[#fff4ec] border border-[#d6b36b]/20 shadow-sm hover:brightness-[1.04] hover:shadow-warm-glow",
   premium:
-    "bg-gradient-to-r from-[#5a2338] to-[#7a2f49] text-[#fff7ef] border border-[#7a2f49]/40 hover:brightness-105",
+    "bg-gradient-to-r from-[#4a1d2f] to-[#7b2f49] text-[#fff4ec] border border-[#9d4963]/35 hover:brightness-105",
   rose:
-    "bg-[#7a2f49] text-[#fff7ef] border border-[#b76d78]/40 hover:bg-[#8a3a55]",
+    "bg-[#7b2f49] text-[#fff4ec] border border-[#9d4963]/40 hover:bg-[#8a3a55]",
   secondary:
-    "bg-white/[0.06] text-[#fff7ef] border border-white/14 hover:bg-white/[0.1] hover:border-[#d8b46a]/25",
+    "bg-white/[0.06] text-[#fff4ec] border border-white/13 hover:bg-white/[0.1] hover:border-[#d6b36b]/25",
   "secondary-light":
-    "bg-white text-[#211a20] border border-[#eadfd8] hover:border-[#7a2f49]/30 hover:bg-[#faf7f4]",
+    "bg-[#fffaf6] text-[#24191f] border border-[#e6d8cf] hover:border-[#7b2f49]/30 hover:bg-[#f4ede7]",
   ghost:
-    "bg-transparent text-[#b7aaa2] border border-transparent hover:bg-white/[0.05] hover:text-[#fff7ef]",
+    "bg-transparent text-[#b8aaa2] border border-transparent hover:bg-white/[0.05] hover:text-[#fff4ec]",
   danger:
     "bg-[#8b3040] text-[#fff7ef] border border-[#8b3040]/40 hover:opacity-90",
   outline:

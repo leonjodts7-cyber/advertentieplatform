@@ -3,25 +3,27 @@
 @tailwind utilities;
 
 :root {
-  --main-dark: #181215;
-  --section-dark: #21181f;
+  --main-dark: #181216;
+  --section-dark: #21171d;
+  --section-darker: #120d11;
   --dark-card: rgba(255, 255, 255, 0.07);
-  --light-section: #f6efe8;
-  --light-card: #ffffff;
+  --light-section: #f4ede7;
+  --light-card: #fffaf6;
   --text-dark: #24191f;
   --text-light: #fff4ec;
-  --muted-dark: #75665f;
-  --muted-light: #b9aaa2;
+  --muted-dark: #786a63;
+  --muted-light: #b8aaa2;
   --wine: #7b2f49;
   --wine-deep: #4a1d2f;
+  --rose-wine: #9d4963;
   --rose: #b76d78;
-  --champagne: #d7b46a;
+  --champagne: #d6b36b;
   --champagne-soft: #ecd89a;
   --bronze: #b87955;
   --success: #4db87a;
   --danger: #8b3040;
-  --border-light: #e8dcd3;
-  --border-dark: rgba(255, 255, 255, 0.14);
+  --border-light: #e6d8cf;
+  --border-dark: rgba(255, 255, 255, 0.13);
   --radius: 1rem;
 
   /* Semantic aliases */
@@ -70,6 +72,12 @@ body {
 /* Dark luxury sections */
 .section-dark {
   background: var(--section-dark);
+  color: var(--text-light);
+  --border: var(--border-dark);
+}
+
+.section-darker {
+  background: var(--section-darker);
   color: var(--text-light);
   --border: var(--border-dark);
 }
@@ -128,16 +136,57 @@ body {
   box-shadow: 0 8px 28px rgba(0, 0, 0, 0.28);
 }
 
-.light-card {
+.light-card,
+.empty-state-card {
   border-radius: var(--radius);
   border: 1px solid var(--border-light);
   background: var(--light-card);
   color: var(--text-dark);
-  box-shadow: 0 2px 12px rgba(33, 26, 32, 0.06);
+  box-shadow: 0 2px 12px rgba(36, 25, 31, 0.06);
   transition: all 0.25s ease;
 }
 
-.light-card:hover {
+.empty-state-card {
+  padding: 2rem 1.5rem;
+  text-align: center;
+}
+
+@media (min-width: 640px) {
+  .empty-state-card {
+    padding: 3rem 2.5rem;
+  }
+}
+
+.trust-card-dark {
+  border-radius: var(--radius);
+  border: 1px solid var(--border-dark);
+  background: var(--dark-card);
+  color: var(--text-light);
+}
+
+.trust-card-dark p {
+  color: var(--muted-light);
+}
+
+.provider-cta-card {
+  border-radius: var(--radius);
+  border: 1px solid var(--border-dark);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.provider-cta-card p {
+  color: var(--muted-light);
+}
+
+.listing-card-dark {
+  border-radius: var(--radius);
+  border: 1px solid var(--border-dark);
+  background: var(--section-dark);
+}
+
+.light-card:hover,
+.empty-state-card:hover,
+.location-card:hover {
   border-color: rgba(122, 47, 73, 0.25);
   box-shadow: 0 6px 20px rgba(33, 26, 32, 0.1);
 }
@@ -361,63 +410,134 @@ body {
   background: rgba(247, 241, 235, 0.96);
 }
 
-/* Category navigation bar */
+/* Premium dark category navigation */
 .category-nav {
-  border-bottom: 1px solid var(--border-light);
-  border-top: 1px solid var(--border-light);
-  background: #f3ebe4;
+  background: #21171d;
+  border-top: 1px solid var(--border-dark);
+  border-bottom: 1px solid var(--border-dark);
 }
 
 .category-nav__scroll {
   display: flex;
-  gap: 0;
+  gap: 0.5rem;
+  padding: 0.75rem 0;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
 }
 
 @media (min-width: 1024px) {
   .category-nav__scroll {
-    display: grid;
-    grid-template-columns: repeat(13, minmax(0, 1fr));
+    flex-wrap: wrap;
+    justify-content: center;
     overflow-x: visible;
+    gap: 0.5rem;
+    padding: 0.875rem 0;
   }
 }
 
-.category-nav__link {
+.category-nav__chip {
   flex-shrink: 0;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 48px;
-  padding: 0.625rem 0.75rem;
+  min-height: 40px;
+  padding: 0.5rem 0.875rem;
   font-size: 0.75rem;
   font-weight: 500;
-  text-align: center;
-  color: var(--text-dark);
-  border-right: 1px solid var(--border-light);
-  transition: color 0.2s, background 0.2s;
+  white-space: nowrap;
+  color: var(--muted-light);
+  border: 1px solid var(--border-dark);
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.05);
+  transition: color 0.2s, background 0.2s, border-color 0.2s;
 }
 
 @media (min-width: 640px) {
-  .category-nav__link {
+  .category-nav__chip {
     font-size: 0.8125rem;
-    padding: 0.75rem 0.5rem;
+    padding: 0.5rem 1rem;
   }
 }
 
-.category-nav__link:last-child {
-  border-right: none;
+.category-nav__chip:hover {
+  color: var(--champagne-soft);
+  border-color: rgba(214, 179, 107, 0.35);
+  background: rgba(123, 47, 73, 0.25);
 }
 
-.category-nav__link:hover {
-  color: var(--wine);
-  background: rgba(122, 47, 73, 0.06);
+.category-nav__chip--active {
+  color: var(--champagne-soft);
+  border-color: rgba(214, 179, 107, 0.4);
+  background: rgba(123, 47, 73, 0.35);
+  font-weight: 600;
+}
+
+/* Legacy alias */
+.category-nav__link {
+  @apply category-nav__chip;
 }
 
 .category-nav__link--active {
-  color: var(--wine);
-  background: rgba(122, 47, 73, 0.1);
+  @apply category-nav__chip--active;
+}
+
+/* Populaire zoekopdrachten */
+.search-link-card {
+  display: flex;
+  align-items: center;
+  min-height: 52px;
+  padding: 0.875rem 1rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--border-dark);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-light);
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.search-link-card:hover {
+  border-color: rgba(214, 179, 107, 0.3);
+  background: rgba(123, 47, 73, 0.2);
+  color: var(--champagne-soft);
+}
+
+/* Lounge-style listing placeholder — geen gezicht */
+.listing-placeholder {
+  background: linear-gradient(160deg, #2a1f28 0%, #1a1218 40%, #120d11 100%);
+}
+
+.listing-placeholder__glow {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 70% 50% at 30% 20%, rgba(214, 179, 107, 0.18), transparent 55%),
+    radial-gradient(ellipse 60% 40% at 80% 30%, rgba(157, 73, 99, 0.12), transparent 50%);
+}
+
+.listing-placeholder__arch {
+  position: absolute;
+  bottom: 18%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 72%;
+  height: 38%;
+  border-radius: 50% 50% 0 0;
+  border: 1px solid rgba(214, 179, 107, 0.12);
+  background: linear-gradient(to top, rgba(123, 47, 73, 0.15), transparent);
+  opacity: 0.7;
+}
+
+.listing-placeholder__label {
+  position: absolute;
+  bottom: 28%;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.6875rem;
   font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 244, 236, 0.45);
 }
 
 /* Chips */

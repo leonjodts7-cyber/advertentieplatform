@@ -32,7 +32,7 @@ const variantClasses: Record<NonNullable<BadgeProps["variant"]>, string> = {
   credits: "bg-[#7a2f49]/30 text-[#ecd89a] border-[#b76d78]/35",
   champagne: "bg-[#d8b46a]/14 text-[#ecd89a] border-[#d8b46a]/30",
   gold: "bg-[#d8b46a]/14 text-[#ecd89a] border-[#d8b46a]/30",
-  wine: "bg-[#7a2f49]/30 text-[#fff7ef] border-[#b76d78]/35",
+  wine: "bg-[#7b2f49]/30 text-[#fff4ec] border-[#9d4963]/35",
   rose: "bg-[#b76d78]/20 text-[#fff7ef] border-[#b76d78]/35",
   bordeaux: "bg-[#7a2f49]/30 text-[#fff7ef] border-[#b76d78]/35",
   green: "bg-[#4db87a]/14 text-[#62d490] border-[#4db87a]/30",

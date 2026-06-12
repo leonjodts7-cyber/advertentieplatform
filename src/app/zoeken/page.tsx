@@ -47,15 +47,15 @@ function isTruthyFilter(value?: string) {
 function CategoryNav({ activeSlug }: { activeSlug?: string }) {
   return (
     <nav className="category-nav" aria-label="Categorieën">
-      <div className="container px-0 sm:px-5">
+      <div className="container">
         <div className="category-nav__scroll no-scrollbar">
           {NAV_CATEGORIEEN.map((cat) => (
             <Link
               key={cat.slug}
               href={`/zoeken?categorie=${cat.slug}`}
               className={cn(
-                "category-nav__link",
-                activeSlug === cat.slug && "category-nav__link--active"
+                "category-nav__chip",
+                activeSlug === cat.slug && "category-nav__chip--active"
               )}
             >
               {cat.label}
@@ -95,10 +95,10 @@ export default async function ZoekenPage({ searchParams }: ZoekenPageProps) {
 
   return (
     <div>
-      <div className="page-header-band">
+      <div className="section-dark page-header-band border-b border-white/10">
         <div className="container">
-          <h1 className="section-title">Profielen zoeken</h1>
-          <p className="section-subtitle mt-1.5 max-w-lg">
+          <h1 className="section-title text-[#fff4ec]">Profielen zoeken</h1>
+          <p className="section-subtitle mt-1.5 max-w-lg text-[#b8aaa2]">
             Vind discrete profielen in jouw regio. Filter op stad, categorie en
             beschikbaarheid.
           </p>
@@ -120,7 +120,7 @@ export default async function ZoekenPage({ searchParams }: ZoekenPageProps) {
           </Suspense>
 
           <div className="mb-5 flex flex-wrap items-center gap-2">
-            <p className="text-sm text-[#75665f]">
+            <p className="text-sm text-[#786a63]">
               <span className="font-medium text-[#24191f]">
                 {advertenties.length}
               </span>{" "}
@@ -139,7 +139,7 @@ export default async function ZoekenPage({ searchParams }: ZoekenPageProps) {
           </div>
 
           {advertenties.length > 0 ? (
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               {advertenties.map((advertentie) => (
                 <AdvertentieCard
                   key={advertentie.id}
@@ -150,11 +150,9 @@ export default async function ZoekenPage({ searchParams }: ZoekenPageProps) {
               ))}
             </div>
           ) : (
-            <div className="light-card mx-auto max-w-md p-8 text-center sm:p-10">
-              <p className="font-display text-xl text-[#24191f]">
-                Geen profielen gevonden
-              </p>
-              <p className="mt-2 text-sm text-[#75665f]">
+            <div className="empty-state-card mx-auto max-w-md">
+              <h3 className="font-display text-xl">Geen profielen gevonden</h3>
+              <p className="mt-2 text-sm leading-relaxed">
                 Pas je filters aan of plaats zelf een profiel als aanbieder.
               </p>
               <Button asChild variant="primary" className="mt-5">

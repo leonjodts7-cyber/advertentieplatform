@@ -1,11 +1,8 @@
 import Link from "next/link";
-import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { formatPrijs, statusLabel } from "@/lib/helpers";
 import type { Advertentie } from "@/lib/types";
 import { cn } from "@/lib/utils";
-
-const PLACEHOLDER_AFBEELDING = "/profielen/placeholder.svg";
 
 interface AdvertentieCardProps {
   advertentie: Advertentie;
@@ -27,6 +24,16 @@ function statusVariant(
     default:
       return "muted";
   }
+}
+
+function ListingPlaceholder() {
+  return (
+    <div className="listing-placeholder absolute inset-0">
+      <div className="listing-placeholder__glow" />
+      <div className="listing-placeholder__arch" />
+      <span className="listing-placeholder__label">Profiel</span>
+    </div>
+  );
 }
 
 export function AdvertentieCard({
@@ -54,8 +61,8 @@ export function AdvertentieCard({
         "hover:-translate-y-0.5 hover:shadow-warm-glow",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-champagne/25",
         isLight
-          ? "border border-[#e8dcd3] bg-white shadow-sm"
-          : "online-profile-card"
+          ? "border border-[#e6d8cf] bg-[#fffaf6] shadow-sm"
+          : "listing-card-dark"
       )}
     >
       <div className="relative aspect-[3/4] overflow-hidden">
@@ -67,13 +74,7 @@ export function AdvertentieCard({
             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
           />
         ) : (
-          <Image
-            src={PLACEHOLDER_AFBEELDING}
-            alt={advertentie.titel}
-            fill
-            className="object-cover object-top transition-transform duration-500 group-hover:scale-[1.03]"
-            sizes="(max-width:640px) 100vw, (max-width:1024px) 50vw, 33vw"
-          />
+          <ListingPlaceholder />
         )}
 
         <div className="profile-card__overlay absolute inset-0" />
@@ -114,7 +115,7 @@ export function AdvertentieCard({
       <div
         className={cn(
           "flex items-center justify-between gap-2 px-3 py-2.5 sm:px-4 sm:py-3",
-          isLight ? "text-[#75665f]" : ""
+          isLight ? "text-[#786a63]" : "text-[#b8aaa2]"
         )}
       >
         {dashboard ? (
@@ -126,8 +127,8 @@ export function AdvertentieCard({
             className={cn(
               "text-xs font-medium tracking-wide transition-colors",
               isLight
-                ? "text-[#75665f] group-hover:text-[#7b2f49]"
-                : "text-[#b9aaa2] group-hover:text-[#d7b46a]"
+                ? "group-hover:text-[#7b2f49]"
+                : "group-hover:text-[#d6b36b]"
             )}
           >
             Bekijk profiel →
