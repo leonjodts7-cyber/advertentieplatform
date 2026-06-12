@@ -120,8 +120,8 @@ export default async function ZoekenPage({ searchParams }: ZoekenPageProps) {
           </Suspense>
 
           <div className="mb-5 flex flex-wrap items-center gap-2">
-            <p className="text-sm text-[#756760]">
-              <span className="font-medium text-[#211a20]">
+            <p className="text-sm text-[#75665f]">
+              <span className="font-medium text-[#24191f]">
                 {advertenties.length}
               </span>{" "}
               profielen
@@ -151,10 +151,10 @@ export default async function ZoekenPage({ searchParams }: ZoekenPageProps) {
             </div>
           ) : (
             <div className="light-card mx-auto max-w-md p-8 text-center sm:p-10">
-              <p className="font-display text-xl text-[#211a20]">
+              <p className="font-display text-xl text-[#24191f]">
                 Geen profielen gevonden
               </p>
-              <p className="mt-2 text-sm text-[#756760]">
+              <p className="mt-2 text-sm text-[#75665f]">
                 Pas je filters aan of plaats zelf een profiel als aanbieder.
               </p>
               <Button asChild variant="primary" className="mt-5">

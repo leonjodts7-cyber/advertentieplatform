@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 500" fill="none" role="img" aria-label="Profielillustratie">
+  <defs>
+    <linearGradient id="s-bg" x1="0" y1="0" x2="400" y2="500" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#4a1d2f"/>
+      <stop offset="50%" stop-color="#5c2438"/>
+      <stop offset="100%" stop-color="#2d1018"/>
+    </linearGradient>
+    <radialGradient id="s-glow" cx="0.6" cy="0.2" r="0.55">
+      <stop offset="0%" stop-color="#b76d78" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#4a1d2f" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="s-skin" x1="200" y1="175" x2="200" y2="420" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#ecc8b0"/>
+      <stop offset="55%" stop-color="#d8a890"/>
+      <stop offset="100%" stop-color="#c08870"/>
+    </linearGradient>
+    <linearGradient id="s-hair" x1="140" y1="40" x2="260" y2="290" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#c04040"/>
+      <stop offset="35%" stop-color="#a02828"/>
+      <stop offset="100%" stop-color="#6a1818"/>
+    </linearGradient>
+    <linearGradient id="s-vignette" x1="200" y1="295" x2="200" y2="500" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#181215" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#181215" stop-opacity="0.88"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="500" fill="url(#s-bg)"/>
+  <rect width="400" height="500" fill="url(#s-glow)"/>
+  <ellipse cx="300" cy="60" rx="90" ry="60" fill="#b76d78" opacity="0.1"/>
+  <path d="M65 500 L72 378 Q92 335 138 328 L262 328 Q308 335 328 378 L335 500 Z" fill="url(#s-skin)"/>
+  <path d="M165 328 Q200 348 235 328 L230 298 Q200 282 170 298 Z" fill="url(#s-skin)"/>
+  <ellipse cx="200" cy="246" rx="74" ry="90" fill="url(#s-skin)"/>
+  <path d="M120 198 Q118 100 200 82 Q282 100 280 198 Q275 155 200 140 Q125 155 120 198 Z" fill="url(#s-hair)"/>
+  <path d="M108 215 Q88 300 118 340 L100 318 Q78 245 108 215 Z" fill="url(#s-hair)"/>
+  <path d="M292 215 Q312 300 282 340 L300 318 Q322 245 292 215 Z" fill="url(#s-hair)"/>
+  <path d="M140 165 Q200 142 260 165 Q250 118 200 108 Q150 118 140 165 Z" fill="#8a2020"/>
+  <ellipse cx="172" cy="244" rx="8" ry="5" fill="#8a5848" opacity="0.5"/>
+  <ellipse cx="228" cy="244" rx="8" ry="5" fill="#8a5848" opacity="0.5"/>
+  <path d="M186 276 Q200 285 214 276" stroke="#c08070" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.65"/>
+  <path d="M195 252 Q200 248 205 252" stroke="#6a3830" stroke-width="1.5" fill="none" opacity="0.4"/>
+  <path d="M128 500 L272 500 L270 415 Q200 395 130 415 Z" fill="url(#s-vignette)"/>
+</svg>

@@ -119,24 +119,24 @@ export default async function HomePage() {
   return (
     <div>
       {/* A. Hero */}
-      <section className="section-dark marketplace-section border-b border-white/10">
+      <section className="section-dark hero-section border-b border-white/10">
         <div className="container">
-          <div className="grid items-start gap-6 lg:grid-cols-2 lg:gap-10">
+          <div className="grid items-start gap-5 lg:grid-cols-2 lg:gap-8">
             <div className="order-2 lg:order-1 animate-fade-in">
               <p className="trustline-text text-[0.625rem] font-medium uppercase sm:text-[0.6875rem]">
                 Alleen 18+ · Discreet · Geverifieerd · Direct contact
               </p>
 
-              <h1 className="font-display mt-3 text-[1.75rem] font-medium leading-[1.1] text-[#fff7ef] sm:text-4xl lg:text-[2.5rem]">
+              <h1 className="font-display mt-2.5 text-[1.75rem] font-medium leading-[1.1] sm:text-4xl lg:text-[2.375rem]">
                 Vind discrete profielen in jouw regio
               </h1>
 
-              <p className="mt-3 max-w-lg text-sm leading-relaxed text-[#b7aaa2] sm:text-base">
+              <p className="mt-2.5 max-w-lg text-sm leading-relaxed sm:text-base">
                 Zoek privé ontvangst, escort, video en meer. Direct contact met
                 zelfstandige aanbieders, discreet en mobiel-first.
               </p>
 
-              <div className="mt-5 flex flex-col gap-2.5 sm:flex-row">
+              <div className="mt-4 flex flex-col gap-2.5 sm:flex-row">
                 <Button asChild size="lg" className="w-full sm:w-auto">
                   <Link href="/zoeken">Zoek profielen</Link>
                 </Button>
@@ -184,35 +184,8 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* D. Adressen & locaties */}
+      {/* D. Nieuwste advertenties */}
       <section className="section-light marketplace-section">
-        <div className="container">
-          <h2 className="section-title text-lg sm:text-xl">
-            Populaire locaties
-          </h2>
-          <p className="section-subtitle mt-1">
-            Ontdek adressen en diensten per categorie.
-          </p>
-          <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {LOCATIE_CARDS.map((loc) => (
-              <Link
-                key={loc.slug}
-                href={`/zoeken?categorie=${loc.slug}`}
-                className="location-card group"
-              >
-                <p className="location-card__title group-hover:text-[#7a2f49]">
-                  {loc.label}
-                </p>
-                <p className="location-card__desc">{loc.beschrijving}</p>
-                <span className="location-card__cta">Bekijk →</span>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* E. Nieuwste advertenties */}
-      <section className="section-light marketplace-section border-t border-[#eadfd8]">
         <div className="container">
           <div className="flex items-end justify-between gap-3">
             <div>
@@ -221,7 +194,8 @@ export default async function HomePage() {
             </div>
             <Link
               href="/zoeken"
-              className="hidden text-sm font-medium text-[#7a2f49] hover:underline sm:inline"
+              className="hidden text-sm font-medium hover:underline sm:inline"
+              style={{ color: "var(--wine)" }}
             >
               Alles bekijken →
             </Link>
@@ -240,10 +214,8 @@ export default async function HomePage() {
             </div>
           ) : (
             <div className="light-card mt-5 p-8 text-center sm:p-12">
-              <p className="font-display text-xl text-[#211a20]">
-                Nog geen actieve advertenties
-              </p>
-              <p className="mx-auto mt-2 max-w-sm text-sm text-[#756760]">
+              <p className="font-display text-xl">Nog geen actieve advertenties</p>
+              <p className="mx-auto mt-2 max-w-sm text-sm">
                 Plaats jouw profiel en word als eerste zichtbaar.
               </p>
               <Button asChild size="lg" className="mt-5">
@@ -257,7 +229,8 @@ export default async function HomePage() {
           <div className="mt-4 text-center sm:hidden">
             <Link
               href="/zoeken"
-              className="text-sm font-medium text-[#7a2f49]"
+              className="text-sm font-medium"
+              style={{ color: "var(--wine)" }}
             >
               Alles bekijken →
             </Link>
@@ -265,8 +238,35 @@ export default async function HomePage() {
         </div>
       </section>
 
+      {/* E. Populaire locaties */}
+      <section className="section-light marketplace-section border-t border-[#e8dcd3]">
+        <div className="container">
+          <h2 className="section-title text-lg sm:text-xl">
+            Populaire locaties
+          </h2>
+          <p className="section-subtitle mt-1">
+            Ontdek adressen en diensten per categorie.
+          </p>
+          <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {LOCATIE_CARDS.map((loc) => (
+              <Link
+                key={loc.slug}
+                href={`/zoeken?categorie=${loc.slug}`}
+                className="location-card group"
+              >
+                <p className="location-card__title group-hover:text-[#7b2f49]">
+                  {loc.label}
+                </p>
+                <p className="location-card__desc">{loc.beschrijving}</p>
+                <span className="location-card__cta">Bekijk →</span>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* F. Waarom Veloura */}
-      <section className="section-light marketplace-section border-t border-[#eadfd8]">
+      <section className="section-light marketplace-section border-t border-[#e8dcd3]">
         <div className="container">
           <h2 className="section-title">Waarom Veloura?</h2>
           <p className="section-subtitle mt-1 max-w-lg">
@@ -276,12 +276,10 @@ export default async function HomePage() {
           <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
             {WAAROM_VELOURA.map((v) => (
               <div key={v.titel} className="light-card p-4 sm:p-5">
-                <h3 className="font-display text-base font-medium text-[#211a20] sm:text-lg">
+                <h3 className="font-display text-base font-medium sm:text-lg">
                   {v.titel}
                 </h3>
-                <p className="mt-2 text-sm leading-relaxed text-[#756760]">
-                  {v.tekst}
-                </p>
+                <p className="mt-2 text-sm leading-relaxed">{v.tekst}</p>
               </div>
             ))}
           </div>
@@ -292,10 +290,10 @@ export default async function HomePage() {
       <section className="section-dark marketplace-section border-t border-white/10">
         <div className="container">
           <div className="profile-card mx-auto max-w-2xl p-8 text-center sm:p-10">
-            <h2 className="font-display text-xl text-[#fff7ef] sm:text-2xl">
+            <h2 className="font-display text-xl sm:text-2xl">
               Word zichtbaar bij bezoekers in jouw regio
             </h2>
-            <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-[#b7aaa2] sm:text-base">
+            <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed sm:text-base">
               Plaats jouw advertentie, beheer je profiel en bereik sneller
               geïnteresseerde bezoekers.
             </p>

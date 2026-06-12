@@ -3,29 +3,31 @@
 @tailwind utilities;
 
 :root {
-  --main-dark: #171216;
-  --dark-card: #211a20;
-  --light-section: #f7f1eb;
+  --main-dark: #181215;
+  --section-dark: #21181f;
+  --dark-card: rgba(255, 255, 255, 0.07);
+  --light-section: #f6efe8;
   --light-card: #ffffff;
-  --text-dark: #211a20;
-  --text-light: #fff7ef;
-  --muted-dark: #756760;
-  --muted-light: #b7aaa2;
-  --wine: #7a2f49;
-  --wine-deep: #5a2338;
+  --text-dark: #24191f;
+  --text-light: #fff4ec;
+  --muted-dark: #75665f;
+  --muted-light: #b9aaa2;
+  --wine: #7b2f49;
+  --wine-deep: #4a1d2f;
   --rose: #b76d78;
-  --champagne: #d8b46a;
+  --champagne: #d7b46a;
   --champagne-soft: #ecd89a;
+  --bronze: #b87955;
   --success: #4db87a;
   --danger: #8b3040;
-  --border-light: #eadfd8;
-  --border-dark: rgba(255, 255, 255, 0.12);
+  --border-light: #e8dcd3;
+  --border-dark: rgba(255, 255, 255, 0.14);
   --radius: 1rem;
 
   /* Semantic aliases */
   --background: var(--main-dark);
-  --background-elevated: var(--dark-card);
-  --surface: rgba(255, 255, 255, 0.07);
+  --background-elevated: var(--section-dark);
+  --surface: var(--dark-card);
   --surface-hover: rgba(255, 255, 255, 0.1);
   --text-main: var(--text-light);
   --text-muted: var(--muted-light);
@@ -61,9 +63,13 @@ body {
   @apply py-8 sm:py-10;
 }
 
+.hero-section {
+  @apply py-6 sm:py-8;
+}
+
 /* Dark luxury sections */
 .section-dark {
-  background: var(--main-dark);
+  background: var(--section-dark);
   color: var(--text-light);
   --border: var(--border-dark);
 }
@@ -102,17 +108,19 @@ body {
 }
 
 /* Cards */
-.profile-card {
+.profile-card,
+.online-profile-card {
   border-radius: var(--radius);
   border: 1px solid var(--border-dark);
-  background: var(--dark-card);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  background: var(--section-dark);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.18);
   transition: all 0.25s ease;
 }
 
-.section-dark .profile-card {
+.section-dark .profile-card,
+.online-profile-card {
   border-color: var(--border-dark);
-  background: var(--dark-card);
+  background: var(--section-dark);
 }
 
 .section-dark .profile-card:hover {
@@ -145,14 +153,24 @@ body {
 }
 
 .hero-search-panel {
-  border-color: rgba(255, 255, 255, 0.14);
-  background: rgba(33, 26, 32, 0.95);
+  border-color: rgba(255, 255, 255, 0.16);
+  background: rgba(33, 24, 31, 0.92);
 }
 
 .hero-search-panel input {
-  background: rgba(23, 18, 22, 0.9) !important;
-  border-color: rgba(255, 255, 255, 0.16) !important;
+  background: rgba(24, 18, 21, 0.85) !important;
+  border-color: rgba(255, 255, 255, 0.18) !important;
   color: var(--text-light) !important;
+}
+
+.hero-search-panel .type-chip {
+  color: var(--muted-light);
+  border-color: rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.hero-search-panel .type-chip-active {
+  color: var(--champagne-soft) !important;
 }
 
 .hero-search-panel input::placeholder {
@@ -217,7 +235,7 @@ body {
 }
 
 .glass-nav {
-  background: #171216;
+  background: var(--main-dark);
   border-bottom: 1px solid var(--border-dark);
 }
 
@@ -346,7 +364,8 @@ body {
 /* Category navigation bar */
 .category-nav {
   border-bottom: 1px solid var(--border-light);
-  background: var(--light-section);
+  border-top: 1px solid var(--border-light);
+  background: #f3ebe4;
 }
 
 .category-nav__scroll {

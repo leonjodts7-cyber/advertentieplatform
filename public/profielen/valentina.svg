@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 500" fill="none" role="img" aria-label="Profielillustratie">
+  <defs>
+    <linearGradient id="v-bg" x1="0" y1="0" x2="400" y2="500" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#5a2438"/>
+      <stop offset="45%" stop-color="#7b2f49"/>
+      <stop offset="100%" stop-color="#3d1828"/>
+    </linearGradient>
+    <radialGradient id="v-glow" cx="0.35" cy="0.15" r="0.65">
+      <stop offset="0%" stop-color="#d7b46a" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#7b2f49" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="v-skin" x1="200" y1="180" x2="200" y2="420" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#e8c4a8"/>
+      <stop offset="55%" stop-color="#d4a088"/>
+      <stop offset="100%" stop-color="#b87955"/>
+    </linearGradient>
+    <linearGradient id="v-hair" x1="160" y1="60" x2="280" y2="280" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#4a3020"/>
+      <stop offset="50%" stop-color="#3d2818"/>
+      <stop offset="100%" stop-color="#2a1a10"/>
+    </linearGradient>
+    <linearGradient id="v-vignette" x1="200" y1="300" x2="200" y2="500" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#181215" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#181215" stop-opacity="0.85"/>
+    </linearGradient>
+    <filter id="v-soft" x="-10%" y="-10%" width="120%" height="120%">
+      <feGaussianBlur stdDeviation="8" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <rect width="400" height="500" fill="url(#v-bg)"/>
+  <rect width="400" height="500" fill="url(#v-glow)"/>
+  <ellipse cx="320" cy="80" rx="120" ry="80" fill="#d7b46a" opacity="0.08"/>
+  <path d="M60 500 L60 380 Q80 340 120 330 L280 330 Q320 340 340 380 L340 500 Z" fill="#4a1d2f" opacity="0.5"/>
+  <path d="M85 500 L95 390 Q110 350 155 345 L245 345 Q290 350 305 390 L315 500 Z" fill="url(#v-skin)"/>
+  <path d="M168 345 Q200 360 232 345 L228 310 Q200 295 172 310 Z" fill="url(#v-skin)"/>
+  <ellipse cx="200" cy="248" rx="72" ry="88" fill="url(#v-skin)"/>
+  <path d="M128 200 Q130 120 200 95 Q270 120 272 200 Q265 160 200 145 Q135 160 128 200 Z" fill="url(#v-hair)"/>
+  <path d="M118 210 Q105 280 130 320 L115 300 Q100 240 118 210 Z" fill="url(#v-hair)"/>
+  <path d="M282 210 Q295 280 270 320 L285 300 Q300 240 282 210 Z" fill="url(#v-hair)"/>
+  <path d="M145 175 Q200 155 255 175 Q248 130 200 118 Q152 130 145 175 Z" fill="#3d2818"/>
+  <ellipse cx="175" cy="245" rx="8" ry="5" fill="#5c3d30" opacity="0.5"/>
+  <ellipse cx="225" cy="245" rx="8" ry="5" fill="#5c3d30" opacity="0.5"/>
+  <path d="M188 278 Q200 286 212 278" stroke="#c99578" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.6"/>
+  <ellipse cx="155" cy="265" rx="18" ry="12" fill="#d7b46a" opacity="0.12" filter="url(#v-soft)"/>
+  <path d="M130 500 L270 500 L270 420 Q200 400 130 420 Z" fill="url(#v-vignette)"/>
+</svg>

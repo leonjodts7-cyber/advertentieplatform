@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 500" fill="none" role="img" aria-label="Profiel placeholder">
+  <defs>
+    <linearGradient id="p-bg" x1="0" y1="0" x2="400" y2="500" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#4a1d2f"/>
+      <stop offset="50%" stop-color="#5c3040"/>
+      <stop offset="100%" stop-color="#2a1820"/>
+    </linearGradient>
+    <radialGradient id="p-glow" cx="0.5" cy="0.15" r="0.55">
+      <stop offset="0%" stop-color="#d7b46a" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#4a1d2f" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="p-skin" x1="200" y1="185" x2="200" y2="420" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#e0bca0"/>
+      <stop offset="55%" stop-color="#c89878"/>
+      <stop offset="100%" stop-color="#a87858"/>
+    </linearGradient>
+    <linearGradient id="p-hair" x1="150" y1="55" x2="250" y2="285" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#4a3828"/>
+      <stop offset="100%" stop-color="#2a1810"/>
+    </linearGradient>
+    <linearGradient id="p-vignette" x1="200" y1="300" x2="200" y2="500" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#181215" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#181215" stop-opacity="0.85"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="500" fill="url(#p-bg)"/>
+  <rect width="400" height="500" fill="url(#p-glow)"/>
+  <path d="M75 500 L82 385 Q102 345 148 338 L252 338 Q298 345 318 385 L325 500 Z" fill="url(#p-skin)"/>
+  <path d="M170 338 Q200 355 230 338 L226 305 Q200 290 174 305 Z" fill="url(#p-skin)"/>
+  <ellipse cx="200" cy="250" rx="70" ry="86" fill="url(#p-skin)"/>
+  <path d="M130 200 Q132 112 200 95 Q268 112 270 200 Q264 158 200 144 Q136 158 130 200 Z" fill="url(#p-hair)"/>
+  <path d="M118 215 Q105 295 130 328 L115 308 Q100 248 118 215 Z" fill="url(#p-hair)"/>
+  <path d="M282 215 Q295 295 270 328 L285 308 Q300 248 282 215 Z" fill="url(#p-hair)"/>
+  <ellipse cx="175" cy="248" rx="7" ry="4" fill="#6a4838" opacity="0.4"/>
+  <ellipse cx="225" cy="248" rx="7" ry="4" fill="#6a4838" opacity="0.4"/>
+  <path d="M128 500 L272 500 L270 418 Q200 400 130 418 Z" fill="url(#p-vignette)"/>
+</svg>

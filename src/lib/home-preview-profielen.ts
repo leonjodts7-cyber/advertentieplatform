@@ -12,6 +12,7 @@ export interface HomePreviewProfiel {
   leeftijd: number;
   stad: string;
   type: string;
+  afbeelding: string;
   photoVariant: ProfilePhotoVariant;
   badges: { label: string; variant: "online" | "verified" | "premium" | "new" | "popular" }[];
 }
@@ -23,6 +24,7 @@ export const HOME_PREVIEW_PROFIELEN: HomePreviewProfiel[] = [
     leeftijd: 21,
     stad: "Antwerpen",
     type: "Jong & spontaan",
+    afbeelding: "/profielen/valentina.svg",
     photoVariant: "warm-wine",
     badges: [
       { label: "Online", variant: "online" },
@@ -35,6 +37,7 @@ export const HOME_PREVIEW_PROFIELEN: HomePreviewProfiel[] = [
     leeftijd: 24,
     stad: "Gent",
     type: "Lief & romantisch",
+    afbeelding: "/profielen/mila.svg",
     photoVariant: "champagne-rose",
     badges: [
       { label: "Online", variant: "online" },
@@ -47,6 +50,7 @@ export const HOME_PREVIEW_PROFIELEN: HomePreviewProfiel[] = [
     leeftijd: 28,
     stad: "Brussel",
     type: "Zelfverzekerd",
+    afbeelding: "/profielen/scarlett.svg",
     photoVariant: "burgundy",
     badges: [
       { label: "Online", variant: "online" },
@@ -59,6 +63,7 @@ export const HOME_PREVIEW_PROFIELEN: HomePreviewProfiel[] = [
     leeftijd: 32,
     stad: "Antwerpen",
     type: "Elegant & discreet",
+    afbeelding: "/profielen/sophia.svg",
     photoVariant: "ivory-champagne",
     badges: [
       { label: "Online", variant: "online" },
@@ -71,6 +76,7 @@ export const HOME_PREVIEW_PROFIELEN: HomePreviewProfiel[] = [
     leeftijd: 38,
     stad: "Leuven",
     type: "Direct & stijlvol",
+    afbeelding: "/profielen/victoria.svg",
     photoVariant: "velvet-purple",
     badges: [
       { label: "Online", variant: "online" },
@@ -83,6 +89,7 @@ export const HOME_PREVIEW_PROFIELEN: HomePreviewProfiel[] = [
     leeftijd: 50,
     stad: "Brugge",
     type: "Ervaren & verfijnd",
+    afbeelding: "/profielen/isabella.svg",
     photoVariant: "deep-gold",
     badges: [
       { label: "Online", variant: "online" },

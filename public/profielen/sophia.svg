@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 500" fill="none" role="img" aria-label="Profielillustratie">
+  <defs>
+    <linearGradient id="so-bg" x1="0" y1="0" x2="400" y2="500" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#2a2228"/>
+      <stop offset="35%" stop-color="#3d3038"/>
+      <stop offset="100%" stop-color="#1a1418"/>
+    </linearGradient>
+    <radialGradient id="so-glow" cx="0.4" cy="0.12" r="0.6">
+      <stop offset="0%" stop-color="#d7b46a" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#2a2228" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="so-skin" x1="200" y1="180" x2="200" y2="420" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#e4c0a4"/>
+      <stop offset="50%" stop-color="#d0a888"/>
+      <stop offset="100%" stop-color="#b88868"/>
+    </linearGradient>
+    <linearGradient id="so-hair" x1="155" y1="55" x2="245" y2="285" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#4a3828"/>
+      <stop offset="50%" stop-color="#3a2818"/>
+      <stop offset="100%" stop-color="#2a1810"/>
+    </linearGradient>
+    <linearGradient id="so-vignette" x1="200" y1="300" x2="200" y2="500" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#181215" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#181215" stop-opacity="0.85"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="500" fill="url(#so-bg)"/>
+  <rect width="400" height="500" fill="url(#so-glow)"/>
+  <rect x="0" y="0" width="400" height="120" fill="#d7b46a" opacity="0.04"/>
+  <path d="M68 500 L74 382 Q98 342 145 335 L255 335 Q302 342 326 382 L332 500 Z" fill="#1a1418" opacity="0.6"/>
+  <path d="M82 500 L90 388 Q108 352 150 345 L250 345 Q292 352 310 388 L318 500 Z" fill="url(#so-skin)"/>
+  <path d="M172 345 Q200 358 228 345 L224 312 Q200 298 176 312 Z" fill="url(#so-skin)"/>
+  <ellipse cx="200" cy="252" rx="68" ry="84" fill="url(#so-skin)"/>
+  <path d="M132 202 Q135 115 200 98 Q265 115 268 202 Q262 162 200 148 Q138 162 132 202 Z" fill="url(#so-hair)"/>
+  <path d="M120 218 Q108 295 132 325 L118 305 Q105 248 120 218 Z" fill="url(#so-hair)"/>
+  <path d="M280 218 Q292 295 268 325 L282 305 Q295 248 280 218 Z" fill="url(#so-hair)"/>
+  <path d="M148 172 Q200 152 252 172 Q245 128 200 118 Q155 128 148 172 Z" fill="#322818"/>
+  <ellipse cx="176" cy="250" rx="7" ry="4" fill="#6a4838" opacity="0.45"/>
+  <ellipse cx="224" cy="250" rx="7" ry="4" fill="#6a4838" opacity="0.45"/>
+  <path d="M192 282 Q200 289 208 282" stroke="#c09878" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.55"/>
+  <ellipse cx="152" cy="270" rx="14" ry="9" fill="#d7b46a" opacity="0.1"/>
+  <path d="M128 500 L272 500 L270 420 Q200 402 130 420 Z" fill="url(#so-vignette)"/>
+</svg>

@@ -22,10 +22,10 @@ export function Header({ user }: HeaderProps) {
           href="/"
           className="min-w-0 shrink-0 rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-champagne/30"
         >
-          <span className="font-display text-lg font-medium tracking-tight text-[#fff7ef] sm:text-xl">
+          <span className="font-display text-lg font-medium tracking-tight text-[#fff4ec] sm:text-xl">
             Veloura
           </span>
-          <span className="mt-0.5 block text-[0.5625rem] uppercase tracking-[0.16em] text-[#b7aaa2] sm:text-[0.625rem]">
+          <span className="mt-0.5 block text-[0.5625rem] uppercase tracking-[0.16em] text-[#b9aaa2] sm:text-[0.625rem]">
             Adult Marketplace
           </span>
         </Link>
@@ -35,7 +35,7 @@ export function Header({ user }: HeaderProps) {
             <Link
               key={link.href}
               href={link.href}
-              className="rounded-full px-3 py-2 text-sm text-[#b7aaa2] transition-colors hover:bg-white/[0.06] hover:text-[#fff7ef]"
+              className="rounded-full px-3 py-2 text-sm text-[#b9aaa2] transition-colors hover:bg-white/[0.06] hover:text-[#fff4ec]"
             >
               {link.label}
             </Link>
@@ -45,7 +45,7 @@ export function Header({ user }: HeaderProps) {
           ) : (
             <Link
               href="/login"
-              className="rounded-full px-3 py-2 text-sm text-[#b7aaa2] hover:text-[#fff7ef]"
+              className="rounded-full px-3 py-2 text-sm text-[#b9aaa2] hover:text-[#fff4ec]"
             >
               Login
             </Link>
@@ -58,13 +58,13 @@ export function Header({ user }: HeaderProps) {
         <div className="flex shrink-0 items-center gap-1 sm:gap-1.5 lg:hidden">
           <Link
             href="/zoeken"
-            className="rounded-full px-2 py-2 text-[0.6875rem] text-[#b7aaa2] hover:text-[#fff7ef] sm:px-2.5 sm:text-xs"
+            className="rounded-full px-2 py-2 text-[0.6875rem] text-[#b9aaa2] hover:text-[#fff4ec] sm:px-2.5 sm:text-xs"
           >
             Advertenties
           </Link>
           <Link
             href="/ai-lounge"
-            className="rounded-full px-2 py-2 text-[0.6875rem] text-[#b7aaa2] hover:text-[#fff7ef] sm:px-2.5 sm:text-xs"
+            className="rounded-full px-2 py-2 text-[0.6875rem] text-[#b9aaa2] hover:text-[#fff4ec] sm:px-2.5 sm:text-xs"
           >
             AI Lounge
           </Link>
