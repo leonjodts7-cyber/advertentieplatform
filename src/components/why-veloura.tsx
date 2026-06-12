@@ -8,18 +8,18 @@ const VOORDELEN = [
     tekst: "Neem rechtstreeks contact op met aanbieders. Geen tussenpersonen, geen gedoe.",
   },
   {
-    titel: "Mobiel-first profielen",
-    tekst: "Veloura is gebouwd voor je telefoon — snel browsen, duidelijke profielkaarten.",
+    titel: "Geverifieerde profielen",
+    tekst: "Herken betrouwbare aanbieders via verificatie en duidelijke profielinformatie.",
   },
   {
-    titel: "AI Lounge met credits",
-    tekst: "Chat met fictieve companions per bericht. Discreet, premium en volledig 21+.",
+    titel: "Mobiel-first ervaring",
+    tekst: "Veloura is gebouwd voor je telefoon — snel browsen, duidelijke profielkaarten.",
   },
 ];
 
 export function WhyVeloura() {
   return (
-    <section className="marketplace-section">
+    <section className="marketplace-section border-b border-white/10">
       <div className="container">
         <h2 className="section-title">Waarom Veloura?</h2>
         <p className="section-subtitle mt-1 max-w-lg">

@@ -10,7 +10,7 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 const variantClasses: Record<NonNullable<ButtonProps["variant"]>, string> = {
   primary:
-    "bg-gradient-to-r from-wine via-wine-light to-champagne/90 text-foreground border border-champagne/20 shadow-sm hover:brightness-105 hover:shadow-warm-glow",
+    "bg-gradient-to-r from-wine-deep via-wine to-wine-light/90 text-foreground border border-champagne/15 shadow-sm hover:brightness-[1.04] hover:shadow-warm-glow",
   premium:
     "bg-gradient-to-r from-wine-deep to-wine text-foreground border border-wine-light/30 hover:brightness-110",
   rose:

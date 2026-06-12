@@ -1,14 +1,13 @@
 import Link from "next/link";
 import { AdvertentieCard } from "@/components/advertentie-card";
-import { AiLoungeHomeSection } from "@/components/ai/ai-lounge-home-section";
 import { MarketplaceHeroSearch } from "@/components/marketplace-hero-search";
-import { PopularSearches } from "@/components/popular-searches";
 import { ProfilePreviewCard } from "@/components/profile-preview-card";
 import { PopularCitiesGrid } from "@/components/popular-cities-grid";
 import { WhyVeloura } from "@/components/why-veloura";
 import { Button } from "@/components/ui/button";
 import { haalEersteFotos } from "@/lib/advertentie-fotos";
 import { HOME_PREVIEW_PROFIELEN } from "@/lib/home-preview-profielen";
+import { MARKETPLACE_CATEGORIEEN } from "@/lib/marketplace";
 import type { Advertentie } from "@/lib/types";
 import { createClient } from "@/lib/supabase/server";
 
@@ -39,10 +38,8 @@ export default async function HomePage() {
                 Alleen 18+ · Discreet · Geverifieerd · Direct contact
               </p>
 
-              <h1 className="font-display mt-3 text-[1.625rem] font-medium leading-[1.12] sm:text-4xl lg:text-[2.375rem]">
-                Ontdek{" "}
-                <span className="text-gradient-hero">geverifieerde profielen</span>{" "}
-                in jouw regio
+              <h1 className="font-display mt-3 text-[1.75rem] font-medium leading-[1.1] sm:text-4xl lg:text-[2.5rem]">
+                Vind discrete profielen in jouw regio
               </h1>
 
               <p className="mt-3 max-w-lg text-sm leading-relaxed text-muted-foreground sm:text-base">
@@ -76,38 +73,59 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* B. Online profielen preview */}
+      {/* B. Online nu */}
       <section className="marketplace-section border-b border-white/10 bg-white/[0.02]">
         <div className="container">
           <h2 className="section-title text-lg sm:text-xl">Online nu</h2>
           <p className="section-subtitle mt-1">
-            Populaire profielen in jouw regio — preview
+            Populaire profielen in jouw regio
           </p>
           <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-6">
             {HOME_PREVIEW_PROFIELEN.map((p) => (
-              <ProfilePreviewCard key={p.id} profiel={p} href="/zoeken" />
+              <ProfilePreviewCard
+                key={p.id}
+                profiel={p}
+                href={`/zoeken?stad=${encodeURIComponent(p.stad)}`}
+              />
             ))}
           </div>
-          <p className="mt-3 text-center text-xs text-muted-foreground">
+          <p className="mt-3 text-center text-xs text-muted-foreground/80">
             Voorbeeldweergave — geen echte personen
           </p>
         </div>
       </section>
 
-      {/* C. Populaire zoekopdrachten */}
+      {/* C. Populaire steden */}
       <section className="marketplace-section border-b border-white/10">
         <div className="container">
-          <h2 className="section-title text-lg sm:text-xl">
-            Populaire zoekopdrachten
-          </h2>
-          <div className="mt-4">
-            <PopularSearches />
+          <h2 className="section-title text-lg sm:text-xl">Populaire steden</h2>
+          <p className="section-subtitle mt-1">Zoek profielen per locatie</p>
+          <div className="mt-5">
+            <PopularCitiesGrid />
           </div>
         </div>
       </section>
 
-      {/* D. AI Lounge preview */}
-      <AiLoungeHomeSection />
+      {/* D. Populaire categorieën */}
+      <section className="marketplace-section border-b border-white/10 bg-white/[0.02]">
+        <div className="container">
+          <h2 className="section-title text-lg sm:text-xl">
+            Populaire categorieën
+          </h2>
+          <p className="section-subtitle mt-1">Vind wat bij jou past</p>
+          <div className="mt-5 grid grid-cols-2 gap-2 sm:grid-cols-4 sm:gap-3">
+            {MARKETPLACE_CATEGORIEEN.map((cat) => (
+              <Link
+                key={cat.slug}
+                href={`/zoeken?categorie=${cat.slug}`}
+                className="category-card"
+              >
+                {cat.label}
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
 
       {/* E. Nieuwste advertenties */}
       <section className="marketplace-section border-b border-white/10">
@@ -145,7 +163,7 @@ export default async function HomePage() {
               </p>
               <Button asChild size="lg" className="mt-5">
                 <Link href="/dashboard/advertenties/nieuw">
-                  Plaats eerste advertentie
+                  Plaats advertentie
                 </Link>
               </Button>
             </div>
@@ -162,19 +180,26 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* F. Populaire steden */}
-      <section className="marketplace-section border-b border-white/10">
+      {/* F. Waarom Veloura */}
+      <WhyVeloura />
+
+      {/* G. Voor aanbieders */}
+      <section className="marketplace-section border-t border-white/10 bg-white/[0.02]">
         <div className="container">
-          <h2 className="section-title text-lg sm:text-xl">Populaire steden</h2>
-          <p className="section-subtitle mt-1">Zoek profielen per locatie</p>
-          <div className="mt-5">
-            <PopularCitiesGrid />
+          <div className="profile-card mx-auto max-w-2xl p-8 text-center sm:p-10">
+            <h2 className="font-display text-xl text-foreground sm:text-2xl">
+              Word zichtbaar bij bezoekers in jouw regio
+            </h2>
+            <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-muted-foreground sm:text-base">
+              Plaats jouw advertentie, beheer je profiel en bereik sneller
+              geïnteresseerde bezoekers.
+            </p>
+            <Button asChild size="lg" className="mt-6">
+              <Link href="/dashboard/advertenties/nieuw">Plaats advertentie</Link>
+            </Button>
           </div>
         </div>
       </section>
-
-      {/* G. Waarom Veloura */}
-      <WhyVeloura />
     </div>
   );
 }

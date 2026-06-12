@@ -51,7 +51,7 @@ export function ProfilePreviewCard({
             </Badge>
           ))}
         </div>
-        <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[#141014]/95 via-[#141014]/50 to-transparent p-4 pt-12">
+        <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[var(--background)]/95 via-[var(--background)]/50 to-transparent p-4 pt-12">
           <p className="font-display text-lg font-medium text-foreground">
             {profiel.naam}
             <span className="ml-2 text-base font-normal text-soft-champagne">

@@ -35,8 +35,8 @@ const variantClasses: Record<NonNullable<BadgeProps["variant"]>, string> = {
   bordeaux: "bg-wine/35 text-foreground border-wine-light/40",
   green: "bg-success/12 text-success border-success/30",
   success: "bg-success/12 text-success border-success/30",
-  muted: "bg-white/[0.04] text-muted-foreground border-white/10",
-  review: "bg-champagne/10 text-champagne border-champagne/20",
+  muted: "bg-white/[0.06] text-muted-foreground border-white/12",
+  review: "bg-champagne/12 text-soft-champagne border-champagne/22",
   danger: "bg-destructive/20 text-red-300 border-destructive/30",
 };
 

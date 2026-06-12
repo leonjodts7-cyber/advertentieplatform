@@ -3,12 +3,12 @@
 @tailwind utilities;
 
 :root {
-  --background: #141014;
-  --background-elevated: #1d171d;
-  --surface: rgba(255, 255, 255, 0.065);
-  --surface-hover: rgba(255, 255, 255, 0.09);
+  --background: #1c181c;
+  --background-elevated: #262024;
+  --surface: rgba(255, 255, 255, 0.078);
+  --surface-hover: rgba(255, 255, 255, 0.105);
   --text-main: #fff5ee;
-  --text-muted: #b8aaa2;
+  --text-muted: #c4b5ad;
   --champagne: #d7b46a;
   --champagne-soft: #f0d99a;
   --wine: #6f2d45;
@@ -53,10 +53,10 @@ body {
   position: relative;
   background-color: var(--background);
   background-image:
-    radial-gradient(ellipse 50% 45% at 0% 0%, rgba(111, 45, 69, 0.35), transparent 55%),
-    radial-gradient(ellipse 45% 40% at 100% 0%, rgba(215, 180, 106, 0.14), transparent 50%),
-    radial-gradient(ellipse 55% 35% at 50% 100%, rgba(197, 139, 114, 0.12), transparent 55%),
-    linear-gradient(180deg, #141014 0%, #1a151a 50%, #1d171d 100%);
+    radial-gradient(ellipse 55% 50% at 0% 0%, rgba(111, 45, 69, 0.28), transparent 58%),
+    radial-gradient(ellipse 50% 45% at 100% 0%, rgba(215, 180, 106, 0.16), transparent 52%),
+    radial-gradient(ellipse 60% 40% at 50% 100%, rgba(197, 139, 114, 0.14), transparent 58%),
+    linear-gradient(180deg, #1c181c 0%, #221e22 45%, #262024 100%);
 }
 
 .marketplace-bg::before,
@@ -106,9 +106,9 @@ body {
 .luxury-card {
   border-radius: var(--radius);
   border: 1px solid var(--border);
-  background: rgba(29, 23, 29, 0.75);
+  background: rgba(38, 32, 36, 0.82);
   backdrop-filter: blur(16px) saturate(1.2);
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15);
 }
 
 .luxury-card-elevated {
@@ -133,10 +133,10 @@ body {
 
 .champagne-button {
   @apply inline-flex items-center justify-center rounded-full font-medium transition-all;
-  background: linear-gradient(135deg, #6f2d45 0%, #8a3a55 40%, #d7b46a 140%);
+  background: linear-gradient(135deg, #5a2538 0%, #6f2d45 50%, #8a5a40 100%);
   color: var(--text-main);
-  border: 1px solid rgba(215, 180, 106, 0.25);
-  box-shadow: 0 2px 12px rgba(111, 45, 69, 0.3);
+  border: 1px solid rgba(215, 180, 106, 0.2);
+  box-shadow: 0 2px 12px rgba(111, 45, 69, 0.22);
 }
 
 .champagne-button:hover {
@@ -156,7 +156,7 @@ body {
 }
 
 .glass-nav {
-  background: rgba(20, 16, 20, 0.82);
+  background: rgba(28, 24, 28, 0.88);
   backdrop-filter: blur(18px) saturate(1.25);
   border-bottom: 1px solid var(--border);
 }
@@ -260,7 +260,7 @@ body {
 .mobile-contact-bar {
   @apply fixed bottom-0 left-0 right-0 z-40 border-t p-3 backdrop-blur-lg lg:hidden;
   border-color: var(--border);
-  background: rgba(20, 16, 20, 0.94);
+  background: rgba(28, 24, 28, 0.94);
 }
 
 .muted-chip {
@@ -328,7 +328,7 @@ body {
 .filter-bar-sticky {
   @apply sticky top-14 z-30 border-b py-3 backdrop-blur-lg sm:top-[3.75rem];
   border-color: var(--border);
-  background: rgba(20, 16, 20, 0.92);
+  background: rgba(28, 24, 28, 0.92);
 }
 
 .filter-panel {
@@ -354,38 +354,24 @@ body {
 }
 
 .profile-photo__vignette {
-  background: linear-gradient(to top, rgba(20, 16, 20, 0.92) 0%, rgba(20, 16, 20, 0.15) 45%, transparent 70%);
+  background: linear-gradient(to top, rgba(28, 24, 28, 0.9) 0%, rgba(28, 24, 28, 0.12) 50%, transparent 75%);
 }
 
 .profile-photo__figure {
   position: relative;
-  width: 42%;
-  height: 72%;
-}
-
-.profile-photo__figure::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 52%;
-  aspect-ratio: 1;
-  border-radius: 50%;
-  background: radial-gradient(circle at 40% 35%, rgba(240, 217, 154, 0.45), rgba(197, 139, 114, 0.55) 50%, rgba(111, 45, 69, 0.4));
-  box-shadow: 0 0 40px rgba(197, 139, 114, 0.25);
-}
-
-.profile-photo__figure::after {
-  content: "";
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 85%;
-  height: 48%;
-  border-radius: 45% 45% 0 0;
-  background: linear-gradient(to bottom, rgba(183, 109, 120, 0.5), rgba(66, 27, 45, 0.65));
+  width: 58%;
+  height: 80%;
+  margin: 0 auto;
+  background: linear-gradient(
+    to top,
+    rgba(66, 27, 45, 0.55) 0%,
+    rgba(183, 109, 120, 0.3) 40%,
+    rgba(197, 139, 114, 0.12) 70%,
+    transparent 100%
+  );
+  border-radius: 42% 42% 0 0;
+  filter: blur(0.5px);
+  opacity: 0.85;
 }
 
 .profile-photo[data-photo-variant="warm-wine"] .profile-photo__base {

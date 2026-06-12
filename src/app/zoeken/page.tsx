@@ -3,7 +3,6 @@ import { Suspense } from "react";
 import type { Metadata } from "next";
 import { AdvertentieCard } from "@/components/advertentie-card";
 import { ZoekFilterBar } from "@/components/zoek-filter-bar";
-import { ZoekMobileBar } from "@/components/zoek-mobile-bar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { haalEersteFotos } from "@/lib/advertentie-fotos";
@@ -59,89 +58,69 @@ export default async function ZoekenPage({ searchParams }: ZoekenPageProps) {
     <div>
       <div className="page-header-band">
         <div className="container">
-          <p className="text-[0.6875rem] uppercase tracking-wider text-muted-foreground">
-            Veloura
-          </p>
-          <h1 className="section-title mt-1">Profielen zoeken</h1>
+          <h1 className="section-title">Profielen zoeken</h1>
           <p className="section-subtitle mt-1.5 max-w-lg">
-            Vind discrete profielen in jouw regio. Alleen 18+.
+            Vind discrete profielen in jouw regio. Filter op stad, categorie en
+            beschikbaarheid.
           </p>
-        </div>
-      </div>
-
-      <div className="filter-bar-sticky lg:hidden">
-        <div className="container">
-          <Suspense
-            fallback={
-              <div className="h-11 animate-pulse rounded-xl bg-white/[0.04]" />
-            }
-          >
-            <ZoekMobileBar />
-          </Suspense>
         </div>
       </div>
 
       <div className="container py-6 sm:py-8">
-        <div className="lg:grid lg:grid-cols-[minmax(0,280px)_1fr] lg:gap-8">
-          <aside className="hidden lg:block">
-            <div className="sticky top-[5.5rem]">
-              <Suspense
-                fallback={
-                  <div className="h-64 animate-pulse rounded-2xl bg-white/[0.04]" />
-                }
-              >
-                <ZoekFilterBar />
-              </Suspense>
-            </div>
-          </aside>
-
-          <div>
-            <div className="mb-5 flex flex-wrap items-center gap-2">
-              <p className="text-sm text-muted-foreground">
-                <span className="font-medium text-foreground">
-                  {advertenties.length}
-                </span>{" "}
-                profielen
-                {stad?.trim() ? ` in ${stad.trim()}` : ""}
-              </p>
-              {categorieLabel && (
-                <Badge variant="wine">Categorie: {categorieLabel}</Badge>
-              )}
-              {isTruthyFilter(beschikbaar) && (
-                <Badge variant="online">Beschikbaar</Badge>
-              )}
-              {isTruthyFilter(geverifieerd) && (
-                <Badge variant="verified">Geverifieerd</Badge>
-              )}
-            </div>
-
-            {advertenties.length > 0 ? (
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                {advertenties.map((advertentie) => (
-                  <AdvertentieCard
-                    key={advertentie.id}
-                    advertentie={advertentie}
-                    afbeeldingUrl={fotos.get(advertentie.id)}
-                  />
-                ))}
-              </div>
-            ) : (
-              <div className="profile-card mx-auto max-w-md p-8 text-center sm:p-10">
-                <p className="font-display text-xl text-foreground">
-                  Geen profielen gevonden
-                </p>
-                <p className="mt-2 text-sm text-muted-foreground">
-                  Pas je filters aan of plaats zelf een profiel als aanbieder.
-                </p>
-                <Button asChild variant="primary" className="mt-5">
-                  <Link href="/dashboard/advertenties/nieuw">
-                    Plaats advertentie
-                  </Link>
-                </Button>
-              </div>
-            )}
+        <Suspense
+          fallback={
+            <div className="filter-panel mb-6 h-48 animate-pulse bg-white/[0.04]" />
+          }
+        >
+          <div className="mb-6">
+            <ZoekFilterBar />
           </div>
+        </Suspense>
+
+        <div className="mb-5 flex flex-wrap items-center gap-2">
+          <p className="text-sm text-muted-foreground">
+            <span className="font-medium text-foreground">
+              {advertenties.length}
+            </span>{" "}
+            profielen
+            {stad?.trim() ? ` in ${stad.trim()}` : ""}
+          </p>
+          {categorieLabel && (
+            <Badge variant="wine">{categorieLabel}</Badge>
+          )}
+          {isTruthyFilter(beschikbaar) && (
+            <Badge variant="online">Beschikbaar</Badge>
+          )}
+          {isTruthyFilter(geverifieerd) && (
+            <Badge variant="verified">Geverifieerd</Badge>
+          )}
         </div>
+
+        {advertenties.length > 0 ? (
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {advertenties.map((advertentie) => (
+              <AdvertentieCard
+                key={advertentie.id}
+                advertentie={advertentie}
+                afbeeldingUrl={fotos.get(advertentie.id)}
+              />
+            ))}
+          </div>
+        ) : (
+          <div className="profile-card mx-auto max-w-md p-8 text-center sm:p-10">
+            <p className="font-display text-xl text-foreground">
+              Geen profielen gevonden
+            </p>
+            <p className="mt-2 text-sm text-muted-foreground">
+              Pas je filters aan of plaats zelf een profiel als aanbieder.
+            </p>
+            <Button asChild variant="primary" className="mt-5">
+              <Link href="/dashboard/advertenties/nieuw">
+                Plaats advertentie
+              </Link>
+            </Button>
+          </div>
+        )}
       </div>
     </div>
   );

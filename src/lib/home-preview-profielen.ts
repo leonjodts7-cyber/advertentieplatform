@@ -50,7 +50,7 @@ export const HOME_PREVIEW_PROFIELEN: HomePreviewProfiel[] = [
     photoVariant: "burgundy",
     badges: [
       { label: "Online", variant: "online" },
-      { label: "Populair", variant: "popular" },
+      { label: "Premium", variant: "premium" },
     ],
   },
   {
@@ -70,7 +70,7 @@ export const HOME_PREVIEW_PROFIELEN: HomePreviewProfiel[] = [
     naam: "Victoria",
     leeftijd: 38,
     stad: "Leuven",
-    type: "Dominant & direct",
+    type: "Direct & stijlvol",
     photoVariant: "velvet-purple",
     badges: [
       { label: "Online", variant: "online" },
@@ -82,7 +82,7 @@ export const HOME_PREVIEW_PROFIELEN: HomePreviewProfiel[] = [
     naam: "Isabella",
     leeftijd: 50,
     stad: "Brugge",
-    type: "Ervaren & stijlvol",
+    type: "Ervaren & verfijnd",
     photoVariant: "deep-gold",
     badges: [
       { label: "Online", variant: "online" },
