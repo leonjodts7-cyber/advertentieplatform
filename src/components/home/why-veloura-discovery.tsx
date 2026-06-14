@@ -8,7 +8,7 @@ const VOORDELEN = [
   },
   {
     titel: "Snelle zoekervaring",
-    tekst: "Filter op stad, categorie en beschikbaarheid — vind snel wat je zoekt.",
+    tekst: "Filter op regio, categorie en voorkeuren — vind snel wat je zoekt.",
     icon: Zap,
   },
   {

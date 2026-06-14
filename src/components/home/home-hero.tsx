@@ -26,7 +26,7 @@ export function HomeHero() {
               size="lg"
               className="w-full sm:w-auto"
             >
-              <Link href="/zoeken?beschikbaar=true">Nu beschikbaar</Link>
+              <Link href="/zoeken">Ontdek categorieën</Link>
             </Button>
           </div>
         </div>

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
+import { CategoryChip } from "@/components/ui/category-chip";
 import { MARKETPLACE_CATEGORIEEN } from "@/lib/marketplace";
 import { cn } from "@/lib/utils";
 import { Search, Sparkles } from "lucide-react";
@@ -12,8 +13,8 @@ import { Search, Sparkles } from "lucide-react";
 const AI_VOORBEELDEN = [
   "Blonde vrouw rond 30 in Antwerpen",
   "Discrete massage in Gent",
-  "Escort beschikbaar vanavond",
-  "Koppel regio Brussel",
+  "Escort in regio Brussel",
+  "Koppel regio Vlaanderen",
 ];
 
 export function HomeSearchTabs() {
@@ -21,7 +22,6 @@ export function HomeSearchTabs() {
   const [tab, setTab] = useState<"klassiek" | "ai">("klassiek");
   const [stad, setStad] = useState("");
   const [categorie, setCategorie] = useState<string | null>(null);
-  const [beschikbaarVandaag, setBeschikbaarVandaag] = useState(false);
   const [aiQuery, setAiQuery] = useState("");
 
   function handleKlassiekSubmit(e: React.FormEvent) {
@@ -29,7 +29,6 @@ export function HomeSearchTabs() {
     const params = new URLSearchParams();
     if (stad.trim()) params.set("stad", stad.trim());
     if (categorie) params.set("categorie", categorie);
-    if (beschikbaarVandaag) params.set("beschikbaar", "true");
     router.push(`/zoeken${params.toString() ? `?${params}` : ""}`);
   }
 
@@ -80,7 +79,7 @@ export function HomeSearchTabs() {
             >
               <div className="discovery-search__field">
                 <label htmlFor="home-stad" className="discovery-label">
-                  Stad
+                  Stad of regio
                 </label>
                 <Input
                   id="home-stad"
@@ -92,37 +91,22 @@ export function HomeSearchTabs() {
               </div>
 
               <div className="discovery-search__field">
-                <p className="discovery-label">Categorie</p>
-                <div className="flex flex-wrap gap-2">
-                  {MARKETPLACE_CATEGORIEEN.slice(0, 8).map((cat) => (
-                    <button
+                <p className="discovery-label">Type dienst</p>
+                <div className="category-chip-scroll no-scrollbar">
+                  {MARKETPLACE_CATEGORIEEN.map((cat) => (
+                    <CategoryChip
                       key={cat.slug}
-                      type="button"
+                      label={cat.label}
+                      active={categorie === cat.slug}
                       onClick={() =>
                         setCategorie(
                           categorie === cat.slug ? null : cat.slug
                         )
                       }
-                      className={cn(
-                        "discovery-chip",
-                        categorie === cat.slug && "discovery-chip--active"
-                      )}
-                    >
-                      {cat.label}
-                    </button>
+                    />
                   ))}
                 </div>
               </div>
-
-              <label className="discovery-checkbox">
-                <input
-                  type="checkbox"
-                  checked={beschikbaarVandaag}
-                  onChange={(e) => setBeschikbaarVandaag(e.target.checked)}
-                  className="discovery-checkbox__input"
-                />
-                <span>Beschikbaar vandaag</span>
-              </label>
 
               <Button type="submit" size="lg" className="w-full sm:w-auto">
                 Zoeken
