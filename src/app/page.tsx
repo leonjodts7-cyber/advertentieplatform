@@ -88,19 +88,22 @@ function CategoryNav({ activeSlug }: { activeSlug?: string }) {
   return (
     <nav className="category-nav" aria-label="Categorieën">
       <div className="container">
-        <div className="category-nav__scroll no-scrollbar">
-          {NAV_CATEGORIEEN.map((cat) => (
-            <Link
-              key={cat.slug}
-              href={`/zoeken?categorie=${cat.slug}`}
-              className={cn(
-                "category-nav__chip",
-                activeSlug === cat.slug && "category-nav__chip--active"
-              )}
-            >
-              {cat.label}
-            </Link>
-          ))}
+        <div className="category-nav__inner">
+          <p className="category-nav__title">Populaire categorieën</p>
+          <div className="category-nav__scroll no-scrollbar">
+            {NAV_CATEGORIEEN.map((cat) => (
+              <Link
+                key={cat.slug}
+                href={`/zoeken?categorie=${cat.slug}`}
+                className={cn(
+                  "category-nav__chip",
+                  activeSlug === cat.slug && "category-nav__chip--active"
+                )}
+              >
+                {cat.label}
+              </Link>
+            ))}
+          </div>
         </div>
       </div>
     </nav>
@@ -125,32 +128,32 @@ export default async function HomePage() {
 
   return (
     <div>
-      {/* 1. Hero */}
+      {/* 1. Hero — compact marketplace intro */}
       <section className="section-dark hero-section border-b border-white/10">
         <div className="container">
-          <div className="grid items-start gap-5 lg:grid-cols-2 lg:gap-8">
+          <div className="grid items-start gap-3 sm:gap-4 lg:grid-cols-2 lg:gap-6">
             <div className="order-2 lg:order-1 animate-fade-in">
-              <p className="trustline-text text-[0.625rem] font-medium uppercase sm:text-[0.6875rem]">
+              <p className="trustline-text text-[0.5625rem] font-medium uppercase sm:text-[0.625rem]">
                 Alleen 18+ · Discreet · Geverifieerd · Direct contact
               </p>
 
-              <h1 className="font-display mt-2.5 text-[1.75rem] font-medium leading-[1.1] sm:text-4xl lg:text-[2.375rem]">
+              <h1 className="font-display mt-1.5 text-[1.5rem] font-medium leading-[1.12] sm:text-[1.75rem] lg:text-[2rem]">
                 Vind discrete profielen in jouw regio
               </h1>
 
-              <p className="mt-2.5 max-w-lg text-sm leading-relaxed sm:text-base">
+              <p className="mt-2 max-w-lg text-sm leading-relaxed">
                 Zoek privé ontvangst, escort, video en meer. Direct contact met
                 zelfstandige aanbieders, discreet en mobiel-first.
               </p>
 
-              <div className="mt-4 flex flex-col gap-2.5 sm:flex-row">
-                <Button asChild size="lg" className="w-full sm:w-auto">
+              <div className="mt-3 flex flex-col gap-2 sm:flex-row">
+                <Button asChild size="md" className="w-full sm:w-auto">
                   <Link href="/zoeken">Zoek profielen</Link>
                 </Button>
                 <Button
                   asChild
                   variant="secondary"
-                  size="lg"
+                  size="md"
                   className="w-full sm:w-auto"
                 >
                   <Link href="/dashboard/advertenties/nieuw">
@@ -161,7 +164,7 @@ export default async function HomePage() {
             </div>
 
             <div className="order-1 lg:order-2">
-              <div className="hero-search-panel glass-card p-4 sm:p-5">
+              <div className="hero-search-panel hero-search-panel--compact glass-card p-3 sm:p-4">
                 <MarketplaceHeroSearch />
               </div>
             </div>
@@ -173,12 +176,16 @@ export default async function HomePage() {
       <CategoryNav />
 
       {/* 3. Nieuwste advertenties — alleen Supabase */}
-      <section className="section-light marketplace-section">
+      <section className="section-light marketplace-section marketplace-section--compact">
         <div className="container">
           <div className="flex items-end justify-between gap-3">
             <div>
-              <h2 className="section-title">Nieuwste advertenties</h2>
-              <p className="section-subtitle mt-1">Actieve profielen op Veloura</p>
+              <h2 className="section-title text-xl sm:text-2xl">
+                Nieuwste advertenties
+              </h2>
+              <p className="section-subtitle mt-0.5">
+                Recent geplaatste profielen op Veloura.
+              </p>
             </div>
             {advertenties.length > 0 && (
               <Link
@@ -192,7 +199,7 @@ export default async function HomePage() {
           </div>
 
           {advertenties.length > 0 ? (
-            <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-4">
               {advertenties.map((advertentie) => (
                 <AdvertentieCard
                   key={advertentie.id}
@@ -203,14 +210,14 @@ export default async function HomePage() {
               ))}
             </div>
           ) : (
-            <div className="empty-state-card mt-5">
-              <h3 className="font-display text-xl sm:text-2xl">
+            <div className="empty-state-card mt-4">
+              <h3 className="font-display text-lg sm:text-xl">
                 Nog geen actieve advertenties
               </h3>
               <p className="mx-auto mt-2 max-w-md text-sm leading-relaxed">
-                Plaats jouw profiel en word als eerste zichtbaar op Veloura.
+                Plaats jouw profiel en word als eerste zichtbaar in jouw regio.
               </p>
-              <Button asChild size="lg" className="mt-6">
+              <Button asChild size="md" className="mt-5">
                 <Link href="/dashboard/advertenties/nieuw">
                   Plaats advertentie
                 </Link>

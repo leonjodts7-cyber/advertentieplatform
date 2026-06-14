@@ -31,6 +31,7 @@ function ListingPlaceholder() {
     <div className="listing-placeholder absolute inset-0">
       <div className="listing-placeholder__glow" />
       <div className="listing-placeholder__arch" />
+      <div className="listing-placeholder__line" />
       <span className="listing-placeholder__label">Profiel</span>
     </div>
   );
@@ -62,7 +63,7 @@ export function AdvertentieCard({
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-champagne/25",
         isLight
           ? "border border-[#e6d8cf] bg-[#fffaf6] shadow-sm"
-          : "listing-card-dark"
+          : "listing-card-dark border border-white/10"
       )}
     >
       <div className="relative aspect-[3/4] overflow-hidden">
@@ -127,8 +128,8 @@ export function AdvertentieCard({
             className={cn(
               "text-xs font-medium tracking-wide transition-colors",
               isLight
-                ? "group-hover:text-[#7b2f49]"
-                : "group-hover:text-[#d6b36b]"
+                ? "group-hover:text-[#81324e]"
+                : "group-hover:text-[#d7b46a]"
             )}
           >
             Bekijk profiel →

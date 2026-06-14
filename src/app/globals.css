@@ -3,34 +3,36 @@
 @tailwind utilities;
 
 :root {
-  --main-dark: #181216;
-  --section-dark: #21171d;
-  --section-darker: #120d11;
-  --dark-card: rgba(255, 255, 255, 0.07);
+  --main-dark: #1b1519;
+  --hero-bg: #211820;
+  --section-dark: #241a20;
+  --section-darker: #1a1418;
+  --dark-card: rgba(255, 255, 255, 0.075);
+  --dark-card-hover: rgba(255, 255, 255, 0.105);
   --light-section: #f4ede7;
   --light-card: #fffaf6;
   --text-dark: #24191f;
-  --text-light: #fff4ec;
+  --text-light: #fff6ef;
   --muted-dark: #786a63;
-  --muted-light: #b8aaa2;
-  --wine: #7b2f49;
-  --wine-deep: #4a1d2f;
+  --muted-light: #c2b4ab;
+  --wine: #81324e;
+  --wine-deep: #5a2438;
   --rose-wine: #9d4963;
   --rose: #b76d78;
-  --champagne: #d6b36b;
-  --champagne-soft: #ecd89a;
-  --bronze: #b87955;
+  --champagne: #d7b46a;
+  --champagne-soft: #e8cc8a;
+  --bronze: #b67852;
   --success: #4db87a;
   --danger: #8b3040;
   --border-light: #e6d8cf;
-  --border-dark: rgba(255, 255, 255, 0.13);
+  --border-dark: rgba(255, 255, 255, 0.16);
   --radius: 1rem;
 
   /* Semantic aliases */
   --background: var(--main-dark);
   --background-elevated: var(--section-dark);
   --surface: var(--dark-card);
-  --surface-hover: rgba(255, 255, 255, 0.1);
+  --surface-hover: var(--dark-card-hover);
   --text-main: var(--text-light);
   --text-muted: var(--muted-light);
   --border: var(--border-dark);
@@ -65,8 +67,38 @@ body {
   @apply py-8 sm:py-10;
 }
 
+.marketplace-section--compact {
+  @apply py-5 sm:py-6;
+}
+
 .hero-section {
-  @apply py-6 sm:py-8;
+  position: relative;
+  background: var(--hero-bg);
+  @apply py-4 sm:py-5;
+}
+
+.hero-section::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 55% 90% at 92% 35%, rgba(182, 120, 82, 0.16), transparent 58%),
+    radial-gradient(ellipse 45% 70% at 8% 75%, rgba(129, 50, 78, 0.09), transparent 52%);
+  pointer-events: none;
+}
+
+.hero-section::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  pointer-events: none;
+}
+
+.hero-section > .container {
+  position: relative;
+  z-index: 1;
 }
 
 /* Dark luxury sections */
@@ -147,13 +179,15 @@ body {
 }
 
 .empty-state-card {
-  padding: 2rem 1.5rem;
+  padding: 1.75rem 1.25rem;
   text-align: center;
+  background: linear-gradient(180deg, #fffaf6 0%, #f8f0e8 100%);
+  border-color: rgba(129, 50, 78, 0.12);
 }
 
 @media (min-width: 640px) {
   .empty-state-card {
-    padding: 3rem 2.5rem;
+    padding: 2.25rem 2rem;
   }
 }
 
@@ -202,8 +236,36 @@ body {
 }
 
 .hero-search-panel {
-  border-color: rgba(255, 255, 255, 0.16);
-  background: rgba(33, 24, 31, 0.92);
+  border-color: var(--border-dark);
+  background: rgba(36, 26, 32, 0.88);
+}
+
+.hero-search-panel--compact form > :not([hidden]) ~ :not([hidden]) {
+  margin-top: 0.75rem;
+}
+
+.hero-search-panel--compact .form-label {
+  margin-bottom: 0.375rem;
+  font-size: 0.625rem;
+}
+
+.hero-search-panel--compact input {
+  min-height: 2.5rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.hero-search-panel--compact .type-chip {
+  min-height: 2rem;
+  padding: 0.375rem 0.75rem;
+  font-size: 0.6875rem;
+}
+
+.hero-search-panel--compact .city-pill {
+  min-height: 2rem;
+  padding: 0.375rem 0.75rem;
+  font-size: 0.6875rem;
 }
 
 .hero-search-panel input {
@@ -410,28 +472,59 @@ body {
   background: rgba(247, 241, 235, 0.96);
 }
 
-/* Premium dark category navigation */
+/* Premium marketplace category strip */
 .category-nav {
-  background: #21171d;
+  background: var(--section-dark);
   border-top: 1px solid var(--border-dark);
   border-bottom: 1px solid var(--border-dark);
 }
 
+.category-nav__inner {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.5rem 0;
+}
+
+@media (min-width: 768px) {
+  .category-nav__inner {
+    flex-direction: row;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.5rem 0;
+  }
+}
+
+.category-nav__title {
+  flex-shrink: 0;
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: var(--text-light);
+  white-space: nowrap;
+}
+
+@media (min-width: 768px) {
+  .category-nav__title {
+    font-size: 0.875rem;
+  }
+}
+
 .category-nav__scroll {
   display: flex;
-  gap: 0.5rem;
-  padding: 0.75rem 0;
+  gap: 0.375rem;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
+  min-width: 0;
 }
 
 @media (min-width: 1024px) {
   .category-nav__scroll {
+    flex: 1;
     flex-wrap: wrap;
-    justify-content: center;
     overflow-x: visible;
-    gap: 0.5rem;
-    padding: 0.875rem 0;
+    gap: 0.375rem;
   }
 }
 
@@ -440,35 +533,35 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 40px;
-  padding: 0.5rem 0.875rem;
-  font-size: 0.75rem;
+  min-height: 32px;
+  padding: 0.375rem 0.75rem;
+  font-size: 0.6875rem;
   font-weight: 500;
   white-space: nowrap;
   color: var(--muted-light);
   border: 1px solid var(--border-dark);
   border-radius: 9999px;
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--dark-card);
   transition: color 0.2s, background 0.2s, border-color 0.2s;
 }
 
 @media (min-width: 640px) {
   .category-nav__chip {
-    font-size: 0.8125rem;
-    padding: 0.5rem 1rem;
+    font-size: 0.75rem;
+    padding: 0.375rem 0.875rem;
   }
 }
 
 .category-nav__chip:hover {
   color: var(--champagne-soft);
-  border-color: rgba(214, 179, 107, 0.35);
-  background: rgba(123, 47, 73, 0.25);
+  border-color: rgba(182, 120, 82, 0.45);
+  background: var(--dark-card-hover);
 }
 
 .category-nav__chip--active {
   color: var(--champagne-soft);
-  border-color: rgba(214, 179, 107, 0.4);
-  background: rgba(123, 47, 73, 0.35);
+  border-color: rgba(129, 50, 78, 0.55);
+  background: rgba(129, 50, 78, 0.22);
   font-weight: 600;
 }
 
@@ -502,42 +595,53 @@ body {
   color: var(--champagne-soft);
 }
 
-/* Lounge-style listing placeholder — geen gezicht */
+/* Lounge-style listing placeholder — geen gezicht of silhouet */
 .listing-placeholder {
-  background: linear-gradient(160deg, #2a1f28 0%, #1a1218 40%, #120d11 100%);
+  background: linear-gradient(155deg, #2e2228 0%, #241a20 38%, #1b1519 100%);
 }
 
 .listing-placeholder__glow {
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(ellipse 70% 50% at 30% 20%, rgba(214, 179, 107, 0.18), transparent 55%),
-    radial-gradient(ellipse 60% 40% at 80% 30%, rgba(157, 73, 99, 0.12), transparent 50%);
+    radial-gradient(ellipse 65% 45% at 25% 18%, rgba(215, 180, 106, 0.2), transparent 55%),
+    radial-gradient(ellipse 55% 40% at 78% 28%, rgba(182, 120, 82, 0.14), transparent 50%),
+    radial-gradient(ellipse 50% 35% at 50% 85%, rgba(129, 50, 78, 0.1), transparent 45%);
 }
 
 .listing-placeholder__arch {
   position: absolute;
-  bottom: 18%;
+  bottom: 20%;
   left: 50%;
   transform: translateX(-50%);
-  width: 72%;
-  height: 38%;
+  width: 68%;
+  height: 34%;
   border-radius: 50% 50% 0 0;
-  border: 1px solid rgba(214, 179, 107, 0.12);
-  background: linear-gradient(to top, rgba(123, 47, 73, 0.15), transparent);
-  opacity: 0.7;
+  border: 1px solid rgba(215, 180, 106, 0.14);
+  background: linear-gradient(to top, rgba(129, 50, 78, 0.12), transparent);
+  opacity: 0.75;
+}
+
+.listing-placeholder__line {
+  position: absolute;
+  bottom: 38%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(215, 180, 106, 0.25), transparent);
 }
 
 .listing-placeholder__label {
   position: absolute;
-  bottom: 28%;
+  bottom: 30%;
   left: 50%;
   transform: translateX(-50%);
   font-size: 0.6875rem;
   font-weight: 600;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: rgba(255, 244, 236, 0.45);
+  color: rgba(255, 246, 239, 0.5);
 }
 
 /* Chips */

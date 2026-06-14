@@ -17,15 +17,15 @@ const navLinks = [
 export function Header({ user }: HeaderProps) {
   return (
     <header className="glass-nav sticky top-0 z-50">
-      <div className="container flex h-14 items-center justify-between gap-2 sm:h-[3.75rem]">
+      <div className="container flex h-12 items-center justify-between gap-2 sm:h-[3.25rem]">
         <Link
           href="/"
           className="min-w-0 shrink-0 rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-champagne/30"
         >
-          <span className="font-display text-lg font-medium tracking-tight text-[#fff4ec] sm:text-xl">
+          <span className="font-display text-base font-medium tracking-tight text-[#fff6ef] sm:text-lg">
             Veloura
           </span>
-          <span className="mt-0.5 block text-[0.5625rem] uppercase tracking-[0.16em] text-[#b9aaa2] sm:text-[0.625rem]">
+          <span className="mt-0.5 block text-[0.5rem] uppercase tracking-[0.14em] text-[#c2b4ab] sm:text-[0.5625rem]">
             Adult Marketplace
           </span>
         </Link>
@@ -35,7 +35,7 @@ export function Header({ user }: HeaderProps) {
             <Link
               key={link.href}
               href={link.href}
-              className="rounded-full px-3 py-2 text-sm text-[#b9aaa2] transition-colors hover:bg-white/[0.06] hover:text-[#fff4ec]"
+              className="rounded-full px-2.5 py-1.5 text-sm text-[#c2b4ab] transition-colors hover:bg-white/[0.06] hover:text-[#fff6ef]"
             >
               {link.label}
             </Link>
@@ -45,30 +45,24 @@ export function Header({ user }: HeaderProps) {
           ) : (
             <Link
               href="/login"
-              className="rounded-full px-3 py-2 text-sm text-[#b9aaa2] hover:text-[#fff4ec]"
+              className="rounded-full px-2.5 py-1.5 text-sm text-[#c2b4ab] hover:text-[#fff6ef]"
             >
               Login
             </Link>
           )}
-          <Button asChild size="sm" variant="primary" className="ml-1.5">
+          <Button asChild size="sm" variant="primary" className="ml-1 h-9 min-h-0 px-3.5 text-xs">
             <Link href="/dashboard/advertenties/nieuw">Plaats advertentie</Link>
           </Button>
         </nav>
 
-        <div className="flex shrink-0 items-center gap-1 sm:gap-1.5 lg:hidden">
+        <div className="flex shrink-0 items-center gap-1.5 lg:hidden">
           <Link
             href="/zoeken"
-            className="rounded-full px-2 py-2 text-[0.6875rem] text-[#b9aaa2] hover:text-[#fff4ec] sm:px-2.5 sm:text-xs"
+            className="rounded-full px-2 py-1.5 text-xs text-[#c2b4ab] hover:text-[#fff6ef]"
           >
-            Advertenties
+            Zoeken
           </Link>
-          <Link
-            href="/ai-lounge"
-            className="rounded-full px-2 py-2 text-[0.6875rem] text-[#b9aaa2] hover:text-[#fff4ec] sm:px-2.5 sm:text-xs"
-          >
-            AI Lounge
-          </Link>
-          <Button asChild size="sm" variant="primary" className="px-2.5 text-[0.6875rem] sm:px-3 sm:text-xs">
+          <Button asChild size="sm" variant="primary" className="h-9 min-h-0 px-3 text-xs">
             <Link href="/dashboard/advertenties/nieuw">Plaatsen</Link>
           </Button>
         </div>
