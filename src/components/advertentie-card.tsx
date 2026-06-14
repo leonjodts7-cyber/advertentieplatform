@@ -62,8 +62,8 @@ export function AdvertentieCard({
         "hover:-translate-y-0.5 hover:shadow-warm-glow",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-champagne/25",
         isLight
-          ? "border border-[#e6d8cf] bg-[#fffaf6] shadow-sm"
-          : "listing-card-dark border border-white/10"
+          ? "border border-[#e6d8cf] bg-[#fffaf6] shadow-[0_2px_12px_rgba(36,25,31,0.05)]"
+          : "listing-card-dark border border-white/[0.12] shadow-[0_2px_16px_rgba(0,0,0,0.15)]"
       )}
     >
       <div className="relative aspect-[3/4] overflow-hidden">
@@ -116,7 +116,7 @@ export function AdvertentieCard({
       <div
         className={cn(
           "flex items-center justify-between gap-2 px-3 py-2.5 sm:px-4 sm:py-3",
-          isLight ? "text-[#786a63]" : "text-[#b8aaa2]"
+          isLight ? "text-[#74665f]" : "text-[#c2b4ab]"
         )}
       >
         {dashboard ? (
@@ -128,8 +128,8 @@ export function AdvertentieCard({
             className={cn(
               "text-xs font-medium tracking-wide transition-colors",
               isLight
-                ? "group-hover:text-[#81324e]"
-                : "group-hover:text-[#d7b46a]"
+                ? "group-hover:text-[#7b2f49]"
+                : "group-hover:text-[#d6b36b]"
             )}
           >
             Bekijk profiel →

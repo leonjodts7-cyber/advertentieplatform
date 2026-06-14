@@ -48,19 +48,22 @@ function CategoryNav({ activeSlug }: { activeSlug?: string }) {
   return (
     <nav className="category-nav" aria-label="Categorieën">
       <div className="container">
-        <div className="category-nav__scroll no-scrollbar">
-          {NAV_CATEGORIEEN.map((cat) => (
-            <Link
-              key={cat.slug}
-              href={`/zoeken?categorie=${cat.slug}`}
-              className={cn(
-                "category-nav__chip",
-                activeSlug === cat.slug && "category-nav__chip--active"
-              )}
-            >
-              {cat.label}
-            </Link>
-          ))}
+        <div className="category-nav__inner">
+          <p className="category-nav__title">Populaire categorieën</p>
+          <div className="category-nav__scroll no-scrollbar">
+            {NAV_CATEGORIEEN.map((cat) => (
+              <Link
+                key={cat.slug}
+                href={`/zoeken?categorie=${cat.slug}`}
+                className={cn(
+                  "category-nav__chip",
+                  activeSlug === cat.slug && "category-nav__chip--active"
+                )}
+              >
+                {cat.label}
+              </Link>
+            ))}
+          </div>
         </div>
       </div>
     </nav>
@@ -93,12 +96,18 @@ export default async function ZoekenPage({ searchParams }: ZoekenPageProps) {
     advertenties.map((a) => a.id)
   );
 
+  const hasFilters =
+    !!stad?.trim() ||
+    !!categorie ||
+    isTruthyFilter(beschikbaar) ||
+    isTruthyFilter(geverifieerd);
+
   return (
     <div>
-      <div className="section-dark page-header-band border-b border-white/10">
+      <div className="zoek-page-header">
         <div className="container">
-          <h1 className="section-title text-[#fff4ec]">Profielen zoeken</h1>
-          <p className="section-subtitle mt-1.5 max-w-lg text-[#b8aaa2]">
+          <h1 className="section-title text-xl sm:text-2xl">Profielen zoeken</h1>
+          <p className="section-subtitle mt-1 max-w-lg">
             Vind discrete profielen in jouw regio. Filter op stad, categorie en
             beschikbaarheid.
           </p>
@@ -108,23 +117,21 @@ export default async function ZoekenPage({ searchParams }: ZoekenPageProps) {
       <CategoryNav activeSlug={categorie} />
 
       <div className="section-light">
-        <div className="container py-6 sm:py-8">
+        <div className="container py-5 sm:py-6">
           <Suspense
             fallback={
-              <div className="filter-panel-light mb-6 h-48 animate-pulse bg-[#faf7f4]" />
+              <div className="filter-panel-light mb-5 h-40 animate-pulse rounded-2xl bg-[#f8f0e8]" />
             }
           >
-            <div className="mb-6">
+            <div className="zoek-filters mb-5">
               <ZoekFilterBar />
             </div>
           </Suspense>
 
-          <div className="mb-5 flex flex-wrap items-center gap-2">
-            <p className="text-sm text-[#786a63]">
-              <span className="font-medium text-[#24191f]">
-                {advertenties.length}
-              </span>{" "}
-              profielen
+          <div className="mb-4 flex flex-wrap items-center gap-2">
+            <p className="results-count">
+              <strong>{advertenties.length}</strong>{" "}
+              {advertenties.length === 1 ? "profiel" : "profielen"} gevonden
               {stad?.trim() ? ` in ${stad.trim()}` : ""}
             </p>
             {categorieLabel && (
@@ -151,15 +158,24 @@ export default async function ZoekenPage({ searchParams }: ZoekenPageProps) {
             </div>
           ) : (
             <div className="empty-state-card mx-auto max-w-md">
-              <h3 className="font-display text-xl">Geen profielen gevonden</h3>
-              <p className="mt-2 text-sm leading-relaxed">
+              <h3 className="font-display text-lg sm:text-xl">
+                Geen profielen gevonden
+              </h3>
+              <p className="mt-2 text-sm leading-relaxed text-[#74665f]">
                 Pas je filters aan of plaats zelf een profiel als aanbieder.
               </p>
-              <Button asChild variant="primary" className="mt-5">
-                <Link href="/dashboard/advertenties/nieuw">
-                  Plaats advertentie
-                </Link>
-              </Button>
+              <div className="mt-5 flex flex-col gap-2 sm:flex-row sm:justify-center">
+                {hasFilters && (
+                  <Button asChild variant="secondary-light" size="md">
+                    <Link href="/zoeken">Filters wissen</Link>
+                  </Button>
+                )}
+                <Button asChild size="md">
+                  <Link href="/dashboard/advertenties/nieuw">
+                    Plaats advertentie
+                  </Link>
+                </Button>
+              </div>
             </div>
           )}
         </div>

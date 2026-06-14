@@ -137,7 +137,7 @@ export default async function HomePage() {
                 Alleen 18+ · Discreet · Geverifieerd · Direct contact
               </p>
 
-              <h1 className="font-display mt-1.5 text-[1.5rem] font-medium leading-[1.12] sm:text-[1.75rem] lg:text-[2rem]">
+              <h1 className="font-display mt-1 text-[1.375rem] font-medium leading-[1.12] sm:text-[1.625rem] lg:text-[1.875rem]">
                 Vind discrete profielen in jouw regio
               </h1>
 
@@ -184,7 +184,7 @@ export default async function HomePage() {
                 Nieuwste advertenties
               </h2>
               <p className="section-subtitle mt-0.5">
-                Recent geplaatste profielen op Veloura.
+                Actieve profielen op Veloura
               </p>
             </div>
             {advertenties.length > 0 && (
@@ -222,6 +222,11 @@ export default async function HomePage() {
                   Plaats advertentie
                 </Link>
               </Button>
+              <ul className="empty-state-benefits">
+                <li>Mobiel-first profiel</li>
+                <li>Direct zichtbaar na goedkeuring</li>
+                <li>Professioneel dashboard</li>
+              </ul>
             </div>
           )}
 

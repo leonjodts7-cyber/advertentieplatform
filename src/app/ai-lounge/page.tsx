@@ -18,35 +18,29 @@ export default async function AiLoungePage() {
   } = await supabase.auth.getUser();
 
   return (
-    <div>
-      <div className="page-header-band">
+    <div className="ai-lounge-page">
+      <section className="ai-lounge-hero">
         <div className="container">
-          <h1 className="section-title">AI Lounge</h1>
+          <h1 className="section-title text-2xl sm:text-3xl">AI Lounge</h1>
           <p className="section-subtitle mt-2 max-w-2xl">
-            Kies een fictieve volwassen companion en chat per bericht met credits.
+            Chat met fictieve volwassen companions. Betaal per bericht met
+            credits.
           </p>
-          <p className="mt-3 text-sm text-muted-foreground">
-            Alle companions zijn fictieve volwassen AI-personages van 21+. Geen
-            echte personen.
-          </p>
-          <div className="mt-4 flex flex-wrap gap-3 text-xs text-muted-foreground">
-            <span className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5">
-              {companions.length} companions online
-            </span>
-            <span className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5">
-              {CREDITS_PER_BERICHT} credits per bericht
-            </span>
-            <span className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5">
-              Geen gratis chat
-            </span>
+          <div className="ai-lounge-meta">
+            <span>{companions.length} companions online</span>
+            <span>{CREDITS_PER_BERICHT} credits per bericht</span>
+            <span>Geen gratis chat</span>
           </div>
+          <p className="ai-lounge-compliance">
+            Fictieve AI-personages 21+ · geen echte personen
+          </p>
         </div>
-      </div>
+      </section>
 
-      <div className="container py-6 sm:py-8">
+      <div className="container py-5 sm:py-7">
         {!user && (
-          <div className="profile-card mb-6 flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5">
-            <p className="text-sm text-muted-foreground">
+          <div className="profile-card mb-5 flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5">
+            <p className="text-sm text-[#c2b4ab]">
               Log in om een gesprek te starten.
             </p>
             <Link
@@ -58,7 +52,7 @@ export default async function AiLoungePage() {
           </div>
         )}
 
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="ai-lounge-grid">
           {companions.map((companion) => (
             <AiCompanionCard
               key={companion.id}
