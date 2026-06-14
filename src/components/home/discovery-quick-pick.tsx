@@ -1,61 +1,83 @@
 import Link from "next/link";
-import { Home, Sparkles, Video, Waves } from "lucide-react";
+import {
+  Heart,
+  Sparkles,
+  UserRound,
+  Users,
+  Video,
+  Waves,
+} from "lucide-react";
 
-const QUICK_PICKS = [
+const CATEGORIEEN = [
   {
     slug: "prive-ontvangst",
     label: "Privé ontvangst",
-    beschrijving: "Discrete ontmoetingen op privélocatie in jouw buurt.",
-    icon: Home,
-    gradient: "from-[#7b2f49]/20 to-[#b87955]/10",
+    tekst: "Discrete ontmoetingen op privélocatie.",
+    icon: UserRound,
   },
   {
     slug: "escort",
     label: "Escort",
-    beschrijving: "Stijlvolle escortdiensten met direct contact.",
+    tekst: "Stijlvolle escortdiensten in jouw regio.",
     icon: Sparkles,
-    gradient: "from-[#b87955]/20 to-[#d6b36b]/10",
   },
   {
     slug: "massage",
     label: "Massage",
-    beschrijving: "Wellness en ontspanning bij erkende aanbieders.",
+    tekst: "Wellness en ontspanning bij aanbieders.",
     icon: Waves,
-    gradient: "from-[#7b2f49]/15 to-[#211820]/40",
   },
   {
     slug: "video",
     label: "Video",
-    beschrijving: "Virtuele afspraken, discreet en flexibel.",
+    tekst: "Virtuele afspraken, flexibel en discreet.",
     icon: Video,
-    gradient: "from-[#b87955]/15 to-[#7b2f49]/10",
+  },
+  {
+    slug: "koppels",
+    label: "Koppels",
+    tekst: "Profielen en diensten voor koppels.",
+    icon: Users,
+  },
+  {
+    slug: "trans",
+    label: "Trans",
+    tekst: "Transgender profielen en diensten.",
+    icon: UserRound,
+  },
+  {
+    slug: "mannen",
+    label: "Mannen",
+    tekst: "Mannelijke aanbieders en profielen.",
+    icon: UserRound,
+  },
+  {
+    slug: "vrouwen",
+    label: "Vrouwen",
+    tekst: "Vrouwelijke aanbieders en profielen.",
+    icon: Heart,
   },
 ] as const;
 
-export function DiscoveryQuickPick() {
+export function CategoryGrid() {
   return (
-    <section className="discovery-section discovery-section--light">
+    <section id="categorieen" className="content-section content-section--light">
       <div className="container">
-        <h2 className="font-display text-xl font-medium text-[#24191f] sm:text-2xl">
-          Wat zoek je vandaag?
-        </h2>
-        <div className="discovery-quick-grid mt-5">
-          {QUICK_PICKS.map((item) => {
-            const Icon = item.icon;
+        <h2 className="content-section__title">Wat zoek je?</h2>
+        <div className="category-card-grid">
+          {CATEGORIEEN.map((cat) => {
+            const Icon = cat.icon;
             return (
               <Link
-                key={item.slug}
-                href={`/zoeken?categorie=${item.slug}`}
-                className="discovery-quick-card group"
+                key={cat.slug}
+                href={`/zoeken?categorie=${cat.slug}`}
+                className="category-card"
               >
-                <div
-                  className={`discovery-quick-card__icon bg-gradient-to-br ${item.gradient}`}
-                >
-                  <Icon className="h-6 w-6 text-[#d6b36b]" strokeWidth={1.5} />
-                </div>
-                <h3 className="discovery-quick-card__title">{item.label}</h3>
-                <p className="discovery-quick-card__desc">{item.beschrijving}</p>
-                <span className="discovery-quick-card__cta">Ontdek →</span>
+                <span className="category-card__icon">
+                  <Icon className="h-5 w-5" strokeWidth={1.5} />
+                </span>
+                <span className="category-card__title">{cat.label}</span>
+                <span className="category-card__text">{cat.tekst}</span>
               </Link>
             );
           })}

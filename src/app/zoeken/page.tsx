@@ -2,10 +2,7 @@ import Link from "next/link";
 import { Suspense } from "react";
 import type { Metadata } from "next";
 import { AdvertentieCard } from "@/components/advertentie-card";
-import {
-  ZoekCategoryBar,
-  ZoekFilterBar,
-} from "@/components/zoek-filter-bar";
+import { ZoekFilterBar } from "@/components/zoek-filter-bar";
 import { Button } from "@/components/ui/button";
 import { haalEersteFotos } from "@/lib/advertentie-fotos";
 import type { Advertentie } from "@/lib/types";
@@ -16,29 +13,17 @@ export const metadata: Metadata = {
   description: "Zoek discrete profielen op Veloura. Alleen 18+.",
 };
 
-const POPULAIRE_ZOEKOPDRACHTEN = [
-  { label: "Escort Antwerpen", href: "/zoeken?stad=Antwerpen&categorie=escort" },
-  {
-    label: "Privé ontvangst Gent",
-    href: "/zoeken?stad=Gent&categorie=prive-ontvangst",
-  },
-  { label: "Massage Brussel", href: "/zoeken?stad=Brussel&categorie=massage" },
-  { label: "Video afspraak", href: "/zoeken?categorie=video" },
-  { label: "Geverifieerde profielen", href: "/zoeken?geverifieerd=true" },
-  { label: "Koppels Vlaanderen", href: "/zoeken?categorie=koppels" },
-] as const;
-
 interface ZoekenPageProps {
   searchParams: Promise<{
     q?: string;
     stad?: string;
-    afstand?: string;
     categorie?: string;
     leeftijd_van?: string;
     leeftijd_tot?: string;
     prijs_min?: string;
     prijs_max?: string;
     geverifieerd?: string;
+    ai?: string;
   }>;
 }
 
@@ -55,24 +40,24 @@ function parseNumber(value?: string): number | null {
 function hasActiveFilters(params: {
   q?: string;
   stad?: string;
-  afstand?: string;
   categorie?: string;
   leeftijd_van?: string;
   leeftijd_tot?: string;
   prijs_min?: string;
   prijs_max?: string;
   geverifieerd?: string;
+  ai?: string;
 }) {
   return !!(
     params.q?.trim() ||
     params.stad?.trim() ||
-    params.afstand ||
     params.categorie ||
     params.leeftijd_van ||
     params.leeftijd_tot ||
     params.prijs_min ||
     params.prijs_max ||
-    isTruthyFilter(params.geverifieerd)
+    isTruthyFilter(params.geverifieerd) ||
+    params.ai === "1"
   );
 }
 
@@ -81,7 +66,6 @@ export default async function ZoekenPage({ searchParams }: ZoekenPageProps) {
   const {
     q,
     stad,
-    categorie,
     leeftijd_van,
     leeftijd_tot,
     prijs_min,
@@ -140,24 +124,20 @@ export default async function ZoekenPage({ searchParams }: ZoekenPageProps) {
 
   return (
     <div className="search-page">
-      <div className="search-page-header">
+      <div className="search-page-hero">
         <div className="container">
-          <h1 className="section-title text-xl sm:text-2xl">Profielen zoeken</h1>
-          <p className="section-subtitle mt-1 max-w-lg">
-            Filter op regio, categorie en voorkeuren.
+          <h1 className="search-page-hero__title">Profielen zoeken</h1>
+          <p className="search-page-hero__subtitle">
+            Gebruik filters of beschrijf wat je zoekt.
           </p>
         </div>
       </div>
 
-      <Suspense fallback={null}>
-        <ZoekCategoryBar activeSlug={categorie} />
-      </Suspense>
-
-      <div className="section-light">
-        <div className="container py-5 sm:py-7">
+      <div className="content-section content-section--light">
+        <div className="container py-5 sm:py-6">
           <Suspense
             fallback={
-              <div className="filter-panel-premium mb-5 h-64 animate-pulse rounded-2xl bg-[#f8f0e8]" />
+              <div className="filter-panel-premium h-56 animate-pulse rounded-2xl bg-[#f8f0e8]" />
             }
           >
             <ZoekFilterBar />
@@ -166,7 +146,7 @@ export default async function ZoekenPage({ searchParams }: ZoekenPageProps) {
           <p className="results-count mt-6">{resultLabel}</p>
 
           {advertenties.length > 0 ? (
-            <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            <div className="listing-grid mt-5">
               {advertenties.map((advertentie) => (
                 <AdvertentieCard
                   key={advertentie.id}
@@ -181,7 +161,7 @@ export default async function ZoekenPage({ searchParams }: ZoekenPageProps) {
               <h3 className="font-display text-lg sm:text-xl">
                 Geen profielen gevonden
               </h3>
-              <p className="mt-2 text-sm leading-relaxed text-[#74665f]">
+              <p className="mt-2 text-sm leading-relaxed text-[var(--muted-dark)]">
                 Pas je filters aan of bekijk alle actieve profielen.
               </p>
               <div className="mt-5 flex flex-col gap-2 sm:flex-row sm:justify-center">
@@ -194,34 +174,17 @@ export default async function ZoekenPage({ searchParams }: ZoekenPageProps) {
                   <Link href="/zoeken">Bekijk alle profielen</Link>
                 </Button>
               </div>
-              <p className="mt-5 text-xs text-[#74665f]">
+              <p className="mt-5 text-xs text-[var(--muted-dark)]">
                 Aanbieder?{" "}
                 <Link
                   href="/dashboard/advertenties/nieuw"
-                  className="font-medium text-[#7b2f49] hover:underline"
+                  className="font-medium text-[var(--wine)] hover:underline"
                 >
                   Plaats advertentie
                 </Link>
               </p>
             </div>
           )}
-
-          <section className="mt-10 border-t border-[#e6d8cf] pt-8">
-            <h2 className="font-display text-lg font-medium text-[#24191f]">
-              Populaire zoekopdrachten
-            </h2>
-            <div className="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
-              {POPULAIRE_ZOEKOPDRACHTEN.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className="popular-search-link"
-                >
-                  {item.label}
-                </Link>
-              ))}
-            </div>
-          </section>
         </div>
       </div>
     </div>

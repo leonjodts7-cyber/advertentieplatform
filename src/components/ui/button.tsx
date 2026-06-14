@@ -36,9 +36,9 @@ const variantClasses: Record<NonNullable<ButtonProps["variant"]>, string> = {
 };
 
 const sizeClasses: Record<NonNullable<ButtonProps["size"]>, string> = {
-  sm: "h-10 min-h-[44px] px-3.5 text-xs sm:text-sm",
-  md: "h-11 min-h-[44px] px-5 text-sm",
-  lg: "h-12 min-h-[44px] px-6 text-sm sm:text-base",
+  sm: "h-9 min-h-[36px] px-3 text-xs",
+  md: "h-10 min-h-[40px] px-4 text-sm",
+  lg: "h-11 min-h-[44px] px-5 text-sm",
 };
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(

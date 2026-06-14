@@ -62,8 +62,8 @@ export function AdvertentieCard({
         "hover:-translate-y-0.5 hover:shadow-warm-glow",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-champagne/25",
         isLight
-          ? "border border-[#e6d8cf] bg-[#fffaf6] shadow-[0_2px_12px_rgba(36,25,31,0.05)]"
-          : "listing-card-dark border border-white/[0.12] shadow-[0_2px_16px_rgba(0,0,0,0.15)]"
+          ? "border border-[var(--border-light)] bg-[var(--card-light)] shadow-[0_2px_14px_rgba(36,25,31,0.05)]"
+          : "listing-card-dark border border-white/[0.12]"
       )}
     >
       <div className="relative aspect-[3/4] overflow-hidden">
@@ -80,18 +80,16 @@ export function AdvertentieCard({
 
         <div className="profile-card__overlay absolute inset-0" />
 
-        <div className="absolute inset-x-0 top-0 flex flex-wrap gap-1.5 p-3">
-          {advertentie.beschikbaar && (
-            <Badge variant="online">Beschikbaar</Badge>
-          )}
+        <div className="absolute inset-x-0 top-0 flex flex-wrap gap-1 p-2.5 sm:p-3">
           {advertentie.geverifieerd && (
-            <Badge variant="verified">Geverifieerd</Badge>
-          )}
-          {isPremium && !dashboard && (
-            <Badge variant="premium">Premium</Badge>
+            <Badge variant="verified" className="text-[0.5625rem]">
+              Geverifieerd
+            </Badge>
           )}
           {!dashboard && (
-            <Badge variant="muted">{advertentie.stad}</Badge>
+            <Badge variant="muted" className="text-[0.5625rem]">
+              {advertentie.stad}
+            </Badge>
           )}
         </div>
 

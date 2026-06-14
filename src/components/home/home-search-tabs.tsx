@@ -10,21 +10,14 @@ import { MARKETPLACE_CATEGORIEEN } from "@/lib/marketplace";
 import { cn } from "@/lib/utils";
 import { Search, Sparkles } from "lucide-react";
 
-const AI_VOORBEELDEN = [
-  "Blonde vrouw rond 30 in Antwerpen",
-  "Discrete massage in Gent",
-  "Escort in regio Brussel",
-  "Koppel regio Vlaanderen",
-];
-
 export function HomeSearchTabs() {
   const router = useRouter();
-  const [tab, setTab] = useState<"klassiek" | "ai">("klassiek");
+  const [tab, setTab] = useState<"snel" | "ai">("snel");
   const [stad, setStad] = useState("");
   const [categorie, setCategorie] = useState<string | null>(null);
   const [aiQuery, setAiQuery] = useState("");
 
-  function handleKlassiekSubmit(e: React.FormEvent) {
+  function handleSnelSubmit(e: React.FormEvent) {
     e.preventDefault();
     const params = new URLSearchParams();
     if (stad.trim()) params.set("stad", stad.trim());
@@ -35,113 +28,95 @@ export function HomeSearchTabs() {
   function handleAiSubmit(e: React.FormEvent) {
     e.preventDefault();
     const q = aiQuery.trim();
-    router.push(q ? `/zoeken?q=${encodeURIComponent(q)}` : "/zoeken");
+    if (!q) {
+      router.push("/zoeken");
+      return;
+    }
+    const params = new URLSearchParams({ q, ai: "1" });
+    router.push(`/zoeken?${params}`);
   }
 
   return (
-    <section className="discovery-search">
-      <div className="container">
-        <div className="discovery-search__panel">
-          <div className="discovery-search__tabs" role="tablist">
-            <button
-              type="button"
-              role="tab"
-              aria-selected={tab === "klassiek"}
-              onClick={() => setTab("klassiek")}
-              className={cn(
-                "discovery-search__tab",
-                tab === "klassiek" && "discovery-search__tab--active"
-              )}
-            >
-              <Search className="h-4 w-4" />
-              Klassiek zoeken
-            </button>
-            <button
-              type="button"
-              role="tab"
-              aria-selected={tab === "ai"}
-              onClick={() => setTab("ai")}
-              className={cn(
-                "discovery-search__tab",
-                tab === "ai" && "discovery-search__tab--active"
-              )}
-            >
-              <Sparkles className="h-4 w-4" />
-              AI Zoekassistent
-            </button>
-          </div>
-
-          {tab === "klassiek" ? (
-            <form
-              onSubmit={handleKlassiekSubmit}
-              className="discovery-search__form"
-              role="tabpanel"
-            >
-              <div className="discovery-search__field">
-                <label htmlFor="home-stad" className="discovery-label">
-                  Stad of regio
-                </label>
-                <Input
-                  id="home-stad"
-                  placeholder="Bijv. Antwerpen"
-                  value={stad}
-                  onChange={(e) => setStad(e.target.value)}
-                  className="discovery-input-light"
-                />
-              </div>
-
-              <div className="discovery-search__field">
-                <p className="discovery-label">Type dienst</p>
-                <div className="category-chip-scroll no-scrollbar">
-                  {MARKETPLACE_CATEGORIEEN.map((cat) => (
-                    <CategoryChip
-                      key={cat.slug}
-                      label={cat.label}
-                      active={categorie === cat.slug}
-                      onClick={() =>
-                        setCategorie(
-                          categorie === cat.slug ? null : cat.slug
-                        )
-                      }
-                    />
-                  ))}
-                </div>
-              </div>
-
-              <Button type="submit" size="lg" className="w-full sm:w-auto">
-                Zoeken
-              </Button>
-            </form>
-          ) : (
-            <form
-              onSubmit={handleAiSubmit}
-              className="discovery-search__form"
-              role="tabpanel"
-            >
-              <div className="discovery-search__field">
-                <label htmlFor="ai-zoek" className="discovery-label">
-                  Beschrijf wat je zoekt
-                </label>
-                <Textarea
-                  id="ai-zoek"
-                  placeholder={AI_VOORBEELDEN.join("\n")}
-                  value={aiQuery}
-                  onChange={(e) => setAiQuery(e.target.value)}
-                  className="discovery-textarea-light min-h-[120px]"
-                />
-                <p className="discovery-hint">
-                  Bijvoorbeeld: &ldquo;{AI_VOORBEELDEN[0]}&rdquo;
-                </p>
-              </div>
-
-              <Button type="submit" size="lg" className="w-full gap-2 sm:w-auto">
-                <Sparkles className="h-4 w-4" />
-                AI zoekopdracht starten
-              </Button>
-            </form>
-          )}
+    <div className="home-search-widget">
+      <div className="home-search-widget__panel">
+        <div className="search-tabs" role="tablist">
+          <button
+            type="button"
+            role="tab"
+            aria-selected={tab === "snel"}
+            onClick={() => setTab("snel")}
+            className={cn("search-tabs__btn", tab === "snel" && "search-tabs__btn--active")}
+          >
+            <Search className="h-3.5 w-3.5" />
+            Snel zoeken
+          </button>
+          <button
+            type="button"
+            role="tab"
+            aria-selected={tab === "ai"}
+            onClick={() => setTab("ai")}
+            className={cn("search-tabs__btn", tab === "ai" && "search-tabs__btn--active")}
+          >
+            <Sparkles className="h-3.5 w-3.5" />
+            Beschrijf je wens
+          </button>
         </div>
+
+        {tab === "snel" ? (
+          <form onSubmit={handleSnelSubmit} className="home-search-widget__form" role="tabpanel">
+            <div>
+              <label htmlFor="home-stad" className="filter-label filter-label--dark">
+                Stad / regio
+              </label>
+              <Input
+                id="home-stad"
+                variant="dark"
+                placeholder="Bijv. Antwerpen"
+                value={stad}
+                onChange={(e) => setStad(e.target.value)}
+              />
+            </div>
+            <div>
+              <p className="filter-label filter-label--dark">Categorie</p>
+              <div className="category-chip-scroll no-scrollbar">
+                {MARKETPLACE_CATEGORIEEN.map((cat) => (
+                  <CategoryChip
+                    key={cat.slug}
+                    label={cat.label}
+                    active={categorie === cat.slug}
+                    onClick={() =>
+                      setCategorie(categorie === cat.slug ? null : cat.slug)
+                    }
+                  />
+                ))}
+              </div>
+            </div>
+            <Button type="submit" size="md" className="w-full">
+              Toon profielen
+            </Button>
+          </form>
+        ) : (
+          <form onSubmit={handleAiSubmit} className="home-search-widget__form" role="tabpanel">
+            <div>
+              <label htmlFor="home-ai" className="filter-label filter-label--dark">
+                Beschrijf je wens
+              </label>
+              <Textarea
+                id="home-ai"
+                variant="dark"
+                placeholder="Bijv. discrete massage in Gent, escort in Antwerpen, video afspraak…"
+                value={aiQuery}
+                onChange={(e) => setAiQuery(e.target.value)}
+                className="min-h-[88px]"
+              />
+            </div>
+            <Button type="submit" size="md" className="w-full gap-2">
+              <Sparkles className="h-4 w-4" />
+              Zoek met AI
+            </Button>
+          </form>
+        )}
       </div>
-    </section>
+    </div>
   );
 }

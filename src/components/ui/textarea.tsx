@@ -1,19 +1,33 @@
 import { cn } from "@/lib/utils";
 import { forwardRef, type TextareaHTMLAttributes } from "react";
 
-export interface TextareaProps
-  extends TextareaHTMLAttributes<HTMLTextAreaElement> {}
+export interface TextareaProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
+  variant?: "dark" | "light";
+}
+
+const variantClasses = {
+  dark: cn(
+    "border-white/[0.14] bg-[var(--dark-soft)]/90 text-[var(--text-light)]",
+    "placeholder:text-[var(--muted-light)]",
+    "focus-visible:border-[var(--champagne)]/45 focus-visible:ring-[var(--champagne)]/15"
+  ),
+  light: cn(
+    "border-[var(--border-light)] bg-[var(--card-light)] text-[var(--text-dark)]",
+    "placeholder:text-[var(--muted-dark)]",
+    "focus-visible:border-[var(--wine)]/35 focus-visible:ring-[var(--wine)]/12"
+  ),
+};
 
 export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
-  ({ className, ...props }, ref) => (
+  ({ className, variant = "dark", ...props }, ref) => (
     <textarea
       ref={ref}
       className={cn(
-        "flex min-h-[140px] w-full rounded-xl border border-white/[0.12] bg-[#211820]/80 px-4 py-3 text-sm text-[#fff6ef]",
-        "placeholder:text-[#c2b4ab]",
+        "flex min-h-[100px] w-full rounded-xl border px-4 py-3 text-sm",
         "transition-all duration-200",
-        "focus-visible:outline-none focus-visible:border-[#d6b36b]/45 focus-visible:ring-2 focus-visible:ring-[#d6b36b]/15",
+        "focus-visible:outline-none focus-visible:ring-2",
         "disabled:cursor-not-allowed disabled:opacity-50",
+        variantClasses[variant],
         className
       )}
       {...props}
