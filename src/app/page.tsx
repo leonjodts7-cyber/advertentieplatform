@@ -88,11 +88,11 @@ export default async function HomePage() {
           ) : (
             <div className="empty-state-card mt-5">
               <h3 className="font-display text-lg">Nog geen actieve profielen</h3>
-              <p className="mx-auto mt-2 max-w-sm text-sm text-[var(--muted-dark)]">
-                Veloura is bijna klaar. Plaats als aanbieder als eerste jouw
-                profiel.
+              <p className="mx-auto mt-2 max-w-md text-sm text-[var(--muted-dark)]">
+                De eerste profielen worden binnenkort zichtbaar. Ben jij
+                aanbieder? Plaats jouw advertentie als eerste.
               </p>
-              <Button asChild size="sm" variant="secondary-light" className="mt-4">
+              <Button asChild size="md" className="mt-4">
                 <Link href="/dashboard/advertenties/nieuw">Plaats advertentie</Link>
               </Button>
             </div>

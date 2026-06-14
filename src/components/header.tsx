@@ -17,12 +17,12 @@ const mainNav = [
 export function Header({ user }: HeaderProps) {
   return (
     <header className="glass-nav sticky top-0 z-50">
-      <div className="container header-inner h-10 sm:h-11">
+      <div className="container header-inner h-11 sm:h-12">
         <Link
           href="/"
           className="min-w-0 shrink-0 rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--champagne)]/30"
         >
-          <span className="font-display text-[0.9375rem] font-medium tracking-tight text-[var(--text-light)] sm:text-base">
+          <span className="font-display text-base font-medium tracking-tight text-[var(--text-light)] sm:text-lg">
             Veloura
           </span>
         </Link>
@@ -32,7 +32,7 @@ export function Header({ user }: HeaderProps) {
             <Link
               key={link.href}
               href={link.href}
-              className="rounded-full px-2.5 py-1 text-sm text-[var(--muted-light)] transition-colors hover:bg-white/[0.06] hover:text-[var(--text-light)]"
+              className="rounded-full px-2 py-0.5 text-[0.8125rem] text-[var(--muted-light)] transition-colors hover:bg-white/[0.06] hover:text-[var(--text-light)]"
             >
               {link.label}
             </Link>

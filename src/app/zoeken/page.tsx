@@ -17,11 +17,18 @@ interface ZoekenPageProps {
   searchParams: Promise<{
     q?: string;
     stad?: string;
+    afstand?: string;
     categorie?: string;
+    type_afspraak?: string;
     leeftijd_van?: string;
     leeftijd_tot?: string;
     prijs_min?: string;
     prijs_max?: string;
+    lengte_van?: string;
+    lengte_tot?: string;
+    haarkleur?: string;
+    taal?: string;
+    mogelijkheden?: string;
     geverifieerd?: string;
     ai?: string;
   }>;
@@ -40,22 +47,36 @@ function parseNumber(value?: string): number | null {
 function hasActiveFilters(params: {
   q?: string;
   stad?: string;
+  afstand?: string;
   categorie?: string;
+  type_afspraak?: string;
   leeftijd_van?: string;
   leeftijd_tot?: string;
   prijs_min?: string;
   prijs_max?: string;
+  lengte_van?: string;
+  lengte_tot?: string;
+  haarkleur?: string;
+  taal?: string;
+  mogelijkheden?: string;
   geverifieerd?: string;
   ai?: string;
 }) {
   return !!(
     params.q?.trim() ||
     params.stad?.trim() ||
+    params.afstand ||
     params.categorie ||
+    params.type_afspraak ||
     params.leeftijd_van ||
     params.leeftijd_tot ||
     params.prijs_min ||
     params.prijs_max ||
+    params.lengte_van ||
+    params.lengte_tot ||
+    params.haarkleur ||
+    params.taal ||
+    params.mogelijkheden ||
     isTruthyFilter(params.geverifieerd) ||
     params.ai === "1"
   );
@@ -123,7 +144,7 @@ export default async function ZoekenPage({ searchParams }: ZoekenPageProps) {
         : `${advertenties.length} profielen gevonden`;
 
   return (
-    <div className="search-page">
+    <div className="search-page search-page--warm">
       <div className="search-page-hero">
         <div className="container">
           <h1 className="search-page-hero__title">Profielen zoeken</h1>

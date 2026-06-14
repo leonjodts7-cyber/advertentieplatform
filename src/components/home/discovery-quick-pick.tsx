@@ -1,5 +1,6 @@
 import Link from "next/link";
 import {
+  Crown,
   Heart,
   Sparkles,
   UserRound,
@@ -12,49 +13,49 @@ const CATEGORIEEN = [
   {
     slug: "prive-ontvangst",
     label: "Privé ontvangst",
-    tekst: "Discrete ontmoetingen op privélocatie.",
+    tekst: "Discrete privélocaties.",
     icon: UserRound,
   },
   {
     slug: "escort",
     label: "Escort",
-    tekst: "Stijlvolle escortdiensten in jouw regio.",
-    icon: Sparkles,
+    tekst: "Escort in jouw regio.",
+    icon: Crown,
   },
   {
     slug: "massage",
     label: "Massage",
-    tekst: "Wellness en ontspanning bij aanbieders.",
+    tekst: "Wellness & ontspanning.",
     icon: Waves,
   },
   {
     slug: "video",
     label: "Video",
-    tekst: "Virtuele afspraken, flexibel en discreet.",
+    tekst: "Virtuele afspraken.",
     icon: Video,
   },
   {
     slug: "koppels",
     label: "Koppels",
-    tekst: "Profielen en diensten voor koppels.",
+    tekst: "Voor koppels.",
     icon: Users,
   },
   {
     slug: "trans",
     label: "Trans",
-    tekst: "Transgender profielen en diensten.",
-    icon: UserRound,
+    tekst: "Trans profielen.",
+    icon: Sparkles,
   },
   {
     slug: "mannen",
     label: "Mannen",
-    tekst: "Mannelijke aanbieders en profielen.",
+    tekst: "Mannelijke profielen.",
     icon: UserRound,
   },
   {
     slug: "vrouwen",
     label: "Vrouwen",
-    tekst: "Vrouwelijke aanbieders en profielen.",
+    tekst: "Vrouwelijke profielen.",
     icon: Heart,
   },
 ] as const;
@@ -64,16 +65,19 @@ export function CategoryGrid() {
     <section id="categorieen" className="content-section content-section--light">
       <div className="container">
         <h2 className="content-section__title">Wat zoek je?</h2>
-        <div className="category-card-grid">
+        <p className="content-section__subtitle">
+          Kies een categorie en start direct met zoeken.
+        </p>
+        <div className="category-card-grid category-card-grid--strong">
           {CATEGORIEEN.map((cat) => {
             const Icon = cat.icon;
             return (
               <Link
                 key={cat.slug}
                 href={`/zoeken?categorie=${cat.slug}`}
-                className="category-card"
+                className="category-card category-card--strong"
               >
-                <span className="category-card__icon">
+                <span className="category-card__icon category-card__icon--strong">
                   <Icon className="h-5 w-5" strokeWidth={1.5} />
                 </span>
                 <span className="category-card__title">{cat.label}</span>

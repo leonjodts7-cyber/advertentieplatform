@@ -7,7 +7,7 @@ export function HomeHeroCompact() {
     <section className="home-hero-compact">
       <div className="container">
         <div className="home-hero-compact__grid">
-          <div className="home-hero-compact__copy animate-fade-in">
+          <div className="home-hero-compact__copy order-2 lg:order-1 animate-fade-in">
             <p className="home-hero-compact__trust">
               Alleen 18+ · Discreet · Geverifieerd
             </p>
@@ -15,7 +15,7 @@ export function HomeHeroCompact() {
               Vind discrete profielen in jouw regio
             </h1>
             <p className="home-hero-compact__subtitle">
-              Zoek privé ontvangst, escort, massage, video en meer. Snel,
+              Zoek op regio, type dienst, leeftijd, prijs en voorkeuren. Snel,
               discreet en mobiel-first.
             </p>
             <div className="home-hero-compact__actions">
@@ -28,11 +28,13 @@ export function HomeHeroCompact() {
                 size="md"
                 className="w-full sm:w-auto"
               >
-                <Link href="#categorieen">Bekijk categorieën</Link>
+                <Link href="#categorieen">Ontdek categorieën</Link>
               </Button>
             </div>
           </div>
-          <HomeSearchTabs />
+          <div className="order-1 lg:order-2">
+            <HomeSearchTabs />
+          </div>
         </div>
       </div>
     </section>

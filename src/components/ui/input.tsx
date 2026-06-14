@@ -1,8 +1,10 @@
 import { cn } from "@/lib/utils";
 import { forwardRef, type InputHTMLAttributes } from "react";
 
-export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
+export interface InputProps
+  extends Omit<InputHTMLAttributes<HTMLInputElement>, "size"> {
   variant?: "dark" | "light";
+  size?: "default" | "compact";
 }
 
 const variantClasses = {
@@ -18,16 +20,25 @@ const variantClasses = {
   ),
 };
 
+const sizeClasses = {
+  default: "h-10 min-h-[40px] px-3.5 py-2",
+  compact: "h-9 min-h-[36px] px-3 py-1.5 text-sm",
+};
+
 export const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ className, type = "text", variant = "dark", ...props }, ref) => (
+  (
+    { className, type = "text", variant = "dark", size = "default", ...props },
+    ref
+  ) => (
     <input
       ref={ref}
       type={type}
       className={cn(
-        "flex h-10 min-h-[40px] w-full rounded-xl border px-3.5 py-2 text-sm",
+        "flex w-full rounded-xl border text-sm",
         "transition-all duration-200",
         "focus-visible:outline-none focus-visible:ring-2",
         "disabled:cursor-not-allowed disabled:opacity-50",
+        sizeClasses[size],
         variantClasses[variant],
         className
       )}
