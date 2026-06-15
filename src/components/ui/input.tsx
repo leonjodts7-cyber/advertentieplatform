@@ -9,14 +9,22 @@ export interface InputProps
 
 const variantClasses = {
   dark: cn(
+    "ui-input ui-input--dark",
     "border-[var(--border-dark)] bg-[var(--dark-soft)]/90 text-[var(--text-light)]",
+    "caret-[var(--champagne)]",
     "placeholder:text-[var(--muted-light)]",
-    "focus-visible:border-[var(--champagne)]/45 focus-visible:ring-[var(--champagne)]/18"
+    "focus-visible:border-[var(--champagne)]/45",
+    "focus-visible:ring-[var(--champagne)]/18",
+    "focus-visible:shadow-[0_0_0_3px_rgba(214,179,107,0.1)]"
   ),
   light: cn(
-    "border-[var(--border-light)] bg-[var(--card-light)] text-[var(--text-dark)]",
-    "placeholder:text-[var(--muted-dark)]/80",
-    "focus-visible:border-[var(--wine)]/30 focus-visible:ring-[var(--wine)]/10"
+    "ui-input ui-input--light",
+    "border-[var(--border-light)] bg-[var(--card-light)] text-[#171216]",
+    "caret-[#7b2f49]",
+    "placeholder:text-[var(--muted-dark)]",
+    "focus-visible:border-[#7b2f49]/55",
+    "focus-visible:ring-[#7b2f49]/15",
+    "focus-visible:shadow-[0_0_0_3px_rgba(123,47,73,0.12)]"
   ),
 };
 
@@ -34,10 +42,11 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       ref={ref}
       type={type}
       className={cn(
-        "flex w-full rounded-xl border text-sm",
+        "flex w-full rounded-xl border text-sm opacity-100",
         "transition-all duration-200",
         "focus-visible:outline-none focus-visible:ring-2",
         "disabled:cursor-not-allowed disabled:opacity-50",
+        type === "password" && "ui-input--password",
         sizeClasses[size],
         variantClasses[variant],
         className

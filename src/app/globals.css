@@ -3761,3 +3761,53 @@ body {
   cursor: pointer;
 }
 
+/* ─── Input: lichte velden + wachtwoord + autofill ─── */
+.ui-input--light,
+.ui-input--light.ui-input--password {
+  color: #171216;
+  caret-color: #7b2f49;
+  opacity: 1;
+}
+
+.ui-input--light::placeholder {
+  color: var(--muted-dark);
+  opacity: 1;
+}
+
+.ui-input--light.ui-input--password {
+  -webkit-text-fill-color: #171216;
+  font-family: inherit;
+  letter-spacing: 0.08em;
+}
+
+.ui-input--light:focus-visible {
+  outline: none;
+  border-color: rgba(123, 47, 73, 0.55);
+  box-shadow: 0 0 0 3px rgba(123, 47, 73, 0.12);
+}
+
+.ui-input--light:-webkit-autofill,
+.ui-input--light:-webkit-autofill:hover,
+.ui-input--light:-webkit-autofill:focus,
+.ui-input--light:-webkit-autofill:active {
+  -webkit-text-fill-color: #171216 !important;
+  caret-color: #7b2f49;
+  color: #171216 !important;
+  border-color: rgba(123, 47, 73, 0.35);
+  box-shadow: 0 0 0 1000px #fffaf6 inset !important;
+  transition: background-color 99999s ease-out 0s;
+}
+
+.ui-input--light.ui-input--password:-webkit-autofill,
+.ui-input--light.ui-input--password:-webkit-autofill:hover,
+.ui-input--light.ui-input--password:-webkit-autofill:focus,
+.ui-input--light.ui-input--password:-webkit-autofill:active {
+  -webkit-text-fill-color: #171216 !important;
+  color: #171216 !important;
+}
+
+.login-card .ui-input--light.ui-input--password {
+  color: #171216;
+  -webkit-text-fill-color: #171216;
+}
+

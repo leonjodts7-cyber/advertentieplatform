@@ -211,6 +211,7 @@ export default function LoginPage() {
                 <Input
                   id="reset-email"
                   type="email"
+                  variant="light"
                   required
                   autoComplete="email"
                   placeholder="jij@voorbeeld.be"
@@ -241,6 +242,7 @@ export default function LoginPage() {
                 <Input
                   id="login-email"
                   type="email"
+                  variant="light"
                   required
                   autoComplete="email"
                   placeholder="jij@voorbeeld.be"
@@ -255,6 +257,7 @@ export default function LoginPage() {
                 <Input
                   id="login-password"
                   type="password"
+                  variant="light"
                   required
                   autoComplete="current-password"
                   placeholder="••••••••"
@@ -285,6 +288,7 @@ export default function LoginPage() {
                 <Input
                   id="register-email"
                   type="email"
+                  variant="light"
                   required
                   autoComplete="email"
                   placeholder="jij@voorbeeld.be"
@@ -299,6 +303,7 @@ export default function LoginPage() {
                 <Input
                   id="register-password"
                   type="password"
+                  variant="light"
                   required
                   autoComplete="new-password"
                   placeholder="Minimaal 8 tekens"
@@ -314,6 +319,7 @@ export default function LoginPage() {
                 <Input
                   id="register-password-confirm"
                   type="password"
+                  variant="light"
                   required
                   autoComplete="new-password"
                   placeholder="Herhaal wachtwoord"
