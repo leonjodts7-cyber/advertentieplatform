@@ -40,9 +40,17 @@ export function Header({ user }: HeaderProps) {
         </nav>
 
         <div className="header-actions">
-          <div className="hidden items-center lg:flex">
+          <div className="hidden items-center gap-1 lg:flex">
             {user ? (
-              <UitloggenKnop />
+              <>
+                <Link
+                  href="/dashboard"
+                  className="rounded-full px-2.5 py-1 text-sm text-[var(--muted-light)] hover:text-[var(--text-light)]"
+                >
+                  Dashboard
+                </Link>
+                <UitloggenKnop />
+              </>
             ) : (
               <Link
                 href="/login"
@@ -62,24 +70,38 @@ export function Header({ user }: HeaderProps) {
           </div>
 
           <div className="flex items-center gap-1.5 lg:hidden">
-            <Link
-              href="/zoeken"
-              className="rounded-full px-1.5 py-1 text-[0.6875rem] text-[var(--muted-light)] hover:text-[var(--text-light)] sm:text-xs"
-            >
-              Advertenties
-            </Link>
-            <Link
-              href="/ai-lounge"
-              className="rounded-full px-1.5 py-1 text-[0.6875rem] text-[var(--muted-light)] hover:text-[var(--text-light)] sm:text-xs"
-            >
-              AI Lounge
-            </Link>
-            <Link
-              href="/dashboard/advertenties/nieuw"
-              className="rounded-full px-2 py-1 text-[0.6875rem] font-medium text-[var(--champagne)] hover:text-[var(--text-light)] sm:text-xs"
-            >
-              Plaatsen
-            </Link>
+            {user ? (
+              <>
+                <Link
+                  href="/dashboard"
+                  className="rounded-full px-1.5 py-1 text-[0.6875rem] text-[var(--muted-light)] hover:text-[var(--text-light)] sm:text-xs"
+                >
+                  Dashboard
+                </Link>
+                <UitloggenKnop />
+              </>
+            ) : (
+              <>
+                <Link
+                  href="/zoeken"
+                  className="rounded-full px-1.5 py-1 text-[0.6875rem] text-[var(--muted-light)] hover:text-[var(--text-light)] sm:text-xs"
+                >
+                  Advertenties
+                </Link>
+                <Link
+                  href="/ai-lounge"
+                  className="rounded-full px-1.5 py-1 text-[0.6875rem] text-[var(--muted-light)] hover:text-[var(--text-light)] sm:text-xs"
+                >
+                  AI Lounge
+                </Link>
+                <Link
+                  href="/login"
+                  className="rounded-full px-1.5 py-1 text-[0.6875rem] text-[var(--muted-light)] hover:text-[var(--text-light)] sm:text-xs"
+                >
+                  Login
+                </Link>
+              </>
+            )}
           </div>
         </div>
       </div>
