@@ -11,8 +11,10 @@ import { createClient } from "@/lib/supabase/server";
 import {
   beschrijvingMatchtFilter,
   categorieMatcht,
+  isNieuwProfiel,
   isTruthyFilter,
   matchtLengteFilter,
+  typeAfspraakMatcht,
 } from "@/lib/zoek-filters";
 
 export const metadata: Metadata = {
@@ -38,21 +40,42 @@ function hasActiveFilters(params: Record<string, string | undefined>) {
   });
 }
 
+function profielCountLabel(count: number): string {
+  if (count === 0) return "0 profielen gevonden";
+  if (count === 1) return "1 profiel gevonden";
+  return `${count} profielen gevonden`;
+}
+
 function filterAdvertenties(
   advertenties: Advertentie[],
   params: Record<string, string | undefined>
 ) {
   return advertenties.filter((ad) => {
     const tekst = `${ad.titel} ${ad.beschrijving}`;
-    const { categorie, haarkleur, taal, lengte_van, lengte_tot } = params;
+    const {
+      categorie,
+      type_afspraak,
+      haarkleur,
+      oogkleur,
+      taal,
+      lengte_van,
+      lengte_tot,
+    } = params;
 
     if (categorie && !categorieMatcht(tekst, categorie)) return false;
+    if (type_afspraak && !typeAfspraakMatcht(tekst, type_afspraak)) return false;
     if (haarkleur && !beschrijvingMatchtFilter(tekst, "haarkleur", haarkleur)) return false;
+    if (oogkleur && !beschrijvingMatchtFilter(tekst, "oogkleur", oogkleur)) return false;
     if (taal && !beschrijvingMatchtFilter(tekst, "taal", taal)) return false;
     if (isTruthyFilter(params.thuis_ontvangen) && !beschrijvingMatchtFilter(tekst, "thuis_ontvangen")) return false;
     if (isTruthyFilter(params.hotel_mogelijk) && !beschrijvingMatchtFilter(tekst, "hotel_mogelijk")) return false;
     if (isTruthyFilter(params.video_mogelijk) && !beschrijvingMatchtFilter(tekst, "video_mogelijk")) return false;
+    if (isTruthyFilter(params.discreet_contact) && !beschrijvingMatchtFilter(tekst, "discreet_contact")) return false;
+    if (isTruthyFilter(params.verplaatsing_mogelijk) && !beschrijvingMatchtFilter(tekst, "verplaatsing_mogelijk")) return false;
     if (!matchtLengteFilter(tekst, lengte_van, lengte_tot)) return false;
+    if (isTruthyFilter(params.beschikbaar) && !ad.beschikbaar) return false;
+    if (isTruthyFilter(params.nieuw_profiel) && !isNieuwProfiel(ad.aangemaakt_op)) return false;
+    if (isTruthyFilter(params.premium_profiel) && ad.premium !== true) return false;
 
     return true;
   });
@@ -60,7 +83,16 @@ function filterAdvertenties(
 
 export default async function ZoekenPage({ searchParams }: ZoekenPageProps) {
   const params = await searchParams;
-  const { q, stad, leeftijd_van, leeftijd_tot, prijs_min, prijs_max, geverifieerd } = params;
+  const {
+    q,
+    stad,
+    leeftijd_van,
+    leeftijd_tot,
+    prijs_min,
+    prijs_max,
+    geverifieerd,
+    ai,
+  } = params;
 
   const supabase = await createClient();
 
@@ -71,11 +103,17 @@ export default async function ZoekenPage({ searchParams }: ZoekenPageProps) {
     .order("aangemaakt_op", { ascending: false });
 
   if (stad?.trim()) query = query.ilike("stad", `%${stad.trim()}%`);
-  if (q?.trim()) {
+  if (q?.trim() && ai !== "1") {
     const term = q.trim();
     query = query.or(`titel.ilike.%${term}%,beschrijving.ilike.%${term}%,stad.ilike.%${term}%`);
   }
   if (isTruthyFilter(geverifieerd)) query = query.eq("geverifieerd", true);
+  if (isTruthyFilter(params.premium_profiel)) {
+    query = query.eq("premium", true);
+  }
+  if (isTruthyFilter(params.beschikbaar)) {
+    query = query.eq("beschikbaar", true);
+  }
 
   const leeftijdVan = parseNumber(leeftijd_van);
   const leeftijdTotRaw = leeftijd_tot?.trim();
@@ -91,7 +129,16 @@ export default async function ZoekenPage({ searchParams }: ZoekenPageProps) {
   if (prijsMax != null) query = query.lte("prijs_vanaf", prijsMax);
 
   const { data: advertentiesRaw } = await query;
-  const advertenties = filterAdvertenties((advertentiesRaw ?? []) as Advertentie[], params);
+  let advertenties = filterAdvertenties((advertentiesRaw ?? []) as Advertentie[], params);
+
+  if (ai === "1" && q?.trim()) {
+    const term = q.trim().toLowerCase();
+    advertenties = advertenties.filter((ad) => {
+      const haystack = `${ad.titel} ${ad.beschrijving} ${ad.stad}`.toLowerCase();
+      return haystack.includes(term) || term.split(/\s+/).some((w) => haystack.includes(w));
+    });
+  }
+
   const fotos = await haalEersteFotos(supabase, advertenties.map((a) => a.id));
   const filtersActive = hasActiveFilters(params);
 
@@ -101,7 +148,7 @@ export default async function ZoekenPage({ searchParams }: ZoekenPageProps) {
         <div className="container">
           <h1 className="search-page-top__title">Profielen zoeken</h1>
           <p className="search-page-top__subtitle">
-            Gebruik snelle filters of open uitgebreide filters.
+            Filter snel of gebruik AI zoeken.
           </p>
         </div>
       </div>
@@ -115,7 +162,20 @@ export default async function ZoekenPage({ searchParams }: ZoekenPageProps) {
           <ZoekActiveChips />
         </Suspense>
 
+        {ai === "1" && q?.trim() && (
+          <div className="zoek-ai-banner">
+            <SparklesIcon />
+            <span>
+              AI zoekopdracht: <strong>{q.trim()}</strong>
+            </span>
+          </div>
+        )}
+
         <main className="zoek-results">
+          <p className="zoek-results__count">
+            {profielCountLabel(advertenties.length)}
+          </p>
+
           {advertenties.length > 0 ? (
             <div className="listing-grid listing-grid--search">
               {advertenties.map((advertentie) => (
@@ -125,6 +185,7 @@ export default async function ZoekenPage({ searchParams }: ZoekenPageProps) {
                   afbeeldingUrl={fotos.get(advertentie.id)}
                   theme="light"
                   premium
+                  showPremium={advertentie.premium === true}
                   showOnline={advertentie.beschikbaar}
                 />
               ))}
@@ -150,5 +211,20 @@ export default async function ZoekenPage({ searchParams }: ZoekenPageProps) {
         </main>
       </div>
     </div>
+  );
+}
+
+function SparklesIcon() {
+  return (
+    <svg
+      className="h-4 w-4 shrink-0 text-[var(--champagne)]"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      aria-hidden
+    >
+      <path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .962 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z" />
+    </svg>
   );
 }

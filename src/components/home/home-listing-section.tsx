@@ -10,10 +10,12 @@ interface HomeListingSectionProps {
   viewAllHref: string;
   showOnline?: boolean;
   hideWhenEmpty?: boolean;
+  variant?: "default" | "premium";
   emptyState?: {
     title: string;
     text: string;
-    showCta?: boolean;
+    cta?: { label: string; href: string };
+    showProviderLink?: boolean;
   };
 }
 
@@ -25,12 +27,17 @@ export function HomeListingSection({
   viewAllHref,
   showOnline = false,
   hideWhenEmpty = false,
+  variant = "default",
   emptyState,
 }: HomeListingSectionProps) {
   if (advertenties.length === 0 && hideWhenEmpty) return null;
 
+  const isPremiumSection = variant === "premium";
+
   return (
-    <section className="home-listing-block">
+    <section
+      className={`home-listing-block${isPremiumSection ? " home-listing-block--premium" : ""}`}
+    >
       <div className="container">
         <div className="home-listing-block__header">
           <div>
@@ -55,6 +62,7 @@ export function HomeListingSection({
                 afbeeldingUrl={fotos.get(advertentie.id)}
                 theme="light"
                 premium
+                showPremium={advertentie.premium === true}
                 showOnline={showOnline || advertentie.beschikbaar}
               />
             ))}
@@ -63,7 +71,12 @@ export function HomeListingSection({
           <div className="home-listing-empty">
             <h3 className="home-listing-empty__title">{emptyState.title}</h3>
             <p className="home-listing-empty__text">{emptyState.text}</p>
-            {emptyState.showCta && (
+            {emptyState.cta && (
+              <p className="home-listing-empty__cta">
+                <Link href={emptyState.cta.href}>{emptyState.cta.label}</Link>
+              </p>
+            )}
+            {emptyState.showProviderLink && (
               <p className="home-listing-empty__cta">
                 Ben jij aanbieder?{" "}
                 <Link href="/dashboard/advertenties/nieuw">

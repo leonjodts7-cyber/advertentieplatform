@@ -61,7 +61,7 @@ export function Header({ user }: HeaderProps) {
             </Button>
           </div>
 
-          <div className="flex items-center gap-1 lg:hidden">
+          <div className="flex items-center gap-1.5 lg:hidden">
             <Link
               href="/zoeken"
               className="rounded-full px-1.5 py-1 text-[0.6875rem] text-[var(--muted-light)] hover:text-[var(--text-light)] sm:text-xs"
@@ -74,14 +74,12 @@ export function Header({ user }: HeaderProps) {
             >
               AI Lounge
             </Link>
-            <Button
-              asChild
-              size="sm"
-              variant="primary"
-              className="h-7 min-h-0 px-2 text-[0.625rem] sm:px-2.5 sm:text-[0.6875rem]"
+            <Link
+              href="/dashboard/advertenties/nieuw"
+              className="rounded-full px-2 py-1 text-[0.6875rem] font-medium text-[var(--champagne)] hover:text-[var(--text-light)] sm:text-xs"
             >
-              <Link href="/dashboard/advertenties/nieuw">Plaatsen</Link>
-            </Button>
+              Plaatsen
+            </Link>
           </div>
         </div>
       </div>

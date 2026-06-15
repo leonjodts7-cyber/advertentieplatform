@@ -17,12 +17,14 @@ Velden (optioneel):
 
 const STEDEN = ["antwerpen", "gent", "brussel", "leuven", "hasselt", "brugge", "mechelen", "kortrijk"];
 
-const FILTER_KEYS = [
-  "q", "stad", "categorie", "leeftijd_van", "leeftijd_tot", "prijs_min", "prijs_max",
-  "lengte_van", "lengte_tot", "gewicht_van", "gewicht_tot", "haarkleur", "oogkleur",
-  "nationaliteit", "taal", "geverifieerd", "beschikbaar", "thuis_ontvangen",
-  "hotel_mogelijk", "video_mogelijk", "koppels_welkom", "roken_toegestaan",
-] as const;
+const FILTER_KEYS: (keyof ParsedZoekFilters)[] = [
+  "q", "stad", "afstand", "categorie", "type_afspraak",
+  "leeftijd_van", "leeftijd_tot", "prijs_min", "prijs_max",
+  "lengte_van", "lengte_tot", "haarkleur", "oogkleur", "taal",
+  "geverifieerd", "beschikbaar", "thuis_ontvangen", "hotel_mogelijk",
+  "video_mogelijk", "discreet_contact", "nieuw_profiel", "premium_profiel",
+  "verplaatsing_mogelijk",
+];
 
 function parseJsonFilters(raw: string): ParsedZoekFilters | null {
   try {

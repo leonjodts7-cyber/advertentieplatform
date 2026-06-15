@@ -1,27 +1,34 @@
 import Link from "next/link";
 import {
+  Building2,
   Crown,
   Heart,
+  Hotel,
+  Music,
   Sparkles,
   UserRound,
   Users,
   Video,
   Waves,
+  Wine,
 } from "lucide-react";
-import { MARKETPLACE_CATEGORIEEN } from "@/lib/marketplace";
+import { HOMEPAGE_CATEGORIEEN } from "@/lib/marketplace";
 
-const CATEGORIE_META: Record<
-  string,
-  { icon: typeof UserRound; subtitle: string }
-> = {
-  "prive-ontvangst": { icon: UserRound, subtitle: "Discrete locaties" },
-  escort: { icon: Crown, subtitle: "In jouw regio" },
-  massage: { icon: Waves, subtitle: "Wellness & rust" },
-  video: { icon: Video, subtitle: "Virtueel contact" },
-  koppels: { icon: Users, subtitle: "Voor koppels" },
-  trans: { icon: Sparkles, subtitle: "Trans profielen" },
-  mannen: { icon: UserRound, subtitle: "Mannelijk" },
-  vrouwen: { icon: Heart, subtitle: "Vrouwelijk" },
+const CATEGORIE_ICONS: Record<string, typeof UserRound> = {
+  privehuizen: Building2,
+  "prive-ontvangst": UserRound,
+  escort: Crown,
+  massagesalons: Waves,
+  "bars-clubs": Music,
+  "rendez-vous-hotels": Hotel,
+  "prive-saunas": Waves,
+  parenclubs: Wine,
+  massage: Waves,
+  video: Video,
+  koppels: Users,
+  trans: Sparkles,
+  mannen: UserRound,
+  vrouwen: Heart,
 };
 
 export function CategoryCompactGrid() {
@@ -29,10 +36,12 @@ export function CategoryCompactGrid() {
     <section className="home-listing-block home-listing-block--compact">
       <div className="container">
         <h2 className="home-listing-block__title">Populaire categorieën</h2>
-        <div className="category-compact-grid">
-          {MARKETPLACE_CATEGORIEEN.map((cat) => {
-            const meta = CATEGORIE_META[cat.slug];
-            const Icon = meta?.icon ?? UserRound;
+        <p className="home-listing-block__subtitle home-listing-block__subtitle--inline">
+          Ontdek profielen per categorie
+        </p>
+        <div className="category-compact-grid category-compact-grid--wide">
+          {HOMEPAGE_CATEGORIEEN.map((cat) => {
+            const Icon = CATEGORIE_ICONS[cat.slug] ?? UserRound;
             return (
               <Link
                 key={cat.slug}
@@ -45,9 +54,10 @@ export function CategoryCompactGrid() {
                 <span className="category-compact-card__body">
                   <span className="category-compact-card__title">{cat.label}</span>
                   <span className="category-compact-card__subtitle">
-                    {meta?.subtitle ?? "Bekijk profielen"}
+                    {cat.subtitle}
                   </span>
                 </span>
+                <span className="category-compact-card__count">Binnenkort</span>
               </Link>
             );
           })}

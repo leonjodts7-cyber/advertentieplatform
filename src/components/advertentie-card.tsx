@@ -55,7 +55,7 @@ export function AdvertentieCard({
       ? `/dashboard/advertenties/${advertentie.id}/bewerken`
       : `/advertentie/${advertentie.id}`);
 
-  const isPremium = showPremium || advertentie.geverifieerd;
+  const isPremiumListing = showPremium || advertentie.premium === true;
   const isLight = theme === "light" && !dashboard;
 
   return (
@@ -69,8 +69,8 @@ export function AdvertentieCard({
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-champagne/25",
         isLight
           ? cn(
-              "border border-[var(--border-light)] bg-white shadow-[0_2px_16px_rgba(36,25,31,0.06)]",
-              premium && "border-[#e8ddd4]"
+              "border border-[var(--border-light)] bg-[var(--card-light)] shadow-[0_2px_16px_rgba(36,25,31,0.06)]",
+              isPremiumListing && "border-[#e0cfc4] ring-1 ring-[#d6b36b]/20"
             )
           : "listing-card-dark border border-white/[0.12]"
       )}
@@ -90,10 +90,15 @@ export function AdvertentieCard({
         <div className="profile-card__overlay absolute inset-0" />
 
         <div className="absolute inset-x-0 top-0 flex flex-wrap gap-1 p-2.5 sm:p-3">
+          {isPremiumListing && !dashboard && (
+            <Badge variant="premium" className="text-[0.5625rem]">
+              Premium
+            </Badge>
+          )}
           {(showOnline || advertentie.beschikbaar) && !dashboard && (
             <Badge variant="online" className="text-[0.5625rem] gap-1">
               <span className="online-dot" aria-hidden />
-              Online
+              Beschikbaar
             </Badge>
           )}
           {advertentie.geverifieerd && (
@@ -132,7 +137,7 @@ export function AdvertentieCard({
       <div
         className={cn(
           "flex items-center justify-between gap-2 px-3 py-2.5 sm:px-4 sm:py-3",
-          isLight ? "text-[#74665f]" : "text-[#c2b4ab]"
+          isLight ? "text-[var(--muted-dark)]" : "text-[#c2b4ab]"
         )}
       >
         {dashboard ? (
@@ -144,8 +149,8 @@ export function AdvertentieCard({
             className={cn(
               "text-xs font-medium tracking-wide transition-colors",
               isLight
-                ? "group-hover:text-[#7b2f49]"
-                : "group-hover:text-[#d6b36b]"
+                ? "group-hover:text-[var(--wine)]"
+                : "group-hover:text-[var(--champagne)]"
             )}
           >
             Bekijk profiel →

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { RECENTE_STEDEN } from "@/lib/marketplace";
+import { POPULAIRE_STEDEN } from "@/lib/marketplace";
 
 export function CityLinksSection() {
   return (
@@ -7,7 +7,7 @@ export function CityLinksSection() {
       <div className="container">
         <h2 className="home-listing-block__title">Populaire steden</h2>
         <div className="city-links-grid">
-          {RECENTE_STEDEN.map((stad) => (
+          {POPULAIRE_STEDEN.map((stad) => (
             <Link
               key={stad}
               href={`/zoeken?stad=${encodeURIComponent(stad)}`}

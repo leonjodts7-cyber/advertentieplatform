@@ -7,28 +7,27 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { CategoryChip } from "@/components/ui/category-chip";
 import { ToggleSwitch } from "@/components/ui/toggle-switch";
-import { AFSTAND_OPTIES, MARKETPLACE_CATEGORIEEN } from "@/lib/marketplace";
 import {
+  AFSTAND_OPTIES,
+  MARKETPLACE_CATEGORIEEN,
+  TYPE_AFSPRAAK_OPTIES,
+} from "@/lib/marketplace";
+import {
+  ALLE_CATEGORIE_OPTIES,
   buildFilterParams,
   HAARKLEUR_OPTIES,
-  parsedFiltersToParams,
+  OOGKLEUR_OPTIES,
   TAAL_OPTIES,
   type ZoekFilterValues,
 } from "@/lib/zoek-filters";
 import { cn } from "@/lib/utils";
 import { ChevronDown, Sparkles } from "lucide-react";
 
-const MOGELIJKHEDEN_OPTIES = [
-  { value: "", label: "Alle mogelijkheden" },
-  { value: "thuis_ontvangen", label: "Thuis ontvangen" },
-  { value: "hotel_mogelijk", label: "Hotel mogelijk" },
-  { value: "video_mogelijk", label: "Video mogelijk" },
-] as const;
-
 const AI_VOORBEELDEN = [
-  "Blonde dame Antwerpen onder €200",
-  "Massage Gent vanavond",
-  "Video afspraak Nederlands",
+  "Blonde escort in Antwerpen onder €200",
+  "Massage in Gent",
+  "Video afspraak in het Nederlands",
+  "Geverifieerd profiel in Brussel",
 ];
 
 function boolFromParam(value: string | null) {
@@ -39,7 +38,6 @@ export function ZoekFilterBar() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [isPending, startTransition] = useTransition();
-  const [aiLoading, setAiLoading] = useState(false);
   const [extendedOpen, setExtendedOpen] = useState(false);
   const [aiOpen, setAiOpen] = useState(searchParams.get("ai") === "1");
 
@@ -49,6 +47,12 @@ export function ZoekFilterBar() {
     searchParams.get("categorie")
   );
   const [afstand, setAfstand] = useState(searchParams.get("afstand") ?? "");
+  const [typeAfspraak, setTypeAfspraak] = useState(
+    searchParams.get("type_afspraak") ?? ""
+  );
+  const [extCategorie, setExtCategorie] = useState(
+    searchParams.get("categorie") ?? ""
+  );
   const [leeftijdVan, setLeeftijdVan] = useState(searchParams.get("leeftijd_van") ?? "");
   const [leeftijdTot, setLeeftijdTot] = useState(searchParams.get("leeftijd_tot") ?? "");
   const [prijsMin, setPrijsMin] = useState(searchParams.get("prijs_min") ?? "");
@@ -56,45 +60,65 @@ export function ZoekFilterBar() {
   const [lengteVan, setLengteVan] = useState(searchParams.get("lengte_van") ?? "");
   const [lengteTot, setLengteTot] = useState(searchParams.get("lengte_tot") ?? "");
   const [haarkleur, setHaarkleur] = useState(searchParams.get("haarkleur") ?? "");
+  const [oogkleur, setOogkleur] = useState(searchParams.get("oogkleur") ?? "");
   const [taal, setTaal] = useState(searchParams.get("taal") ?? "");
-  const [mogelijkheid, setMogelijkheid] = useState(() => {
-    if (boolFromParam(searchParams.get("thuis_ontvangen"))) return "thuis_ontvangen";
-    if (boolFromParam(searchParams.get("hotel_mogelijk"))) return "hotel_mogelijk";
-    if (boolFromParam(searchParams.get("video_mogelijk"))) return "video_mogelijk";
-    return "";
-  });
   const [geverifieerd, setGeverifieerd] = useState(
     boolFromParam(searchParams.get("geverifieerd"))
+  );
+  const [beschikbaar, setBeschikbaar] = useState(
+    boolFromParam(searchParams.get("beschikbaar"))
+  );
+  const [hotelMogelijk, setHotelMogelijk] = useState(
+    boolFromParam(searchParams.get("hotel_mogelijk"))
+  );
+  const [thuisOntvangen, setThuisOntvangen] = useState(
+    boolFromParam(searchParams.get("thuis_ontvangen"))
+  );
+  const [videoMogelijk, setVideoMogelijk] = useState(
+    boolFromParam(searchParams.get("video_mogelijk"))
+  );
+  const [discreetContact, setDiscreetContact] = useState(
+    boolFromParam(searchParams.get("discreet_contact"))
+  );
+  const [nieuwProfiel, setNieuwProfiel] = useState(
+    boolFromParam(searchParams.get("nieuw_profiel"))
+  );
+  const [premiumProfiel, setPremiumProfiel] = useState(
+    boolFromParam(searchParams.get("premium_profiel"))
+  );
+  const [verplaatsingMogelijk, setVerplaatsingMogelijk] = useState(
+    boolFromParam(searchParams.get("verplaatsing_mogelijk"))
   );
   const [aiQuery, setAiQuery] = useState(
     searchParams.get("ai") === "1" ? searchParams.get("q") ?? "" : ""
   );
 
   function getValues(): ZoekFilterValues {
+    const activeCategorie = categorie ?? (extCategorie || null);
     return {
       q,
       stad,
       afstand,
-      categorie,
+      categorie: activeCategorie,
+      typeAfspraak,
       leeftijdVan,
       leeftijdTot,
       prijsMin,
       prijsMax,
       lengteVan,
       lengteTot,
-      gewichtVan: "",
-      gewichtTot: "",
       haarkleur,
-      oogkleur: "",
-      nationaliteit: "",
+      oogkleur,
       taal,
       geverifieerd,
-      beschikbaar: false,
-      hotelMogelijk: mogelijkheid === "hotel_mogelijk",
-      thuisOntvangen: mogelijkheid === "thuis_ontvangen",
-      videoMogelijk: mogelijkheid === "video_mogelijk",
-      koppelsWelkom: false,
-      rokenToegestaan: false,
+      beschikbaar,
+      hotelMogelijk,
+      thuisOntvangen,
+      videoMogelijk,
+      discreetContact,
+      nieuwProfiel,
+      premiumProfiel,
+      verplaatsingMogelijk,
     };
   }
 
@@ -110,28 +134,14 @@ export function ZoekFilterBar() {
     navigate(buildFilterParams(getValues()));
   }
 
-  async function handleAiSubmit(e: React.FormEvent) {
+  function handleAiSubmit(e: React.FormEvent) {
     e.preventDefault();
     const trimmed = aiQuery.trim();
-    if (!trimmed) return navigate(new URLSearchParams());
-    setAiLoading(true);
-    try {
-      const res = await fetch("/api/ai/zoek", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ query: trimmed }),
-      });
-      if (res.ok) {
-        const data = (await res.json()) as { filters?: Record<string, string> };
-        navigate(parsedFiltersToParams(data.filters ?? {}));
-        return;
-      }
-    } catch {
-      /* fallback */
-    } finally {
-      setAiLoading(false);
+    if (!trimmed) {
+      navigate(new URLSearchParams({ ai: "1" }));
+      return;
     }
-    navigate(new URLSearchParams({ q: trimmed }));
+    navigate(new URLSearchParams({ q: trimmed, ai: "1" }));
   }
 
   function handleClear() {
@@ -139,6 +149,8 @@ export function ZoekFilterBar() {
     setStad("");
     setCategorie(null);
     setAfstand("");
+    setTypeAfspraak("");
+    setExtCategorie("");
     setLeeftijdVan("");
     setLeeftijdTot("");
     setPrijsMin("");
@@ -146,9 +158,17 @@ export function ZoekFilterBar() {
     setLengteVan("");
     setLengteTot("");
     setHaarkleur("");
+    setOogkleur("");
     setTaal("");
-    setMogelijkheid("");
     setGeverifieerd(false);
+    setBeschikbaar(false);
+    setHotelMogelijk(false);
+    setThuisOntvangen(false);
+    setVideoMogelijk(false);
+    setDiscreetContact(false);
+    setNieuwProfiel(false);
+    setPremiumProfiel(false);
+    setVerplaatsingMogelijk(false);
     setAiQuery("");
     setExtendedOpen(false);
     setAiOpen(false);
@@ -171,9 +191,13 @@ export function ZoekFilterBar() {
             >
               ← Snel zoeken
             </button>
+            <span className="zoek-filter-bar__ai-title">
+              <Sparkles className="h-4 w-4" aria-hidden />
+              AI zoeken
+            </span>
           </div>
           <label htmlFor="zoek-ai" className="filter-label">
-            Beschrijf je wens
+            Beschrijf wat je zoekt…
           </label>
           <Textarea
             id="zoek-ai"
@@ -181,7 +205,7 @@ export function ZoekFilterBar() {
             placeholder="Beschrijf wat je zoekt…"
             value={aiQuery}
             onChange={(e) => setAiQuery(e.target.value)}
-            className="min-h-[88px]"
+            className="min-h-[96px]"
           />
           <div className="popular-chip-grid mt-2">
             {AI_VOORBEELDEN.map((ex) => (
@@ -198,11 +222,11 @@ export function ZoekFilterBar() {
           <Button
             type="submit"
             size="md"
-            disabled={aiLoading || isPending}
+            disabled={isPending}
             className="mt-3 w-full gap-2 sm:w-auto"
           >
             <Sparkles className="h-4 w-4" />
-            {aiLoading ? "Bezig…" : "Zoek met AI"}
+            Zoek met AI
           </Button>
         </form>
       ) : (
@@ -249,9 +273,11 @@ export function ZoekFilterBar() {
                   key={cat.slug}
                   label={cat.label}
                   active={categorie === cat.slug}
-                  onClick={() =>
-                    setCategorie(categorie === cat.slug ? null : cat.slug)
-                  }
+                  onClick={() => {
+                    const next = categorie === cat.slug ? null : cat.slug;
+                    setCategorie(next);
+                    setExtCategorie(next ?? "");
+                  }}
                 />
               ))}
             </div>
@@ -274,7 +300,7 @@ export function ZoekFilterBar() {
               className="zoek-filter-bar__ai-link"
               onClick={() => setAiOpen(true)}
             >
-              Beschrijf je wens
+              AI zoeken
             </button>
             {hasFilters && (
               <button
@@ -289,28 +315,36 @@ export function ZoekFilterBar() {
 
           {extendedOpen && (
             <div className="zoek-filter-bar__extended">
+              <p className="zoek-filter-bar__section-label">Basis</p>
               <div className="zoek-filter-bar__extended-grid">
                 <div>
                   <label htmlFor="afstand" className="filter-label">Afstand</label>
-                  <select
-                    id="afstand"
-                    className="filter-select filter-select--compact"
-                    value={afstand}
-                    onChange={(e) => setAfstand(e.target.value)}
-                  >
+                  <select id="afstand" className="filter-select filter-select--compact" value={afstand} onChange={(e) => setAfstand(e.target.value)}>
                     {AFSTAND_OPTIES.map((o) => (
                       <option key={o.value || "all"} value={o.value}>{o.label}</option>
                     ))}
                   </select>
                 </div>
                 <div>
-                  <label htmlFor="leeftijd-van" className="filter-label">Leeftijd min</label>
-                  <Input id="leeftijd-van" variant="light" size="compact" type="number" min={18} placeholder="18" value={leeftijdVan} onChange={(e) => setLeeftijdVan(e.target.value)} />
+                  <label htmlFor="ext-categorie" className="filter-label">Categorie</label>
+                  <select id="ext-categorie" className="filter-select filter-select--compact" value={extCategorie} onChange={(e) => { setExtCategorie(e.target.value); setCategorie(e.target.value || null); }}>
+                    {ALLE_CATEGORIE_OPTIES.map((o) => (
+                      <option key={o.value || "all"} value={o.value}>{o.label}</option>
+                    ))}
+                  </select>
                 </div>
                 <div>
-                  <label htmlFor="leeftijd-tot" className="filter-label">Leeftijd max</label>
-                  <Input id="leeftijd-tot" variant="light" size="compact" placeholder="65+" value={leeftijdTot} onChange={(e) => setLeeftijdTot(e.target.value)} />
+                  <label htmlFor="type-afspraak" className="filter-label">Type afspraak</label>
+                  <select id="type-afspraak" className="filter-select filter-select--compact" value={typeAfspraak} onChange={(e) => setTypeAfspraak(e.target.value)}>
+                    {TYPE_AFSPRAAK_OPTIES.map((o) => (
+                      <option key={o.value || "all"} value={o.value}>{o.label}</option>
+                    ))}
+                  </select>
                 </div>
+              </div>
+
+              <p className="zoek-filter-bar__section-label">Prijs</p>
+              <div className="zoek-filter-bar__extended-grid zoek-filter-bar__extended-grid--2">
                 <div>
                   <label htmlFor="prijs-min" className="filter-label">Prijs min €</label>
                   <Input id="prijs-min" variant="light" size="compact" type="number" min={0} placeholder="0" value={prijsMin} onChange={(e) => setPrijsMin(e.target.value)} />
@@ -319,6 +353,22 @@ export function ZoekFilterBar() {
                   <label htmlFor="prijs-max" className="filter-label">Prijs max €</label>
                   <Input id="prijs-max" variant="light" size="compact" type="number" min={0} placeholder="500" value={prijsMax} onChange={(e) => setPrijsMax(e.target.value)} />
                 </div>
+              </div>
+
+              <p className="zoek-filter-bar__section-label">Leeftijd</p>
+              <div className="zoek-filter-bar__extended-grid zoek-filter-bar__extended-grid--2">
+                <div>
+                  <label htmlFor="leeftijd-van" className="filter-label">Vanaf</label>
+                  <Input id="leeftijd-van" variant="light" size="compact" type="number" min={18} placeholder="18" value={leeftijdVan} onChange={(e) => setLeeftijdVan(e.target.value)} />
+                </div>
+                <div>
+                  <label htmlFor="leeftijd-tot" className="filter-label">Tot</label>
+                  <Input id="leeftijd-tot" variant="light" size="compact" placeholder="65+" value={leeftijdTot} onChange={(e) => setLeeftijdTot(e.target.value)} />
+                </div>
+              </div>
+
+              <p className="zoek-filter-bar__section-label">Uiterlijk</p>
+              <div className="zoek-filter-bar__extended-grid">
                 <div>
                   <label htmlFor="lengte-van" className="filter-label">Lengte min cm</label>
                   <Input id="lengte-van" variant="light" size="compact" type="number" placeholder="150" value={lengteVan} onChange={(e) => setLengteVan(e.target.value)} />
@@ -336,29 +386,38 @@ export function ZoekFilterBar() {
                   </select>
                 </div>
                 <div>
-                  <label htmlFor="taal" className="filter-label">Taal</label>
+                  <label htmlFor="oogkleur" className="filter-label">Oogkleur</label>
+                  <select id="oogkleur" className="filter-select filter-select--compact" value={oogkleur} onChange={(e) => setOogkleur(e.target.value)}>
+                    {OOGKLEUR_OPTIES.map((o) => (
+                      <option key={o.value || "all"} value={o.value}>{o.label}</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              <p className="zoek-filter-bar__section-label">Taal</p>
+              <div className="zoek-filter-bar__extended-grid zoek-filter-bar__extended-grid--1">
+                <div>
                   <select id="taal" className="filter-select filter-select--compact" value={taal} onChange={(e) => setTaal(e.target.value)}>
                     {TAAL_OPTIES.map((o) => (
                       <option key={o.value || "all"} value={o.value}>{o.label}</option>
                     ))}
                   </select>
                 </div>
-                <div>
-                  <label htmlFor="mogelijkheden" className="filter-label">Mogelijkheden</label>
-                  <select id="mogelijkheden" className="filter-select filter-select--compact" value={mogelijkheid} onChange={(e) => setMogelijkheid(e.target.value)}>
-                    {MOGELIJKHEDEN_OPTIES.map((o) => (
-                      <option key={o.value || "all"} value={o.value}>{o.label}</option>
-                    ))}
-                  </select>
-                </div>
               </div>
-              <ToggleSwitch
-                id="geverifieerd"
-                label="Alleen geverifieerd"
-                checked={geverifieerd}
-                onChange={setGeverifieerd}
-                className="mt-3"
-              />
+
+              <p className="zoek-filter-bar__section-label">Mogelijkheden</p>
+              <div className="zoek-filter-bar__toggles">
+                <ToggleSwitch id="geverifieerd" label="Geverifieerd" checked={geverifieerd} onChange={setGeverifieerd} />
+                <ToggleSwitch id="video-mogelijk" label="Video mogelijk" checked={videoMogelijk} onChange={setVideoMogelijk} />
+                <ToggleSwitch id="hotel-mogelijk" label="Hotel mogelijk" checked={hotelMogelijk} onChange={setHotelMogelijk} />
+                <ToggleSwitch id="discreet-contact" label="Discreet contact" checked={discreetContact} onChange={setDiscreetContact} />
+                <ToggleSwitch id="nieuw-profiel" label="Nieuw profiel" checked={nieuwProfiel} onChange={setNieuwProfiel} />
+                <ToggleSwitch id="premium-profiel" label="Premium profiel" checked={premiumProfiel} onChange={setPremiumProfiel} />
+                <ToggleSwitch id="beschikbaar" label="Nu beschikbaar" checked={beschikbaar} onChange={setBeschikbaar} />
+                <ToggleSwitch id="thuis-ontvangen" label="Thuis ontvangen" checked={thuisOntvangen} onChange={setThuisOntvangen} />
+                <ToggleSwitch id="verplaatsing" label="Verplaatsing mogelijk" checked={verplaatsingMogelijk} onChange={setVerplaatsingMogelijk} />
+              </div>
             </div>
           )}
         </form>
