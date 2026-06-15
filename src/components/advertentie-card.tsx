@@ -10,6 +10,8 @@ interface AdvertentieCardProps {
   href?: string;
   afbeeldingUrl?: string | null;
   showPremium?: boolean;
+  showOnline?: boolean;
+  premium?: boolean;
   theme?: "dark" | "light";
 }
 
@@ -43,6 +45,8 @@ export function AdvertentieCard({
   href,
   afbeeldingUrl,
   showPremium = false,
+  showOnline = false,
+  premium = false,
   theme = "dark",
 }: AdvertentieCardProps) {
   const linkHref =
@@ -59,10 +63,15 @@ export function AdvertentieCard({
       href={linkHref}
       className={cn(
         "group block overflow-hidden rounded-2xl transition-all duration-300",
-        "hover:-translate-y-0.5 hover:shadow-warm-glow",
+        premium
+          ? "hover:-translate-y-1 hover:shadow-[0_12px_40px_rgba(123,47,73,0.14)]"
+          : "hover:-translate-y-0.5 hover:shadow-warm-glow",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-champagne/25",
         isLight
-          ? "border border-[var(--border-light)] bg-[var(--card-light)] shadow-[0_2px_14px_rgba(36,25,31,0.05)]"
+          ? cn(
+              "border border-[var(--border-light)] bg-white shadow-[0_2px_16px_rgba(36,25,31,0.06)]",
+              premium && "border-[#e8ddd4]"
+            )
           : "listing-card-dark border border-white/[0.12]"
       )}
     >
@@ -81,6 +90,12 @@ export function AdvertentieCard({
         <div className="profile-card__overlay absolute inset-0" />
 
         <div className="absolute inset-x-0 top-0 flex flex-wrap gap-1 p-2.5 sm:p-3">
+          {(showOnline || advertentie.beschikbaar) && !dashboard && (
+            <Badge variant="online" className="text-[0.5625rem] gap-1">
+              <span className="online-dot" aria-hidden />
+              Online
+            </Badge>
+          )}
           {advertentie.geverifieerd && (
             <Badge variant="verified" className="text-[0.5625rem]">
               Geverifieerd

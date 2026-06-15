@@ -44,3 +44,31 @@ export async function genereerAiAntwoord(
 
   return textBlock.text.trim();
 }
+
+export async function genereerZoekParseAntwoord(
+  systemPrompt: string,
+  userQuery: string
+): Promise<string> {
+  const apiKey = process.env.ANTHROPIC_API_KEY;
+  if (!apiKey) {
+    throw new Error("ANTHROPIC_API_KEY is niet geconfigureerd.");
+  }
+
+  const client = new Anthropic({ apiKey });
+  const model =
+    process.env.ANTHROPIC_MODEL ?? "claude-sonnet-4-20250514";
+
+  const response = await client.messages.create({
+    model,
+    max_tokens: 512,
+    system: systemPrompt,
+    messages: [{ role: "user", content: userQuery }],
+  });
+
+  const textBlock = response.content.find((b) => b.type === "text");
+  if (!textBlock || textBlock.type !== "text") {
+    throw new Error("Geen tekstantwoord van Claude ontvangen.");
+  }
+
+  return textBlock.text.trim();
+}

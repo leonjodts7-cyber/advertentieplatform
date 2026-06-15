@@ -1,8 +1,8 @@
 import Link from "next/link";
-import { AdvertentieCard } from "@/components/advertentie-card";
 import { HomeHeroCompact } from "@/components/home/home-hero";
-import { CategoryGrid } from "@/components/home/discovery-quick-pick";
-import { Button } from "@/components/ui/button";
+import { HomeListingSection } from "@/components/home/home-listing-section";
+import { CategoryCompactGrid } from "@/components/home/category-compact-grid";
+import { CityLinksSection } from "@/components/home/city-links-section";
 import { haalEersteFotos } from "@/lib/advertentie-fotos";
 import type { Advertentie } from "@/lib/types";
 import { createClient } from "@/lib/supabase/server";
@@ -19,91 +19,87 @@ const POPULAIRE_ZOEKOPDRACHTEN = [
   { label: "Geverifieerde profielen", href: "/zoeken?geverifieerd=true" },
 ] as const;
 
-const WAAROM_VELOURA = [
-  {
-    titel: "Discreet zoeken",
-    tekst: "Zoek op regio en categorie zonder opdringerige uitstraling.",
-  },
-  {
-    titel: "Snelle filters",
-    tekst: "Filter op leeftijd, prijs en verificatie in enkele klikken.",
-  },
-  {
-    titel: "Mobiel-first ervaring",
-    tekst: "Veloura is gebouwd voor je telefoon — snel en overzichtelijk.",
-  },
-] as const;
-
 export default async function HomePage() {
   const supabase = await createClient();
 
-  const { data: advertentiesRaw } = await supabase
-    .from("advertenties")
-    .select("*")
-    .eq("status", "actief")
-    .order("aangemaakt_op", { ascending: false })
-    .limit(8);
+  const [nieuwsteRes, onlineRes, geverifieerdRes] = await Promise.all([
+    supabase
+      .from("advertenties")
+      .select("*")
+      .eq("status", "actief")
+      .order("aangemaakt_op", { ascending: false })
+      .limit(8),
+    supabase
+      .from("advertenties")
+      .select("*")
+      .eq("status", "actief")
+      .eq("beschikbaar", true)
+      .order("bijgewerkt_op", { ascending: false })
+      .limit(8),
+    supabase
+      .from("advertenties")
+      .select("*")
+      .eq("status", "actief")
+      .eq("geverifieerd", true)
+      .order("aangemaakt_op", { ascending: false })
+      .limit(8),
+  ]);
 
-  const advertenties = (advertentiesRaw ?? []) as Advertentie[];
-  const fotos = await haalEersteFotos(
-    supabase,
-    advertenties.map((a) => a.id)
-  );
+  const nieuwste = (nieuwsteRes.data ?? []) as Advertentie[];
+  const online = (onlineRes.data ?? []) as Advertentie[];
+  const geverifieerd = (geverifieerdRes.data ?? []) as Advertentie[];
+
+  const alleIds = [
+    ...new Set([
+      ...nieuwste.map((a) => a.id),
+      ...online.map((a) => a.id),
+      ...geverifieerd.map((a) => a.id),
+    ]),
+  ];
+
+  const fotos = await haalEersteFotos(supabase, alleIds);
 
   return (
     <div className="home-page">
       <HomeHeroCompact />
-      <CategoryGrid />
 
-      <section className="content-section content-section--light">
+      <HomeListingSection
+        title="Nieuwste advertenties"
+        subtitle="Recent geplaatste actieve profielen."
+        advertenties={nieuwste}
+        fotos={fotos}
+        viewAllHref="/zoeken"
+        emptyState={{
+          title: "Nog geen actieve profielen",
+          text: "De eerste profielen worden binnenkort zichtbaar.",
+          showCta: true,
+        }}
+      />
+
+      <HomeListingSection
+        title="Nu online"
+        advertenties={online}
+        fotos={fotos}
+        viewAllHref="/zoeken?beschikbaar=true"
+        showOnline
+        hideWhenEmpty
+      />
+
+      <HomeListingSection
+        title="Geverifieerde profielen"
+        advertenties={geverifieerd}
+        fotos={fotos}
+        viewAllHref="/zoeken?geverifieerd=true"
+        hideWhenEmpty
+      />
+
+      <CategoryCompactGrid />
+      <CityLinksSection />
+
+      <section className="home-listing-block home-listing-block--compact">
         <div className="container">
-          <div className="flex items-end justify-between gap-3">
-            <div>
-              <h2 className="content-section__title">Nieuwste advertenties</h2>
-              <p className="content-section__subtitle">
-                Recent geplaatste actieve profielen
-              </p>
-            </div>
-            {advertenties.length > 0 && (
-              <Link
-                href="/zoeken"
-                className="hidden text-sm font-medium text-[var(--wine)] hover:underline sm:inline"
-              >
-                Alles bekijken →
-              </Link>
-            )}
-          </div>
-
-          {advertenties.length > 0 ? (
-            <div className="listing-grid mt-5">
-              {advertenties.map((advertentie) => (
-                <AdvertentieCard
-                  key={advertentie.id}
-                  advertentie={advertentie}
-                  afbeeldingUrl={fotos.get(advertentie.id)}
-                  theme="light"
-                />
-              ))}
-            </div>
-          ) : (
-            <div className="empty-state-card mt-5">
-              <h3 className="font-display text-lg">Nog geen actieve profielen</h3>
-              <p className="mx-auto mt-2 max-w-md text-sm text-[var(--muted-dark)]">
-                De eerste profielen worden binnenkort zichtbaar. Ben jij
-                aanbieder? Plaats jouw advertentie als eerste.
-              </p>
-              <Button asChild size="md" className="mt-4">
-                <Link href="/dashboard/advertenties/nieuw">Plaats advertentie</Link>
-              </Button>
-            </div>
-          )}
-        </div>
-      </section>
-
-      <section className="content-section content-section--light border-t border-[var(--border-light)]">
-        <div className="container">
-          <h2 className="content-section__title">Populaire zoekopdrachten</h2>
-          <div className="popular-chip-grid mt-4">
+          <h2 className="home-listing-block__title">Populaire zoekopdrachten</h2>
+          <div className="popular-chip-grid">
             {POPULAIRE_ZOEKOPDRACHTEN.map((item) => (
               <Link key={item.href} href={item.href} className="popular-chip">
                 {item.label}
@@ -113,17 +109,14 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="content-section content-section--light border-t border-[var(--border-light)]">
+      <section className="home-provider-cta">
         <div className="container">
-          <h2 className="content-section__title">Waarom Veloura?</h2>
-          <div className="trust-grid mt-5">
-            {WAAROM_VELOURA.map((item) => (
-              <div key={item.titel} className="trust-card">
-                <h3 className="trust-card__title">{item.titel}</h3>
-                <p className="trust-card__text">{item.tekst}</p>
-              </div>
-            ))}
-          </div>
+          <p className="home-provider-cta__text">
+            Aanbieder?{" "}
+            <Link href="/dashboard/advertenties/nieuw" className="home-provider-cta__link">
+              Plaats jouw advertentie
+            </Link>
+          </p>
         </div>
       </section>
     </div>

@@ -17,12 +17,12 @@ const mainNav = [
 export function Header({ user }: HeaderProps) {
   return (
     <header className="glass-nav sticky top-0 z-50">
-      <div className="container header-inner h-11 sm:h-12">
+      <div className="container header-inner h-10 sm:h-11">
         <Link
           href="/"
           className="min-w-0 shrink-0 rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--champagne)]/30"
         >
-          <span className="font-display text-base font-medium tracking-tight text-[var(--text-light)] sm:text-lg">
+          <span className="font-display text-[0.9375rem] font-medium tracking-tight text-[var(--text-light)] sm:text-base">
             Veloura
           </span>
         </Link>
@@ -55,7 +55,7 @@ export function Header({ user }: HeaderProps) {
               asChild
               size="sm"
               variant="primary"
-              className="ml-1.5 h-8 min-h-0 px-3 text-xs"
+              className="ml-1 h-7 min-h-0 px-2.5 text-[0.6875rem] sm:text-xs"
             >
               <Link href="/dashboard/advertenties/nieuw">Plaats advertentie</Link>
             </Button>
@@ -78,7 +78,7 @@ export function Header({ user }: HeaderProps) {
               asChild
               size="sm"
               variant="primary"
-              className="h-8 min-h-0 px-2.5 text-[0.6875rem] sm:px-3 sm:text-xs"
+              className="h-7 min-h-0 px-2 text-[0.625rem] sm:px-2.5 sm:text-[0.6875rem]"
             >
               <Link href="/dashboard/advertenties/nieuw">Plaatsen</Link>
             </Button>
