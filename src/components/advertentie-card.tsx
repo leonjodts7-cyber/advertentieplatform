@@ -102,7 +102,10 @@ export function AdvertentieCard({
             </Badge>
           )}
           {!dashboard && (
-            <Badge variant="muted" className="text-[0.5625rem]">
+            <Badge
+              variant={isLight ? "muted-light" : "muted"}
+              className="text-[0.5625rem]"
+            >
               {advertentie.stad}
             </Badge>
           )}

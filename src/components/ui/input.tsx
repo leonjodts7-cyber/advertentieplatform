@@ -15,8 +15,8 @@ const variantClasses = {
   ),
   light: cn(
     "border-[var(--border-light)] bg-[var(--card-light)] text-[var(--text-dark)]",
-    "placeholder:text-[var(--muted-dark)]",
-    "focus-visible:border-[var(--wine)]/35 focus-visible:ring-[var(--wine)]/12"
+    "placeholder:text-[var(--muted-dark)]/80",
+    "focus-visible:border-[var(--wine)]/30 focus-visible:ring-[var(--wine)]/10"
   ),
 };
 

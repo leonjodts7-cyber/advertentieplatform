@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { AdvertentieCard } from "@/components/advertentie-card";
-import { Button } from "@/components/ui/button";
 import type { Advertentie } from "@/lib/types";
 
 interface HomeListingSectionProps {
@@ -65,9 +64,12 @@ export function HomeListingSection({
             <h3 className="home-listing-empty__title">{emptyState.title}</h3>
             <p className="home-listing-empty__text">{emptyState.text}</p>
             {emptyState.showCta && (
-              <Button asChild size="sm" variant="secondary-light" className="mt-3">
-                <Link href="/dashboard/advertenties/nieuw">Plaats advertentie</Link>
-              </Button>
+              <p className="home-listing-empty__cta">
+                Ben jij aanbieder?{" "}
+                <Link href="/dashboard/advertenties/nieuw">
+                  Plaats advertentie
+                </Link>
+              </p>
             )}
           </div>
         ) : null}

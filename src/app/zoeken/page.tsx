@@ -101,7 +101,7 @@ export default async function ZoekenPage({ searchParams }: ZoekenPageProps) {
         <div className="container">
           <h1 className="search-page-top__title">Profielen zoeken</h1>
           <p className="search-page-top__subtitle">
-            Filter snel of gebruik uitgebreide filters.
+            Gebruik snelle filters of open uitgebreide filters.
           </p>
         </div>
       </div>
@@ -130,16 +130,21 @@ export default async function ZoekenPage({ searchParams }: ZoekenPageProps) {
               ))}
             </div>
           ) : (
-            <div className="empty-state-card">
-              <h3 className="font-display text-lg">Geen profielen gevonden</h3>
-              <p className="mt-2 text-sm text-[var(--muted-dark)]">
+            <div className="zoek-empty">
+              <h3 className="zoek-empty__title">Geen profielen gevonden</h3>
+              <p className="zoek-empty__text">
                 Pas je filters aan of bekijk alle actieve profielen.
               </p>
-              {filtersActive && (
-                <Button asChild variant="secondary-light" size="md" className="mt-4">
-                  <Link href="/zoeken">Filters wissen</Link>
+              <div className="zoek-empty__actions">
+                {filtersActive && (
+                  <Button asChild variant="secondary-light" size="sm">
+                    <Link href="/zoeken">Filters wissen</Link>
+                  </Button>
+                )}
+                <Button asChild size="sm">
+                  <Link href="/zoeken">Bekijk alle profielen</Link>
                 </Button>
-              )}
+              </div>
             </div>
           )}
         </main>

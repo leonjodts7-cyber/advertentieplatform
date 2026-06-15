@@ -22,7 +22,8 @@ export function HomeHeroSearch() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="hero-search-card hero-search-card--dark">
+    <form onSubmit={handleSubmit} className="hero-search-card hero-search-card--premium">
+      <h2 className="hero-search-card__title">Start je zoektocht</h2>
       <div className="hero-search-card__fields">
         <div>
           <label htmlFor="home-stad" className="filter-label filter-label--dark">
@@ -56,9 +57,14 @@ export function HomeHeroSearch() {
       <Button type="submit" size="md" className="w-full">
         Toon profielen
       </Button>
-      <Link href="/zoeken?ai=1" className="hero-search-card__ai-link">
-        Beschrijf je wens
-      </Link>
+      <div className="hero-search-card__links">
+        <Link href="/zoeken" className="hero-search-card__link">
+          Uitgebreid zoeken
+        </Link>
+        <Link href="/zoeken?ai=1" className="hero-search-card__link hero-search-card__link--subtle">
+          Beschrijf je wens
+        </Link>
+      </div>
     </form>
   );
 }

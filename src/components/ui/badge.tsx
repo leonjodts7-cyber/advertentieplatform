@@ -13,6 +13,7 @@ export interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {
     | "wine"
     | "green"
     | "muted"
+    | "muted-light"
     | "review"
     | "danger"
     | "default"
@@ -38,6 +39,8 @@ const variantClasses: Record<NonNullable<BadgeProps["variant"]>, string> = {
   green: "bg-[#4db87a]/14 text-[#62d490] border-[#4db87a]/28",
   success: "bg-[#4db87a]/14 text-[#62d490] border-[#4db87a]/28",
   muted: "bg-black/22 text-[#d4ccc6] border-white/[0.12] backdrop-blur-sm",
+  "muted-light":
+    "bg-[rgba(36,25,31,0.06)] text-[#74665f] border-[#e5d8cf]",
   review: "bg-[#d6b36b]/12 text-[#ecd89a] border-[#d6b36b]/20",
   danger: "bg-[#8b3040]/22 text-red-300 border-[#8b3040]/32",
 };
