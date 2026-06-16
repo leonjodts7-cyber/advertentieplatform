@@ -89,6 +89,9 @@ export function ZoekFilterBar() {
   const [verplaatsingMogelijk, setVerplaatsingMogelijk] = useState(
     boolFromParam(searchParams.get("verplaatsing_mogelijk"))
   );
+  const [koppelsWelkom, setKoppelsWelkom] = useState(
+    boolFromParam(searchParams.get("koppels_welkom"))
+  );
   const [aiQuery, setAiQuery] = useState(
     searchParams.get("ai") === "1" ? searchParams.get("q") ?? "" : ""
   );
@@ -119,6 +122,7 @@ export function ZoekFilterBar() {
       nieuwProfiel,
       premiumProfiel,
       verplaatsingMogelijk,
+      koppelsWelkom,
     };
   }
 
@@ -169,6 +173,7 @@ export function ZoekFilterBar() {
     setNieuwProfiel(false);
     setPremiumProfiel(false);
     setVerplaatsingMogelijk(false);
+    setKoppelsWelkom(false);
     setAiQuery("");
     setExtendedOpen(false);
     setAiOpen(false);
@@ -417,6 +422,7 @@ export function ZoekFilterBar() {
                 <ToggleSwitch id="beschikbaar" label="Nu beschikbaar" checked={beschikbaar} onChange={setBeschikbaar} />
                 <ToggleSwitch id="thuis-ontvangen" label="Thuis ontvangen" checked={thuisOntvangen} onChange={setThuisOntvangen} />
                 <ToggleSwitch id="verplaatsing" label="Verplaatsing mogelijk" checked={verplaatsingMogelijk} onChange={setVerplaatsingMogelijk} />
+                <ToggleSwitch id="koppels-welkom" label="Koppels welkom" checked={koppelsWelkom} onChange={setKoppelsWelkom} />
               </div>
             </div>
           )}

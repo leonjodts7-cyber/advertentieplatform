@@ -20,6 +20,7 @@ export interface Advertentie {
   geverifieerd: boolean;
   status: AdvertentieStatus;
   premium?: boolean;
+  premium_tot?: string | null;
   aangemaakt_op: string;
   bijgewerkt_op: string;
 }

@@ -66,6 +66,7 @@ export type ZoekFilterValues = {
   nieuwProfiel: boolean;
   premiumProfiel: boolean;
   verplaatsingMogelijk: boolean;
+  koppelsWelkom: boolean;
 };
 
 export type ParsedZoekFilters = Partial<{
@@ -92,6 +93,7 @@ export type ParsedZoekFilters = Partial<{
   nieuw_profiel: string;
   premium_profiel: string;
   verplaatsing_mogelijk: string;
+  koppels_welkom: string;
 }>;
 
 export function buildFilterParams(values: ZoekFilterValues) {
@@ -119,6 +121,7 @@ export function buildFilterParams(values: ZoekFilterValues) {
   if (values.nieuwProfiel) params.set("nieuw_profiel", "true");
   if (values.premiumProfiel) params.set("premium_profiel", "true");
   if (values.verplaatsingMogelijk) params.set("verplaatsing_mogelijk", "true");
+  if (values.koppelsWelkom) params.set("koppels_welkom", "true");
   return params;
 }
 

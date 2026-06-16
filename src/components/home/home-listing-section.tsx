@@ -16,6 +16,7 @@ interface HomeListingSectionProps {
     text: string;
     cta?: { label: string; href: string };
     showProviderLink?: boolean;
+    compact?: boolean;
   };
 }
 
@@ -68,7 +69,10 @@ export function HomeListingSection({
             ))}
           </div>
         ) : emptyState ? (
-          <div className="home-listing-empty">
+          emptyState.compact ? (
+            <p className="home-listing-inline-empty">{emptyState.text}</p>
+          ) : (
+            <div className="home-listing-empty">
             <h3 className="home-listing-empty__title">{emptyState.title}</h3>
             <p className="home-listing-empty__text">{emptyState.text}</p>
             {emptyState.cta && (
@@ -85,6 +89,7 @@ export function HomeListingSection({
               </p>
             )}
           </div>
+          )
         ) : null}
       </div>
     </section>

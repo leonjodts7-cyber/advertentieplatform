@@ -26,6 +26,7 @@ const BOOL_LABELS: Record<string, string> = {
   nieuw_profiel: "Nieuw profiel",
   premium_profiel: "Premium profiel",
   verplaatsing_mogelijk: "Verplaatsing mogelijk",
+  koppels_welkom: "Koppels welkom",
 };
 
 export function ZoekActiveChips() {

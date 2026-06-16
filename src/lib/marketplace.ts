@@ -13,6 +13,8 @@ export const BUURT_STEDEN = [
   "Leuven",
   "Hasselt",
   "Brugge",
+  "Kortrijk",
+  "Mechelen",
 ] as const;
 
 export const POPULAIRE_STEDEN = [

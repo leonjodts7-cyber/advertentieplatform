@@ -1,5 +1,14 @@
 import { createBrowserClient } from "@supabase/ssr";
 
+export const MEDIA_BUCKET = "advertentie-media";
+
+export type { Advertentie, AdvertentieFoto, AdvertentieStatus } from "@/lib/types";
+export type {
+  AdvertentieMetadata,
+  AdvertentiePakket,
+  WerktijdDag,
+} from "@/lib/advertentie-metadata";
+
 export function getSupabaseEnv() {
   return {
     url:

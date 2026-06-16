@@ -16,6 +16,10 @@ import {
   matchtLengteFilter,
   typeAfspraakMatcht,
 } from "@/lib/zoek-filters";
+import {
+  metaBevatTerm,
+  parseAdvertentieBeschrijving,
+} from "@/lib/advertentie-metadata";
 
 export const metadata: Metadata = {
   title: "Profielen zoeken",
@@ -51,7 +55,8 @@ function filterAdvertenties(
   params: Record<string, string | undefined>
 ) {
   return advertenties.filter((ad) => {
-    const tekst = `${ad.titel} ${ad.beschrijving}`;
+    const { tekst, meta } = parseAdvertentieBeschrijving(ad.beschrijving);
+    const fullTekst = `${ad.titel} ${tekst}`;
     const {
       categorie,
       type_afspraak,
@@ -62,17 +67,52 @@ function filterAdvertenties(
       lengte_tot,
     } = params;
 
-    if (categorie && !categorieMatcht(tekst, categorie)) return false;
-    if (type_afspraak && !typeAfspraakMatcht(tekst, type_afspraak)) return false;
-    if (haarkleur && !beschrijvingMatchtFilter(tekst, "haarkleur", haarkleur)) return false;
-    if (oogkleur && !beschrijvingMatchtFilter(tekst, "oogkleur", oogkleur)) return false;
-    if (taal && !beschrijvingMatchtFilter(tekst, "taal", taal)) return false;
-    if (isTruthyFilter(params.thuis_ontvangen) && !beschrijvingMatchtFilter(tekst, "thuis_ontvangen")) return false;
-    if (isTruthyFilter(params.hotel_mogelijk) && !beschrijvingMatchtFilter(tekst, "hotel_mogelijk")) return false;
-    if (isTruthyFilter(params.video_mogelijk) && !beschrijvingMatchtFilter(tekst, "video_mogelijk")) return false;
-    if (isTruthyFilter(params.discreet_contact) && !beschrijvingMatchtFilter(tekst, "discreet_contact")) return false;
-    if (isTruthyFilter(params.verplaatsing_mogelijk) && !beschrijvingMatchtFilter(tekst, "verplaatsing_mogelijk")) return false;
-    if (!matchtLengteFilter(tekst, lengte_van, lengte_tot)) return false;
+    if (categorie) {
+      const catMatch =
+        meta.categorie === categorie ||
+        categorieMatcht(fullTekst, categorie);
+      if (!catMatch) return false;
+    }
+    if (type_afspraak && !typeAfspraakMatcht(fullTekst, type_afspraak)) return false;
+    if (haarkleur) {
+      const match =
+        meta.haarkleur?.toLowerCase() === haarkleur ||
+        beschrijvingMatchtFilter(fullTekst, "haarkleur", haarkleur);
+      if (!match) return false;
+    }
+    if (oogkleur) {
+      const match =
+        meta.oogkleur?.toLowerCase() === oogkleur ||
+        beschrijvingMatchtFilter(fullTekst, "oogkleur", oogkleur);
+      if (!match) return false;
+    }
+    if (taal) {
+      const match =
+        meta.talen?.some((t) => t.toLowerCase().includes(taal)) ||
+        beschrijvingMatchtFilter(fullTekst, "taal", taal);
+      if (!match) return false;
+    }
+    if (isTruthyFilter(params.koppels_welkom)) {
+      const match =
+        meta.mogelijkheden?.includes("koppels") ||
+        metaBevatTerm(meta, "koppel");
+      if (!match) return false;
+    }
+    if (isTruthyFilter(params.thuis_ontvangen) && !beschrijvingMatchtFilter(fullTekst, "thuis_ontvangen")) return false;
+    if (isTruthyFilter(params.hotel_mogelijk) && !beschrijvingMatchtFilter(fullTekst, "hotel_mogelijk") && !meta.mogelijkheden?.includes("hotel")) return false;
+    if (isTruthyFilter(params.video_mogelijk) && !beschrijvingMatchtFilter(fullTekst, "video_mogelijk") && !meta.mogelijkheden?.includes("video")) return false;
+    if (isTruthyFilter(params.discreet_contact) && !beschrijvingMatchtFilter(fullTekst, "discreet_contact") && !meta.mogelijkheden?.includes("discreet")) return false;
+    if (isTruthyFilter(params.verplaatsing_mogelijk) && !beschrijvingMatchtFilter(fullTekst, "verplaatsing_mogelijk")) return false;
+    if (!matchtLengteFilter(fullTekst, lengte_van, lengte_tot)) {
+      if (meta.lengteCm) {
+        const min = lengte_van ? Number(lengte_van) : null;
+        const max = lengte_tot ? Number(lengte_tot) : null;
+        if (min != null && meta.lengteCm < min) return false;
+        if (max != null && meta.lengteCm > max) return false;
+      } else if (lengte_van || lengte_tot) {
+        return false;
+      }
+    }
     if (isTruthyFilter(params.beschikbaar) && !ad.beschikbaar) return false;
     if (isTruthyFilter(params.nieuw_profiel) && !isNieuwProfiel(ad.aangemaakt_op)) return false;
     if (isTruthyFilter(params.premium_profiel) && ad.premium !== true) return false;

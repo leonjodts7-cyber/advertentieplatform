@@ -1,6 +1,12 @@
 import type { Database } from "./database";
 import type { SUBSCRIPTION_TIERS, USER_ROLES } from "@/lib/constants";
 
+export type {
+  Advertentie,
+  AdvertentieFoto,
+  AdvertentieStatus,
+} from "@/lib/types";
+
 export type UserRole = (typeof USER_ROLES)[number];
 export type SubscriptionTier = (typeof SUBSCRIPTION_TIERS)[number];
 
