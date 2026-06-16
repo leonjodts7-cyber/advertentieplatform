@@ -12,6 +12,12 @@ export function vertaalAuthFout(error: AuthError | Error): string {
     return "Bevestig eerst je e-mailadres voordat je inlogt.";
   }
   if (
+    message.includes("expired") ||
+    message.includes("invalid or has expired")
+  ) {
+    return "Deze activatielink is verlopen. Vraag een nieuwe bevestigingsmail aan.";
+  }
+  if (
     message.includes("user already registered") ||
     message.includes("already been registered")
   ) {
