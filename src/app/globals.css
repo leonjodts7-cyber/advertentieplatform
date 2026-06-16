@@ -4275,3 +4275,256 @@ body {
   box-shadow: 0 0 24px rgba(214, 179, 107, 0.08);
 }
 
+/* ─── Header balanced layout ─── */
+.header-inner--balanced {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.header-actions--balanced {
+  justify-self: end;
+}
+
+/* ─── Dashboard subnav & stats ─── */
+.dashboard-subnav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+}
+
+.dashboard-subnav__pill {
+  padding: 0.375rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--muted-light);
+  border: 1px solid var(--border-dark);
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.04);
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.dashboard-subnav__pill:hover {
+  color: var(--text-light);
+  border-color: rgba(214, 179, 107, 0.25);
+}
+
+.dashboard-subnav__pill--active {
+  color: var(--text-light);
+  border-color: rgba(123, 47, 73, 0.45);
+  background: rgba(123, 47, 73, 0.22);
+  box-shadow: 0 0 0 1px rgba(214, 179, 107, 0.12);
+}
+
+.dashboard-quick-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.dashboard-section-label {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+}
+
+.dashboard-stat-grid {
+  display: grid;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+  grid-template-columns: repeat(2, 1fr);
+}
+
+@media (min-width: 1024px) {
+  .dashboard-stat-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.dashboard-stat-label {
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted-foreground);
+}
+
+.dashboard-stat-value {
+  margin-top: 0.25rem;
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 1.875rem;
+  color: var(--foreground);
+}
+
+.dashboard-ad-card {
+  transition: box-shadow 0.2s;
+}
+
+.dashboard-ad-card:hover {
+  box-shadow: 0 8px 32px rgba(123, 47, 73, 0.12);
+}
+
+/* ─── Boosts page ─── */
+.boost-stripe-notice {
+  padding: 0.75rem 1rem;
+  font-size: 0.8125rem;
+  color: var(--champagne);
+  border: 1px solid rgba(214, 179, 107, 0.25);
+  border-radius: 0.75rem;
+  background: rgba(123, 47, 73, 0.1);
+}
+
+.boost-plan-card {
+  padding: 1.25rem;
+  border: 1px solid var(--border-dark);
+  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.boost-plan-card__title {
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 1.125rem;
+  color: var(--text-light);
+}
+
+.boost-plan-card__desc {
+  margin-top: 0.375rem;
+  font-size: 0.8125rem;
+  color: var(--muted-light);
+}
+
+.boost-plan-card__prices {
+  margin: 1rem 0;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.boost-plan-card__prices li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0.625rem;
+  font-size: 0.8125rem;
+  color: var(--muted-light);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 0.5rem;
+  background: rgba(0, 0, 0, 0.15);
+}
+
+.boost-plan-card__price {
+  font-weight: 600;
+  color: var(--champagne);
+}
+
+/* ─── Wizard boost UX ─── */
+.wizard-boost-hint {
+  padding: 0.875rem 1rem;
+  border: 1px dashed rgba(214, 179, 107, 0.3);
+  border-radius: 0.75rem;
+  background: rgba(214, 179, 107, 0.06);
+}
+
+.wizard-boost-hint__title {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--champagne);
+}
+
+.wizard-boost-hint__text {
+  margin-top: 0.25rem;
+  font-size: 0.75rem;
+  color: var(--muted-light);
+}
+
+.wizard-duration-grid {
+  display: grid;
+  gap: 0.5rem;
+  grid-template-columns: repeat(2, 1fr);
+}
+
+@media (min-width: 480px) {
+  .wizard-duration-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.wizard-duration-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0.625rem 0.75rem;
+  text-align: left;
+  border: 1px solid var(--border-dark);
+  border-radius: 0.625rem;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.wizard-duration-card--active {
+  border-color: rgba(214, 179, 107, 0.45);
+  background: rgba(123, 47, 73, 0.18);
+}
+
+.wizard-duration-card__days {
+  font-size: 0.75rem;
+  color: var(--muted-light);
+}
+
+.wizard-duration-card__price {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--champagne);
+}
+
+.wizard-boost-selected {
+  padding: 0.625rem 0.875rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--champagne);
+  border: 1px solid rgba(214, 179, 107, 0.3);
+  border-radius: 0.5rem;
+  background: rgba(123, 47, 73, 0.12);
+}
+
+.wizard-publish-notes .wizard__note {
+  color: #d4c8bf;
+}
+
+/* ─── Dark form labels (glass panels) ─── */
+.glass-panel .form-label,
+.wizard .form-label {
+  color: #f0e6dc;
+  font-weight: 500;
+}
+
+.glass-panel .wizard-check,
+.wizard .wizard-check {
+  color: #e8ddd4;
+}
+
+.glass-panel input[type="checkbox"],
+.wizard input[type="checkbox"] {
+  width: 1rem;
+  height: 1rem;
+  accent-color: #7b2f49;
+}
+
+.glass-panel input:focus,
+.glass-panel select:focus,
+.glass-panel textarea:focus,
+.wizard input:focus,
+.wizard select:focus,
+.wizard textarea:focus {
+  outline: none;
+}
+
+.ui-input--on-dark:-webkit-autofill,
+.ui-input--on-dark:-webkit-autofill:hover,
+.ui-input--on-dark:-webkit-autofill:focus {
+  -webkit-text-fill-color: #171216 !important;
+  box-shadow: 0 0 0 1000px #fffaf6 inset !important;
+}
+

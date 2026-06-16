@@ -1,7 +1,8 @@
-import Link from "next/link";
+import { Suspense } from "react";
 import { notFound, redirect } from "next/navigation";
 import type { Metadata } from "next";
 import { AdvertentieWizard } from "@/components/advertentie-wizard";
+import { DashboardSubnav } from "@/components/dashboard-subnav";
 import type { Advertentie } from "@/lib/types";
 import { createClient } from "@/lib/supabase/server";
 
@@ -44,20 +45,22 @@ export default async function BewerkAdvertentiePage({ params }: BewerkAdvertenti
     <div>
       <div className="page-header-band">
         <div className="container">
-          <Link href="/dashboard/advertenties" className="text-sm text-muted-foreground hover:text-champagne-light">
-            ← Mijn advertenties
-          </Link>
-          <h1 className="section-title mt-3">Advertentie bewerken</h1>
-          <p className="section-subtitle mt-2">Pas alle profielgegevens, media en werktijden aan.</p>
+          <DashboardSubnav />
+          <h1 className="section-title mt-4">Advertentie bewerken</h1>
+          <p className="section-subtitle mt-2">
+            Pas alle profielgegevens, media en zichtbaarheid aan.
+          </p>
         </div>
       </div>
       <div className="container py-8 sm:py-10">
         <div className="glass-panel mx-auto max-w-3xl p-6 sm:p-8">
-          <AdvertentieWizard
-            aanbiederId={user.id}
-            advertentie={advertentie}
-            bestaandeFotoUrls={bestaandeFotoUrls}
-          />
+          <Suspense fallback={<p className="text-sm text-muted-foreground">Wizard laden…</p>}>
+            <AdvertentieWizard
+              aanbiederId={user.id}
+              advertentie={advertentie}
+              bestaandeFotoUrls={bestaandeFotoUrls}
+            />
+          </Suspense>
         </div>
       </div>
     </div>

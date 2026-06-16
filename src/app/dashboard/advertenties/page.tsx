@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import type { Metadata } from "next";
-import { AdvertentieCard } from "@/components/advertentie-card";
+import { DashboardAdvertentieCard } from "@/components/advertentie-card";
+import { DashboardSubnav } from "@/components/dashboard-subnav";
 import { Button } from "@/components/ui/button";
 import { haalEersteFotos } from "@/lib/advertentie-fotos";
 import type { Advertentie } from "@/lib/types";
@@ -35,33 +36,33 @@ export default async function DashboardAdvertentiesPage() {
     <div>
       <div className="page-header-band">
         <div className="container">
-          <Link
-            href="/dashboard"
-            className="text-sm text-muted-foreground hover:text-champagne-light"
-          >
-            ← Dashboard
-          </Link>
-          <h1 className="section-title mt-2">Mijn advertenties</h1>
-          <p className="section-subtitle mt-1">
-            Concept · In beoordeling · Actief
-          </p>
+          <DashboardSubnav />
+          <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <h1 className="section-title">Mijn advertenties</h1>
+              <p className="section-subtitle mt-1">
+                Concept · In beoordeling · Actief
+              </p>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              <Button asChild variant="primary" size="sm">
+                <Link href="/dashboard/advertenties/nieuw">Nieuwe advertentie</Link>
+              </Button>
+              <Button asChild variant="secondary" size="sm">
+                <Link href="/dashboard/boosts">Boost kopen</Link>
+              </Button>
+            </div>
+          </div>
         </div>
       </div>
 
       <div className="container py-6 sm:py-8">
-        <div className="mb-5 flex justify-end">
-          <Button asChild variant="primary">
-            <Link href="/dashboard/advertenties/nieuw">+ Nieuwe advertentie</Link>
-          </Button>
-        </div>
-
         {advertenties.length > 0 ? (
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {advertenties.map((advertentie) => (
-              <AdvertentieCard
+              <DashboardAdvertentieCard
                 key={advertentie.id}
                 advertentie={advertentie}
-                dashboard
                 afbeeldingUrl={fotos.get(advertentie.id)}
               />
             ))}
@@ -74,9 +75,14 @@ export default async function DashboardAdvertentiesPage() {
             <p className="mt-2 text-sm text-muted-foreground">
               Start met je eerste profiel als aanbieder op Veloura.
             </p>
-            <Button asChild variant="primary" className="mt-5">
-              <Link href="/dashboard/advertenties/nieuw">Nieuwe advertentie</Link>
-            </Button>
+            <div className="mt-5 flex flex-wrap justify-center gap-2">
+              <Button asChild variant="primary">
+                <Link href="/dashboard/advertenties/nieuw">Nieuwe advertentie</Link>
+              </Button>
+              <Button asChild variant="secondary">
+                <Link href="/dashboard/boosts">Boost kopen</Link>
+              </Button>
+            </div>
           </div>
         )}
       </div>

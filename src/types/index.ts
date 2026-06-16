@@ -7,6 +7,17 @@ export type {
   AdvertentieStatus,
 } from "@/lib/types";
 
+export type { BoostType } from "@/lib/advertentie-metadata";
+export {
+  BOOST_PRIJZEN,
+  BOOST_DUUR_OPTIES,
+  PREMIUM_MAAND_PRIJS,
+  formatEuro,
+  boostPrijs,
+  boostPrijsLabel,
+  boostSamenvatting,
+} from "@/lib/advertentie-boost";
+
 export type UserRole = (typeof USER_ROLES)[number];
 export type SubscriptionTier = (typeof SUBSCRIPTION_TIERS)[number];
 

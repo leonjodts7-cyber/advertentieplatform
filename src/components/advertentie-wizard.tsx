@@ -1,13 +1,19 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import {
-  BOOST_PRIJZEN,
+  BOOST_DUUR_OPTIES,
+  BOOST_ZICHTBAARHEID,
+  PREMIUM_MAAND_PRIJS,
   berekenBoostEinde,
   boostLabel,
+  boostPrijs,
+  boostPrijsLabel,
+  boostSamenvatting,
+  formatEuro,
 } from "@/lib/advertentie-boost";
 import {
   ADRES_TYPE_OPTIES,
@@ -78,12 +84,16 @@ export function AdvertentieWizard({
   bestaandeFotoUrls = [],
 }: AdvertentieWizardProps) {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const isEdit = Boolean(advertentie);
   const parsed = advertentie
     ? parseAdvertentieBeschrijving(advertentie.beschrijving)
     : { tekst: "", meta: {} as AdvertentieMetadata };
 
   const [stap, setStap] = useState(0);
+  const [boostBevestigd, setBoostBevestigd] = useState(
+    (parsed.meta.boostType ?? "none") !== "none"
+  );
   const [laden, setLaden] = useState(false);
   const [fout, setFout] = useState<string | null>(null);
 
@@ -164,11 +174,15 @@ export function AdvertentieWizard({
   const fotoCount = media.filter((m) => m.type === "foto").length;
   const videoCount = media.filter((m) => m.type === "video").length;
 
-  const boostPrijs = useMemo(() => {
+  const boostPrijsBedrag = useMemo(() => {
     if (boostType === "none") return 0;
-    const tabel = BOOST_PRIJZEN[boostType];
-    return tabel[boostDuur as keyof typeof tabel] ?? 0;
+    return boostPrijs(boostType, boostDuur);
   }, [boostType, boostDuur]);
+
+  useEffect(() => {
+    const stapParam = searchParams.get("stap");
+    if (stapParam === "promotie") setStap(6);
+  }, [searchParams]);
 
   const validatieFouten = useMemo(() => {
     const fouten: { stap: number; melding: string }[] = [];
@@ -388,12 +402,9 @@ export function AdvertentieWizard({
     router.refresh();
   }
 
-  const boostOpties: Record<BoostType, number[]> = {
-    none: [],
-    stad: [1, 3, 7, 14, 30],
-    categorie: [1, 7, 30],
-    homepage: [1, 7, 30],
-  };
+  const boostOpties = BOOST_DUUR_OPTIES;
+
+  const gekozenBoostTekst = boostSamenvatting(boostType, boostDuur);
 
   return (
     <div className="wizard">
@@ -447,17 +458,24 @@ export function AdvertentieWizard({
               onClick={() => setPakket("premium")}
             >
               <p className="wizard-pakket-card__name">Premium</p>
-              <p className="wizard-pakket-card__price">Hogere zichtbaarheid</p>
+              <p className="wizard-pakket-card__price">€19,99/maand introductieprijs</p>
               <ul className="wizard-pakket-card__list">
-                <li>100 foto&apos;s + 5 video&apos;s</li>
+                <li>100 foto&apos;s</li>
+                <li>5 video&apos;s</li>
                 <li>Premium badge</li>
                 <li>Hoger in zoekresultaten</li>
-                <li>Beschikbaar voor boosts</li>
+                <li>Boost-opties beschikbaar</li>
               </ul>
             </button>
           </div>
+          <div className="wizard-boost-hint mt-4">
+            <p className="wizard-boost-hint__title">Tijdelijk bovenaan?</p>
+            <p className="wizard-boost-hint__text">
+              Wil je tijdelijk bovenaan staan? Kies later een boost per stad, categorie of homepage.
+            </p>
+          </div>
           <p className="wizard__note mt-3">
-            Betaling wordt later gekoppeld. Je keuze wordt nu opgeslagen.
+            Betaling wordt later gekoppeld. Premium: {formatEuro(PREMIUM_MAAND_PRIJS)}/maand indicatie.
           </p>
         </div>
       )}
@@ -698,7 +716,8 @@ export function AdvertentieWizard({
       {stap === 6 && (
         <div className="wizard__panel space-y-4">
           <h2 className="wizard__title">Extra zichtbaarheid kiezen</h2>
-          <div className="wizard-boost-grid">
+          <p className="wizard__note">Kies een boost en duur. Prijzen zijn indicatief — geen betaling nu.</p>
+          <div className="wizard-boost-grid wizard-boost-grid--promo">
             {(["none", "stad", "categorie", "homepage"] as BoostType[]).map((type) => (
               <button
                 key={type}
@@ -706,6 +725,7 @@ export function AdvertentieWizard({
                 className={cn("wizard-boost-card", boostType === type && "wizard-boost-card--active")}
                 onClick={() => {
                   setBoostType(type);
+                  setBoostBevestigd(false);
                   if (type !== "none") {
                     const opties = boostOpties[type];
                     if (!opties.includes(boostDuur)) setBoostDuur(opties[0]);
@@ -720,24 +740,34 @@ export function AdvertentieWizard({
                 </p>
                 <p className="wizard-boost-card__desc">
                   {type === "none" && "Gratis · normale positie"}
-                  {type === "stad" && "Bovenaan in gekozen stad"}
-                  {type === "categorie" && "Bovenaan in gekozen categorie"}
-                  {type === "homepage" && "Zichtbaar bovenaan homepage"}
+                  {type !== "none" && BOOST_ZICHTBAARHEID[type]}
                 </p>
               </button>
             ))}
           </div>
           {boostType !== "none" && (
             <>
-              <div className="flex flex-wrap gap-2">
+              <p className="form-label">Kies duur en prijs</p>
+              <div className="wizard-duration-grid">
                 {boostOpties[boostType].map((d) => (
                   <button
                     key={d}
                     type="button"
-                    className={cn("wizard-duration-chip", boostDuur === d && "wizard-duration-chip--active")}
-                    onClick={() => setBoostDuur(d)}
+                    className={cn(
+                      "wizard-duration-card",
+                      boostDuur === d && "wizard-duration-card--active"
+                    )}
+                    onClick={() => {
+                      setBoostDuur(d);
+                      setBoostBevestigd(false);
+                    }}
                   >
-                    {d} dag{d > 1 ? "en" : ""}
+                    <span className="wizard-duration-card__days">
+                      {d} dag{d > 1 ? "en" : ""}
+                    </span>
+                    <span className="wizard-duration-card__price">
+                      {boostPrijsLabel(boostType, d)}
+                    </span>
                   </button>
                 ))}
               </div>
@@ -759,8 +789,20 @@ export function AdvertentieWizard({
                 </div>
               )}
               <p className="wizard__note">
-                Prijsindicatie: €{boostPrijs.toFixed(2).replace(".", ",")} · Betaling wordt later gekoppeld.
+                Zichtbaar: {BOOST_ZICHTBAARHEID[boostType]} · Totaal: {formatEuro(boostPrijsBedrag)}
               </p>
+              <Button
+                type="button"
+                variant="primary"
+                onClick={() => setBoostBevestigd(true)}
+              >
+                Boost selecteren
+              </Button>
+              {boostBevestigd && (
+                <p className="wizard-boost-selected" role="status">
+                  Geselecteerd: {gekozenBoostTekst}
+                </p>
+              )}
             </>
           )}
         </div>
@@ -768,7 +810,7 @@ export function AdvertentieWizard({
 
       {stap === 7 && (
         <div className="wizard__panel space-y-4">
-          <h2 className="wizard__title">Samenvatting</h2>
+          <h2 className="wizard__title">Publiceren</h2>
           {validatieFouten.length > 0 && (
             <div className="login-alert login-alert--error">
               <p className="font-medium">Ontbrekende velden:</p>
@@ -780,18 +822,28 @@ export function AdvertentieWizard({
             </div>
           )}
           <dl className="wizard-summary">
-            <div><dt>Pakket</dt><dd>{pakket === "premium" ? "Premium" : "Gratis"}</dd></div>
+            <div><dt>Pakket</dt><dd>{pakket === "premium" ? `Premium (${formatEuro(PREMIUM_MAAND_PRIJS)}/mnd)` : "Gratis (€0)"}</dd></div>
             <div><dt>Titel</dt><dd>{titel || "—"}</dd></div>
             <div><dt>Stad</dt><dd>{stad || "—"}</dd></div>
             <div><dt>Categorie</dt><dd>{CATEGORIE_OPTIES.find((c) => c.slug === categorie)?.label ?? "—"}</dd></div>
             <div><dt>Prijs vanaf</dt><dd>{prijsVanaf ? `€${prijsVanaf}` : "—"}</dd></div>
             <div><dt>Media</dt><dd>{fotoCount} foto&apos;s, {videoCount} video&apos;s</dd></div>
-            <div><dt>Boost</dt><dd>{boostType === "none" ? "Geen" : `${boostLabel(bouwMeta([], undefined)) ?? boostType} (${boostDuur} dagen)`}</dd></div>
-            <div><dt>Status</dt><dd>Concept of actief (kies hieronder)</dd></div>
+            <div><dt>Boost</dt><dd>{boostType === "none" ? "Geen" : (gekozenBoostTekst ?? `${boostLabel(bouwMeta([], undefined)) ?? boostType} (${boostDuur} dagen)`)}</dd></div>
           </dl>
-          <p className="wizard__note text-xs">
-            Na publicatie kan je profiel kort gecontroleerd worden.
-          </p>
+          <div className="wizard-publish-notes space-y-2">
+            <p className="wizard__note">Concepten zijn alleen zichtbaar voor jou.</p>
+            <p className="wizard__note">Na publiceren staat je advertentie live als actief profiel.</p>
+            {boostType !== "none" && (
+              <>
+                <p className="wizard-boost-selected">
+                  Gekozen boost: {gekozenBoostTekst}
+                </p>
+                <p className="wizard__note text-xs">
+                  Betaling wordt later gekoppeld. Boost wordt voorlopig opgeslagen.
+                </p>
+              </>
+            )}
+          </div>
         </div>
       )}
 

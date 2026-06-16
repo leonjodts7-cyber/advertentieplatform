@@ -1,11 +1,12 @@
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { formatPrijs, statusLabel } from "@/lib/helpers";
 import {
   categorieLabel,
   parseAdvertentieBeschrijving,
 } from "@/lib/advertentie-metadata";
-import { boostActief } from "@/lib/advertentie-boost";
+import { boostActief, boostLabel } from "@/lib/advertentie-boost";
 import type { Advertentie } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
@@ -170,5 +171,78 @@ export function AdvertentieCard({
         )}
       </div>
     </Link>
+  );
+}
+
+interface DashboardAdvertentieCardProps {
+  advertentie: Advertentie;
+  afbeeldingUrl?: string | null;
+}
+
+export function DashboardAdvertentieCard({
+  advertentie,
+  afbeeldingUrl,
+}: DashboardAdvertentieCardProps) {
+  const { meta } = parseAdvertentieBeschrijving(advertentie.beschrijving);
+  const boost = boostLabel(meta);
+  const isPremium = advertentie.premium === true || boostActief(meta);
+
+  return (
+    <article className="dashboard-ad-card overflow-hidden rounded-2xl border border-white/[0.12] bg-[rgba(255,255,255,0.04)]">
+      <Link
+        href={`/dashboard/advertenties/${advertentie.id}/bewerken`}
+        className="relative block aspect-[3/4] overflow-hidden"
+      >
+        {afbeeldingUrl ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={afbeeldingUrl}
+            alt={advertentie.titel}
+            className="h-full w-full object-cover"
+          />
+        ) : (
+          <ListingPlaceholder />
+        )}
+        <div className="profile-card__overlay absolute inset-0" />
+        <div className="absolute inset-x-0 top-0 flex flex-wrap gap-1 p-2.5">
+          <Badge variant={statusVariant(advertentie.status)} className="text-[0.5625rem]">
+            {statusLabel(advertentie.status)}
+          </Badge>
+          {isPremium && (
+            <Badge variant="premium" className="text-[0.5625rem]">
+              Premium
+            </Badge>
+          )}
+          {boost && (
+            <Badge variant="new" className="text-[0.5625rem]">
+              {boost}
+            </Badge>
+          )}
+        </div>
+        <div className="absolute inset-x-0 bottom-0 p-3 pt-10">
+          <h3 className="profile-card__overlay-text font-display line-clamp-2 text-base font-medium">
+            {advertentie.titel}
+          </h3>
+          <p className="profile-card__overlay-muted mt-1 text-xs">
+            {advertentie.stad}
+            {advertentie.prijs_vanaf != null && (
+              <> · Vanaf {formatPrijs(advertentie.prijs_vanaf)}</>
+            )}
+          </p>
+        </div>
+      </Link>
+      <div className="flex gap-2 p-3">
+        <Button asChild variant="secondary" size="sm" className="flex-1">
+          <Link href={`/dashboard/advertenties/${advertentie.id}/bewerken`}>
+            Bewerken
+          </Link>
+        </Button>
+        <Button asChild variant="primary" size="sm" className="flex-1">
+          <Link href={`/dashboard/advertenties/${advertentie.id}/bewerken?stap=promotie`}>
+            Boost kopen
+          </Link>
+        </Button>
+      </div>
+    </article>
   );
 }
