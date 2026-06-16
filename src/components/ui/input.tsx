@@ -3,7 +3,7 @@ import { forwardRef, type InputHTMLAttributes } from "react";
 
 export interface InputProps
   extends Omit<InputHTMLAttributes<HTMLInputElement>, "size"> {
-  variant?: "dark" | "light";
+  variant?: "dark" | "light" | "onDark";
   size?: "default" | "compact";
 }
 
@@ -11,20 +11,29 @@ const variantClasses = {
   dark: cn(
     "ui-input ui-input--dark",
     "border-[var(--border-dark)] bg-[var(--dark-soft)]/90 text-[var(--text-light)]",
-    "caret-[var(--champagne)]",
+    "caret-[var(--champagne)] font-medium",
     "placeholder:text-[var(--muted-light)]",
     "focus-visible:border-[var(--champagne)]/45",
     "focus-visible:ring-[var(--champagne)]/18",
-    "focus-visible:shadow-[0_0_0_3px_rgba(214,179,107,0.1)]"
+    "focus-visible:shadow-[0_0_0_3px_rgba(214,179,107,0.18)]"
   ),
   light: cn(
     "ui-input ui-input--light",
-    "border-[var(--border-light)] bg-[var(--card-light)] text-[#171216]",
-    "caret-[#7b2f49]",
-    "placeholder:text-[var(--muted-dark)]",
-    "focus-visible:border-[#7b2f49]/55",
-    "focus-visible:ring-[#7b2f49]/15",
-    "focus-visible:shadow-[0_0_0_3px_rgba(123,47,73,0.12)]"
+    "border-[var(--border-light)] bg-[#fffaf6] text-[#171216]",
+    "caret-[#7b2f49] font-medium",
+    "placeholder:text-[rgba(36,25,31,0.45)]",
+    "focus-visible:border-[#d6b36b]",
+    "focus-visible:ring-[#d6b36b]/20",
+    "focus-visible:shadow-[0_0_0_3px_rgba(214,179,107,0.18)]"
+  ),
+  onDark: cn(
+    "ui-input ui-input--on-dark",
+    "border-[#e5d8cf] bg-[#fffaf6] text-[#171216]",
+    "caret-[#7b2f49] font-medium",
+    "placeholder:text-[rgba(36,25,31,0.45)]",
+    "focus-visible:border-[#d6b36b]",
+    "focus-visible:ring-[#d6b36b]/20",
+    "focus-visible:shadow-[0_0_0_3px_rgba(214,179,107,0.18)]"
   ),
 };
 

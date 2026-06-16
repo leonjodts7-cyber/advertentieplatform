@@ -5,10 +5,12 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ProfilePhotoPlaceholder } from "@/components/profile-photo-placeholder";
 import {
+  BESCHIKBAARHEID_OPTIES,
   categorieLabel,
-  MOGELIJKHEDEN_OPTIES,
+  alleMogelijkheden,
   parseAdvertentieBeschrijving,
 } from "@/lib/advertentie-metadata";
+import { boostActief, boostLabel } from "@/lib/advertentie-boost";
 import { beschikbaarLabel, formatPrijs } from "@/lib/helpers";
 import type { Advertentie, AdvertentieFoto } from "@/lib/types";
 import { createClient } from "@/lib/supabase/server";
@@ -61,12 +63,21 @@ export default async function AdvertentieDetailPage({
   const fotos = (fotosRaw ?? []) as AdvertentieFoto[];
   const { tekst, meta } = parseAdvertentieBeschrijving(advertentie.beschrijving);
   const categorie = categorieLabel(meta.categorie);
-  const mogelijkheidLabels = (meta.mogelijkheden ?? [])
-    .map((v) => MOGELIJKHEDEN_OPTIES.find((o) => o.value === v)?.label ?? v);
+  const mogelijkheidLabels = alleMogelijkheden(meta);
+  const videoUrls = meta.videoUrls ?? (meta.videoUrl ? [meta.videoUrl] : []);
+  const beschikbaarheidLabels = (meta.beschikbaarheid ?? []).map(
+    (v) => BESCHIKBAARHEID_OPTIES.find((o) => o.value === v)?.label ?? v
+  );
 
   const whatsappUrl = meta.whatsapp
     ? `https://wa.me/${meta.whatsapp.replace(/\D/g, "")}`
     : null;
+  const telegramUrl = meta.telegram
+    ? meta.telegram.startsWith("http")
+      ? meta.telegram
+      : `https://t.me/${meta.telegram.replace(/^@/, "")}`
+    : null;
+  const isPremium = advertentie.premium || boostActief(meta);
 
   return (
     <div className="pb-24 lg:pb-0">
@@ -79,11 +90,11 @@ export default async function AdvertentieDetailPage({
 
         <div className="container">
           <div className="profile-detail-gallery">
-            {meta.videoUrl ? (
-              <div className="profile-detail-gallery__video">
-                <video src={meta.videoUrl} controls className="h-full w-full object-cover" />
+            {videoUrls.map((url) => (
+              <div key={url} className="profile-detail-gallery__video">
+                <video src={url} controls className="h-full w-full object-cover" />
               </div>
-            ) : null}
+            ))}
             {fotos.length > 0 ? (
               fotos.map((foto) => (
                 <div key={foto.id} className="profile-detail-gallery__item">
@@ -99,7 +110,8 @@ export default async function AdvertentieDetailPage({
           </div>
 
           <div className="mt-4 flex flex-wrap gap-2">
-            {advertentie.premium && <Badge variant="premium">Premium</Badge>}
+            {isPremium && <Badge variant="premium">Premium</Badge>}
+            {boostLabel(meta) && <Badge variant="new">{boostLabel(meta)}</Badge>}
             {advertentie.geverifieerd && <Badge variant="verified">Geverifieerd</Badge>}
             {categorie && <Badge variant="wine">{categorie}</Badge>}
             <Badge variant="wine">
@@ -140,6 +152,8 @@ export default async function AdvertentieDetailPage({
                   {meta.haarkleur && <div><dt>Haarkleur</dt><dd>{meta.haarkleur}</dd></div>}
                   {meta.oogkleur && <div><dt>Oogkleur</dt><dd>{meta.oogkleur}</dd></div>}
                   {meta.lengteCm && <div><dt>Lengte</dt><dd>{meta.lengteCm} cm</dd></div>}
+                  {meta.gewichtKg && <div><dt>Gewicht</dt><dd>{meta.gewichtKg} kg</dd></div>}
+                  {meta.regio && <div><dt>Regio</dt><dd>{meta.regio}</dd></div>}
                   {meta.cupmaat && <div><dt>Cupmaat</dt><dd>{meta.cupmaat}</dd></div>}
                   {meta.nationaliteit && <div><dt>Nationaliteit</dt><dd>{meta.nationaliteit}</dd></div>}
                   {meta.talen && meta.talen.length > 0 && (
@@ -156,6 +170,17 @@ export default async function AdvertentieDetailPage({
                   <h2 className="profile-detail-section-title">Mogelijkheden</h2>
                   <div className="mt-3 flex flex-wrap gap-2">
                     {mogelijkheidLabels.map((label) => (
+                      <span key={label} className="profile-detail-chip">{label}</span>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {beschikbaarheidLabels.length > 0 && (
+                <div className="light-card p-5 sm:p-7">
+                  <h2 className="profile-detail-section-title">Beschikbaarheid</h2>
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    {beschikbaarheidLabels.map((label) => (
                       <span key={label} className="profile-detail-chip">{label}</span>
                     ))}
                   </div>
@@ -212,6 +237,20 @@ export default async function AdvertentieDetailPage({
                     <Button asChild size="lg" variant="secondary-light" className="w-full">
                       <a href={whatsappUrl} target="_blank" rel="noopener noreferrer">
                         WhatsApp
+                      </a>
+                    </Button>
+                  )}
+                  {telegramUrl && (
+                    <Button asChild size="lg" variant="secondary-light" className="w-full">
+                      <a href={telegramUrl} target="_blank" rel="noopener noreferrer">
+                        Telegram
+                      </a>
+                    </Button>
+                  )}
+                  {meta.website && (
+                    <Button asChild size="lg" variant="secondary-light" className="w-full">
+                      <a href={meta.website.startsWith("http") ? meta.website : `https://${meta.website}`} target="_blank" rel="noopener noreferrer">
+                        Website
                       </a>
                     </Button>
                   )}

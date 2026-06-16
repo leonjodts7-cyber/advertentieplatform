@@ -5,6 +5,7 @@ import {
   categorieLabel,
   parseAdvertentieBeschrijving,
 } from "@/lib/advertentie-metadata";
+import { boostActief } from "@/lib/advertentie-boost";
 import type { Advertentie } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
@@ -62,7 +63,8 @@ export function AdvertentieCard({
       ? `/dashboard/advertenties/${advertentie.id}/bewerken`
       : `/advertentie/${advertentie.id}`);
 
-  const isPremiumListing = showPremium || advertentie.premium === true;
+  const isPremiumListing =
+    showPremium || advertentie.premium === true || boostActief(meta);
   const isLight = theme === "light" && !dashboard;
 
   return (

@@ -6,6 +6,18 @@ import type { Advertentie } from "@/lib/types";
 import { haalAiLoungeStats } from "@/lib/ai/queries";
 import { createClient } from "@/lib/supabase/server";
 import { zorgProfielBestaat } from "@/lib/profiel";
+import { parseAdvertentieBeschrijving } from "@/lib/advertentie-metadata";
+import { boostActief } from "@/lib/advertentie-boost";
+
+function fotoTipScore(
+  ads: Pick<Advertentie, "beschrijving">[]
+): number {
+  return ads.reduce((sum, a) => {
+    const { meta } = parseAdvertentieBeschrijving(a.beschrijving ?? "");
+    const mediaCount = meta.mediaItems?.length ?? 0;
+    return sum + Math.min(mediaCount * 2, 10);
+  }, 0);
+}
 
 export const metadata: Metadata = {
   title: "Dashboard",
@@ -24,19 +36,37 @@ export default async function DashboardPage() {
   const [{ data: advertentiesRaw }, aiStats] = await Promise.all([
     supabase
       .from("advertenties")
-      .select("id, status")
+      .select("id, status, premium, beschrijving")
       .eq("aanbieder_id", user.id),
     haalAiLoungeStats(user.id),
   ]);
 
   const advertenties = (advertentiesRaw ?? []) as Pick<
     Advertentie,
-    "id" | "status"
+    "id" | "status" | "premium" | "beschrijving"
   >[];
 
   const totaal = advertenties.length;
   const actief = advertenties.filter((a) => a.status === "actief").length;
-  const inReview = advertenties.filter((a) => a.status === "in_review").length;
+  const concept = advertenties.filter((a) => a.status === "concept").length;
+  const premiumActief = advertenties.filter((a) => {
+    if (a.status !== "actief") return false;
+    if (a.premium) return true;
+    const { meta } = parseAdvertentieBeschrijving(a.beschrijving ?? "");
+    return boostActief(meta);
+  }).length;
+
+  const views = 0;
+  const contactKliks = 0;
+  const whatsappKliks = 0;
+  const profielscore = Math.min(100, actief * 20 + premiumActief * 15 + fotoTipScore(advertenties));
+
+  const tips = [
+    "Voeg meer foto's toe",
+    "Voeg video toe",
+    "Vul werktijden in",
+    "Kies een boost voor meer zichtbaarheid",
+  ];
 
   return (
     <div>
@@ -45,9 +75,9 @@ export default async function DashboardPage() {
           <p className="text-[0.6875rem] uppercase tracking-wider text-muted-foreground">
             Veloura Dashboard
           </p>
-          <h1 className="section-title mt-1">Welkom terug</h1>
+          <h1 className="section-title mt-1">Business center</h1>
           <p className="section-subtitle mt-1">
-            Beheer jouw profielen als aanbieder en AI Lounge.
+            Overzicht van je marketplace profielen en prestaties.
           </p>
         </div>
       </div>
@@ -56,108 +86,88 @@ export default async function DashboardPage() {
         <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
           Marketplace
         </h2>
-        <div className="mt-3 grid gap-3 sm:grid-cols-3">
+        <div className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           <div className="profile-card p-5">
-            <p className="text-xs uppercase tracking-wider text-muted-foreground">
-              Totaal
-            </p>
-            <p className="mt-1 font-display text-3xl text-foreground">
-              {totaal}
-            </p>
+            <p className="text-xs uppercase tracking-wider text-muted-foreground">Totaal advertenties</p>
+            <p className="mt-1 font-display text-3xl text-foreground">{totaal}</p>
           </div>
           <div className="profile-card p-5">
-            <p className="text-xs uppercase tracking-wider text-muted-foreground">
-              Actief
-            </p>
+            <p className="text-xs uppercase tracking-wider text-muted-foreground">Actief</p>
             <p className="mt-1 font-display text-3xl text-success">{actief}</p>
           </div>
           <div className="profile-card p-5">
-            <p className="text-xs uppercase tracking-wider text-muted-foreground">
-              In beoordeling
-            </p>
-            <p className="mt-1 font-display text-3xl text-champagne">
-              {inReview}
-            </p>
+            <p className="text-xs uppercase tracking-wider text-muted-foreground">Concept</p>
+            <p className="mt-1 font-display text-3xl text-champagne">{concept}</p>
+          </div>
+          <div className="profile-card p-5">
+            <p className="text-xs uppercase tracking-wider text-muted-foreground">Premium actief</p>
+            <p className="mt-1 font-display text-3xl text-soft-champagne">{premiumActief}</p>
           </div>
         </div>
+
+        <h2 className="mt-8 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+          Performance
+        </h2>
+        <div className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="profile-card p-5">
+            <p className="text-xs uppercase tracking-wider text-muted-foreground">Views</p>
+            <p className="mt-1 font-display text-3xl text-foreground">{views}</p>
+          </div>
+          <div className="profile-card p-5">
+            <p className="text-xs uppercase tracking-wider text-muted-foreground">Contactkliks</p>
+            <p className="mt-1 font-display text-3xl text-foreground">{contactKliks}</p>
+          </div>
+          <div className="profile-card p-5">
+            <p className="text-xs uppercase tracking-wider text-muted-foreground">WhatsApp-kliks</p>
+            <p className="mt-1 font-display text-3xl text-foreground">{whatsappKliks}</p>
+          </div>
+          <div className="profile-card p-5">
+            <p className="text-xs uppercase tracking-wider text-muted-foreground">Profielscore</p>
+            <p className="mt-1 font-display text-3xl text-champagne">{Math.round(profielscore)}</p>
+          </div>
+        </div>
+
+        <h2 className="mt-8 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+          AI tips
+        </h2>
+        <ul className="mt-3 grid gap-2 sm:grid-cols-2">
+          {tips.map((tip) => (
+            <li key={tip} className="profile-card px-4 py-3 text-sm text-muted-foreground">
+              {tip}
+            </li>
+          ))}
+        </ul>
 
         <h2 className="mt-8 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
           AI Lounge
         </h2>
         <div className="mt-3 grid gap-3 sm:grid-cols-3">
           <div className="profile-card p-5">
-            <p className="text-xs uppercase tracking-wider text-muted-foreground">
-              Gesprekken
-            </p>
-            <p className="mt-1 font-display text-3xl text-foreground">
-              {aiStats.gesprekken}
-            </p>
+            <p className="text-xs uppercase tracking-wider text-muted-foreground">Gesprekken</p>
+            <p className="mt-1 font-display text-3xl text-foreground">{aiStats.gesprekken}</p>
           </div>
           <div className="profile-card p-5">
-            <p className="text-xs uppercase tracking-wider text-muted-foreground">
-              Gebruikte credits
-            </p>
-            <p className="mt-1 font-display text-3xl text-soft-champagne">
-              {aiStats.gebruikteCredits}
-            </p>
+            <p className="text-xs uppercase tracking-wider text-muted-foreground">Gebruikte credits</p>
+            <p className="mt-1 font-display text-3xl text-soft-champagne">{aiStats.gebruikteCredits}</p>
           </div>
           <div className="profile-card p-5">
-            <p className="text-xs uppercase tracking-wider text-muted-foreground">
-              Resterende credits
-            </p>
-            <p className="mt-1 font-display text-3xl text-champagne">
-              {aiStats.resterendeCredits}
-            </p>
+            <p className="text-xs uppercase tracking-wider text-muted-foreground">Resterende credits</p>
+            <p className="mt-1 font-display text-3xl text-champagne">{aiStats.resterendeCredits}</p>
           </div>
         </div>
 
-        <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          <Link
-            href="/dashboard/advertenties"
-            className="profile-card group p-5 transition-all hover:-translate-y-0.5 hover:shadow-warm-glow"
-          >
-            <p className="font-display text-lg text-foreground group-hover:text-soft-champagne">
-              Mijn advertenties
-            </p>
-            <p className="mt-1 text-sm text-muted-foreground">
-              Bekijk en bewerk al jouw profielen
-            </p>
-          </Link>
-          <Link
-            href="/ai-lounge"
-            className="profile-card group p-5 transition-all hover:-translate-y-0.5 hover:shadow-warm-glow"
-          >
-            <p className="font-display text-lg text-soft-champagne">
-              AI Lounge
-            </p>
-            <p className="mt-1 text-sm text-muted-foreground">
-              Chat met fictieve companions
-            </p>
-          </Link>
-          <Link
-            href="/credits"
-            className="profile-card group p-5 transition-all hover:-translate-y-0.5 hover:shadow-warm-glow sm:col-span-2 lg:col-span-1"
-          >
-            <p className="font-display text-lg text-foreground group-hover:text-soft-champagne">
-              Credits kopen
-            </p>
-            <p className="mt-1 text-sm text-muted-foreground">
-              {aiStats.resterendeCredits} credits beschikbaar
-            </p>
-          </Link>
-        </div>
-
-        <div className="mt-6 flex flex-col gap-2.5 sm:flex-row">
-          <Button asChild size="lg" variant="primary" className="w-full sm:w-auto">
-            <Link href="/dashboard/advertenties/nieuw">Plaats advertentie</Link>
+        <div className="mt-6 flex flex-col gap-2.5 sm:flex-row sm:flex-wrap">
+          <Button asChild size="lg" variant="primary">
+            <Link href="/dashboard/advertenties/nieuw">Nieuwe advertentie</Link>
           </Button>
-          <Button
-            asChild
-            variant="secondary"
-            size="lg"
-            className="w-full sm:w-auto"
-          >
-            <Link href="/ai-lounge">Open AI Lounge</Link>
+          <Button asChild variant="secondary" size="lg">
+            <Link href="/dashboard/advertenties">Mijn advertenties</Link>
+          </Button>
+          <Button asChild variant="secondary" size="lg">
+            <Link href="/dashboard/advertenties/nieuw?stap=promotie">Boost kopen</Link>
+          </Button>
+          <Button asChild variant="ghost" size="lg" disabled className="opacity-60">
+            <span>AI profielhulp (later)</span>
           </Button>
         </div>
       </div>

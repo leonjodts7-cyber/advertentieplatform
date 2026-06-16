@@ -29,7 +29,7 @@ export async function uploadAdvertentieMedia(
     if (isBucketMissingError(error.message)) {
       return {
         ok: false,
-        error: "Maak Supabase Storage bucket advertentie-media aan.",
+        error: "Maak in Supabase Storage de bucket advertentie-media aan.",
       };
     }
     return { ok: false, error: error.message };

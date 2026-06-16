@@ -7,10 +7,9 @@ interface HeaderProps {
   user: User | null;
 }
 
-const mainNav = [
+const publicNav = [
   { href: "/zoeken", label: "Zoeken" },
   { href: "/ai-lounge", label: "AI Lounge" },
-  { href: "/dashboard", label: "Dashboard" },
 ];
 
 export function Header({ user }: HeaderProps) {
@@ -27,7 +26,7 @@ export function Header({ user }: HeaderProps) {
         </Link>
 
         <nav className="header-nav-center hidden items-center lg:flex">
-          {mainNav.map((link) => (
+          {publicNav.map((link) => (
             <Link
               key={link.href}
               href={link.href}
@@ -36,20 +35,20 @@ export function Header({ user }: HeaderProps) {
               {link.label}
             </Link>
           ))}
+          {user && (
+            <Link
+              href="/dashboard"
+              className="rounded-full px-2 py-0.5 text-[0.8125rem] text-[var(--muted-light)] transition-colors hover:bg-white/[0.06] hover:text-[var(--text-light)]"
+            >
+              Dashboard
+            </Link>
+          )}
         </nav>
 
         <div className="header-actions">
           <div className="hidden items-center gap-1 lg:flex">
             {user ? (
-              <>
-                <Link
-                  href="/dashboard"
-                  className="rounded-full px-2.5 py-1 text-sm text-[var(--muted-light)] hover:text-[var(--text-light)]"
-                >
-                  Dashboard
-                </Link>
-                <UitloggenKnop />
-              </>
+              <UitloggenKnop />
             ) : (
               <Link
                 href="/login"
@@ -81,17 +80,15 @@ export function Header({ user }: HeaderProps) {
             >
               AI Lounge
             </Link>
-            {user ? (
-              <>
-                <Link
-                  href="/dashboard"
-                  className="rounded-full px-1.5 py-1 text-[0.6875rem] text-[var(--muted-light)] hover:text-[var(--text-light)] sm:text-xs"
-                >
-                  Dashboard
-                </Link>
-                <UitloggenKnop />
-              </>
-            ) : (
+            {user && (
+              <Link
+                href="/dashboard"
+                className="rounded-full px-1.5 py-1 text-[0.6875rem] text-[var(--muted-light)] hover:text-[var(--text-light)] sm:text-xs"
+              >
+                Dashboard
+              </Link>
+            )}
+            {!user && (
               <Link
                 href="/login"
                 className="rounded-full px-1.5 py-1 text-[0.6875rem] text-[var(--muted-light)] hover:text-[var(--text-light)] sm:text-xs"
@@ -99,6 +96,7 @@ export function Header({ user }: HeaderProps) {
                 Login
               </Link>
             )}
+            {user && <UitloggenKnop />}
             <Link
               href="/dashboard/advertenties/nieuw"
               className="rounded-full px-2 py-1 text-[0.6875rem] font-medium text-[var(--champagne)] hover:text-[var(--text-light)] sm:text-xs"

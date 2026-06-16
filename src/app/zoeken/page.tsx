@@ -20,6 +20,7 @@ import {
   metaBevatTerm,
   parseAdvertentieBeschrijving,
 } from "@/lib/advertentie-metadata";
+import { sorteerAdvertenties } from "@/lib/advertentie-boost";
 
 export const metadata: Metadata = {
   title: "Profielen zoeken",
@@ -178,6 +179,8 @@ export default async function ZoekenPage({ searchParams }: ZoekenPageProps) {
       return haystack.includes(term) || term.split(/\s+/).some((w) => haystack.includes(w));
     });
   }
+
+  advertenties = sorteerAdvertenties(advertenties);
 
   const fotos = await haalEersteFotos(supabase, advertenties.map((a) => a.id));
   const filtersActive = hasActiveFilters(params);
