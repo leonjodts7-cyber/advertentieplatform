@@ -21,6 +21,8 @@ export interface Advertentie {
   status: AdvertentieStatus;
   premium?: boolean;
   premium_tot?: string | null;
+  plaatsing_type?: string | null;
+  plaatsing_eindigt_op?: string | null;
   aangemaakt_op: string;
   bijgewerkt_op: string;
 }

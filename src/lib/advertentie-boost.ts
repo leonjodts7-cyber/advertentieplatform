@@ -58,6 +58,50 @@ export const BOOST_ZICHTBAARHEID: Record<BoostPrijsType, string> = {
   homepage: "Spotlight bovenaan de homepage",
 };
 
+export const AUTO_BOOST_PRIJZEN = {
+  weekend: 19.99,
+  avond: 29.99,
+} as const;
+
+export type PlaatsingType =
+  | "none"
+  | "stad"
+  | "categorie"
+  | "homepage"
+  | "auto";
+
+export function plaatsingType(ad: Advertentie): string | null {
+  if (ad.plaatsing_type) return ad.plaatsing_type;
+  const { meta } = parseAdvertentieBeschrijving(ad.beschrijving);
+  return meta.boostType && meta.boostType !== "none" ? meta.boostType : null;
+}
+
+export function plaatsingEindigtOp(ad: Advertentie): string | null {
+  if (ad.plaatsing_eindigt_op) return ad.plaatsing_eindigt_op;
+  const { meta } = parseAdvertentieBeschrijving(ad.beschrijving);
+  return meta.boostEindigtOp ?? null;
+}
+
+export function isPlaatsingActief(ad: Advertentie): boolean {
+  const type = plaatsingType(ad);
+  if (!type || type === "none") return false;
+  const eind = plaatsingEindigtOp(ad);
+  if (!eind) return true;
+  return new Date(eind).getTime() > Date.now();
+}
+
+export function isPremiumListing(ad: Advertentie): boolean {
+  if (ad.premium === true) {
+    if (!ad.premium_tot) return true;
+    return new Date(ad.premium_tot).getTime() > Date.now();
+  }
+  const type = plaatsingType(ad);
+  if (type === "stad" || type === "categorie") {
+    return isPlaatsingActief(ad);
+  }
+  return false;
+}
+
 export function boostActief(meta: AdvertentieMetadata): boolean {
   if (!meta.boostType || meta.boostType === "none") return false;
   if (!meta.boostEindigtOp) return true;
@@ -71,18 +115,35 @@ export function berekenBoostEinde(dagen: number): string {
 }
 
 export function advertentieBoostScore(advertentie: Advertentie): number {
-  const { meta } = parseAdvertentieBeschrijving(advertentie.beschrijving);
-  if (!boostActief(meta)) return advertentie.premium ? 1 : 0;
-  switch (meta.boostType) {
-    case "homepage":
-      return 100;
-    case "categorie":
-      return 50;
-    case "stad":
-      return 30;
-    default:
-      return advertentie.premium ? 10 : 0;
+  const type = plaatsingType(advertentie);
+  if (isPlaatsingActief(advertentie)) {
+    switch (type) {
+      case "homepage":
+        return 100;
+      case "categorie":
+        return 50;
+      case "stad":
+        return 30;
+      case "auto":
+        return 20;
+      default:
+        break;
+    }
   }
+  const { meta } = parseAdvertentieBeschrijving(advertentie.beschrijving);
+  if (boostActief(meta)) {
+    switch (meta.boostType) {
+      case "homepage":
+        return 100;
+      case "categorie":
+        return 50;
+      case "stad":
+        return 30;
+      default:
+        return advertentie.premium ? 10 : 0;
+    }
+  }
+  return advertentie.premium ? 1 : 0;
 }
 
 export function sorteerAdvertenties(advertenties: Advertentie[]): Advertentie[] {

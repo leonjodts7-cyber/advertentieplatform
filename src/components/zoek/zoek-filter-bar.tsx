@@ -20,8 +20,7 @@ import {
   TAAL_OPTIES,
   type ZoekFilterValues,
 } from "@/lib/zoek-filters";
-import { cn } from "@/lib/utils";
-import { ChevronDown, Sparkles } from "lucide-react";
+import { Sparkles } from "lucide-react";
 
 const AI_VOORBEELDEN = [
   "Blonde escort in Antwerpen onder €200",
@@ -292,13 +291,9 @@ export function ZoekFilterBar() {
             <button
               type="button"
               className="zoek-filter-bar__extend-btn"
-              onClick={() => setExtendedOpen((v) => !v)}
-              aria-expanded={extendedOpen}
+              onClick={() => setExtendedOpen(true)}
             >
-              Uitgebreide filters
-              <ChevronDown
-                className={cn("h-4 w-4 transition-transform", extendedOpen && "rotate-180")}
-              />
+              Filters
             </button>
             <button
               type="button"
@@ -317,9 +312,29 @@ export function ZoekFilterBar() {
               </button>
             )}
           </div>
+        </form>
+      )}
 
-          {extendedOpen && (
-            <div className="zoek-filter-bar__extended">
+      {extendedOpen && (
+        <>
+          <button
+            type="button"
+            className="zoek-filter-drawer__backdrop"
+            aria-label="Sluit filters"
+            onClick={() => setExtendedOpen(false)}
+          />
+          <aside className="zoek-filter-drawer" aria-label="Uitgebreide filters">
+            <div className="zoek-filter-drawer__head">
+              <h2 className="zoek-filter-drawer__title">Filters</h2>
+              <button
+                type="button"
+                className="zoek-filter-drawer__close"
+                onClick={() => setExtendedOpen(false)}
+              >
+                Sluiten
+              </button>
+            </div>
+            <div className="zoek-filter-drawer__body">
               <p className="zoek-filter-bar__section-label">Basis</p>
               <div className="zoek-filter-bar__extended-grid">
                 <div>
@@ -416,17 +431,45 @@ export function ZoekFilterBar() {
                 <ToggleSwitch id="geverifieerd" label="Geverifieerd" checked={geverifieerd} onChange={setGeverifieerd} />
                 <ToggleSwitch id="video-mogelijk" label="Video mogelijk" checked={videoMogelijk} onChange={setVideoMogelijk} />
                 <ToggleSwitch id="hotel-mogelijk" label="Hotel mogelijk" checked={hotelMogelijk} onChange={setHotelMogelijk} />
-                <ToggleSwitch id="discreet-contact" label="Discreet contact" checked={discreetContact} onChange={setDiscreetContact} />
-                <ToggleSwitch id="nieuw-profiel" label="Nieuw profiel" checked={nieuwProfiel} onChange={setNieuwProfiel} />
-                <ToggleSwitch id="premium-profiel" label="Premium profiel" checked={premiumProfiel} onChange={setPremiumProfiel} />
-                <ToggleSwitch id="beschikbaar" label="Nu beschikbaar" checked={beschikbaar} onChange={setBeschikbaar} />
                 <ToggleSwitch id="thuis-ontvangen" label="Thuis ontvangen" checked={thuisOntvangen} onChange={setThuisOntvangen} />
                 <ToggleSwitch id="verplaatsing" label="Verplaatsing mogelijk" checked={verplaatsingMogelijk} onChange={setVerplaatsingMogelijk} />
                 <ToggleSwitch id="koppels-welkom" label="Koppels welkom" checked={koppelsWelkom} onChange={setKoppelsWelkom} />
+                <ToggleSwitch id="premium-profiel" label="Premium profiel" checked={premiumProfiel} onChange={setPremiumProfiel} />
+                <ToggleSwitch id="beschikbaar" label="Nu beschikbaar" checked={beschikbaar} onChange={setBeschikbaar} />
+                <ToggleSwitch id="discreet-contact" label="Discreet contact" checked={discreetContact} onChange={setDiscreetContact} />
+                <ToggleSwitch id="nieuw-profiel" label="Nieuw profiel" checked={nieuwProfiel} onChange={setNieuwProfiel} />
               </div>
             </div>
-          )}
-        </form>
+            <div className="zoek-filter-drawer__foot">
+              <Button
+                type="button"
+                size="md"
+                disabled={isPending}
+                className="w-full"
+                onClick={() => {
+                  navigate(buildFilterParams(getValues()));
+                  setExtendedOpen(false);
+                }}
+              >
+                Toon profielen
+              </Button>
+              {hasFilters && (
+                <Button
+                  type="button"
+                  variant="secondary-light"
+                  size="md"
+                  className="w-full"
+                  onClick={() => {
+                    handleClear();
+                    setExtendedOpen(false);
+                  }}
+                >
+                  Filters wissen
+                </Button>
+              )}
+            </div>
+          </aside>
+        </>
       )}
     </div>
   );

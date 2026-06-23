@@ -15,6 +15,8 @@ export const BUURT_STEDEN = [
   "Brugge",
   "Kortrijk",
   "Mechelen",
+  "Oostende",
+  "Knokke",
 ] as const;
 
 export const POPULAIRE_STEDEN = [

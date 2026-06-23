@@ -1,10 +1,65 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Advertentie } from "@/lib/types";
+import {
+  isPlaatsingActief,
+  isPremiumListing,
+  plaatsingType,
+  plaatsingEindigtOp,
+} from "@/lib/advertentie-boost";
 
-function isPremiumActief(ad: Advertentie): boolean {
-  if (ad.premium !== true) return false;
-  if (!ad.premium_tot) return true;
-  return new Date(ad.premium_tot).getTime() > Date.now();
+function nowIso() {
+  return new Date().toISOString();
+}
+
+function filterSpotlight(ads: Advertentie[], limit: number): Advertentie[] {
+  return ads
+    .filter((ad) => {
+      const type = plaatsingType(ad);
+      return type === "homepage" && isPlaatsingActief(ad);
+    })
+    .sort((a, b) => {
+      const ea = plaatsingEindigtOp(a) ?? "";
+      const eb = plaatsingEindigtOp(b) ?? "";
+      return eb.localeCompare(ea);
+    })
+    .slice(0, limit);
+}
+
+function filterPremium(ads: Advertentie[], limit: number): Advertentie[] {
+  return ads
+    .filter(isPremiumListing)
+    .sort(
+      (a, b) =>
+        new Date(b.aangemaakt_op).getTime() - new Date(a.aangemaakt_op).getTime()
+    )
+    .slice(0, limit);
+}
+
+export async function fetchSpotlightAdvertenties(
+  supabase: SupabaseClient,
+  limit = 6
+): Promise<Advertentie[]> {
+  const { data, error } = await supabase
+    .from("advertenties")
+    .select("*")
+    .eq("status", "actief")
+    .eq("plaatsing_type", "homepage")
+    .gt("plaatsing_eindigt_op", nowIso())
+    .order("plaatsing_eindigt_op", { ascending: false })
+    .limit(limit);
+
+  if (!error && data?.length) {
+    return data as Advertentie[];
+  }
+
+  const { data: fallback } = await supabase
+    .from("advertenties")
+    .select("*")
+    .eq("status", "actief")
+    .order("aangemaakt_op", { ascending: false })
+    .limit(80);
+
+  return filterSpotlight((fallback ?? []) as Advertentie[], limit);
 }
 
 export async function fetchPremiumAdvertenties(
@@ -15,24 +70,23 @@ export async function fetchPremiumAdvertenties(
     .from("advertenties")
     .select("*")
     .eq("status", "actief")
-    .eq("premium", true)
+    .or("premium.eq.true,plaatsing_type.in.(stad,categorie)")
     .order("aangemaakt_op", { ascending: false })
-    .limit(limit * 2);
+    .limit(limit * 3);
 
-  if (error) {
-    const { data: fallback } = await supabase
-      .from("advertenties")
-      .select("*")
-      .eq("status", "actief")
-      .order("aangemaakt_op", { ascending: false })
-      .limit(0);
-    void fallback;
-    return [];
+  if (!error && data?.length) {
+    const filtered = filterPremium(data as Advertentie[], limit);
+    if (filtered.length) return filtered;
   }
 
-  return ((data ?? []) as Advertentie[])
-    .filter(isPremiumActief)
-    .slice(0, limit);
+  const { data: fallback } = await supabase
+    .from("advertenties")
+    .select("*")
+    .eq("status", "actief")
+    .order("aangemaakt_op", { ascending: false })
+    .limit(80);
+
+  return filterPremium((fallback ?? []) as Advertentie[], limit);
 }
 
 export async function fetchActieveAdvertenties(

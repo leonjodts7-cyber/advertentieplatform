@@ -6,7 +6,13 @@ import {
   categorieLabel,
   parseAdvertentieBeschrijving,
 } from "@/lib/advertentie-metadata";
-import { boostActief, boostLabel } from "@/lib/advertentie-boost";
+import {
+  boostActief,
+  boostLabel,
+  isPlaatsingActief,
+  isPremiumListing as heeftPremiumPlaatsing,
+  plaatsingType,
+} from "@/lib/advertentie-boost";
 import type { Advertentie } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
@@ -65,7 +71,7 @@ export function AdvertentieCard({
       : `/advertentie/${advertentie.id}`);
 
   const isPremiumListing =
-    showPremium || advertentie.premium === true || boostActief(meta);
+    showPremium || heeftPremiumPlaatsing(advertentie) || boostActief(meta);
   const isLight = theme === "light" && !dashboard;
 
   return (
@@ -242,6 +248,165 @@ export function DashboardAdvertentieCard({
             Boost kopen
           </Link>
         </Button>
+      </div>
+    </article>
+  );
+}
+
+interface SpotlightSectionProps {
+  advertenties: Advertentie[];
+  fotos: Map<string, string | undefined>;
+}
+
+export function SpotlightSection({ advertenties, fotos }: SpotlightSectionProps) {
+  return (
+    <section className="home-spotlight">
+      <div className="container">
+        <div className="home-listing-block__header">
+          <div>
+            <h2 className="home-listing-block__title">Homepage Spotlight</h2>
+            <p className="home-listing-block__subtitle">
+              Topprofielen met maximale zichtbaarheid.
+            </p>
+          </div>
+        </div>
+        {advertenties.length > 0 ? (
+          <div className="spotlight-track">
+            {advertenties.map((ad) => (
+              <SpotlightCard
+                key={ad.id}
+                advertentie={ad}
+                afbeeldingUrl={fotos.get(ad.id)}
+              />
+            ))}
+          </div>
+        ) : (
+          <p className="home-listing-inline-empty">
+            Spotlight-posities komen hier binnenkort.
+          </p>
+        )}
+      </div>
+    </section>
+  );
+}
+
+function SpotlightCard({
+  advertentie,
+  afbeeldingUrl,
+}: {
+  advertentie: Advertentie;
+  afbeeldingUrl?: string | null;
+}) {
+  const { meta } = parseAdvertentieBeschrijving(advertentie.beschrijving);
+  const categorie = categorieLabel(meta.categorie);
+  const href = `/advertentie/${advertentie.id}`;
+
+  return (
+    <article className="spotlight-card">
+      <Link href={href} className="spotlight-card__media">
+        {afbeeldingUrl ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={afbeeldingUrl} alt={advertentie.titel} className="h-full w-full object-cover" />
+        ) : (
+          <ListingPlaceholder />
+        )}
+      </Link>
+      <div className="spotlight-card__body">
+        <div className="spotlight-card__badges">
+          <Badge variant="premium">Spotlight</Badge>
+          {heeftPremiumPlaatsing(advertentie) && <Badge variant="premium">Premium</Badge>}
+          {categorie && <Badge variant="wine">{categorie}</Badge>}
+          {advertentie.geverifieerd && <Badge variant="verified">Geverifieerd</Badge>}
+        </div>
+        <h3 className="spotlight-card__title">
+          <Link href={href}>{advertentie.titel}</Link>
+        </h3>
+        <p className="spotlight-card__meta">
+          {advertentie.stad}
+          {advertentie.leeftijd != null && ` · ${advertentie.leeftijd} jaar`}
+        </p>
+        {advertentie.prijs_vanaf != null && (
+          <p className="spotlight-card__price">Vanaf {formatPrijs(advertentie.prijs_vanaf)}</p>
+        )}
+        <Button asChild size="sm" variant="primary" className="mt-3">
+          <Link href={href}>Bekijk profiel</Link>
+        </Button>
+      </div>
+    </article>
+  );
+}
+
+interface AdvertentieCardHorizontalProps {
+  advertentie: Advertentie;
+  afbeeldingUrl?: string | null;
+}
+
+export function AdvertentieCardHorizontal({
+  advertentie,
+  afbeeldingUrl,
+}: AdvertentieCardHorizontalProps) {
+  const { meta } = parseAdvertentieBeschrijving(advertentie.beschrijving);
+  const categorie = categorieLabel(meta.categorie);
+  const href = `/advertentie/${advertentie.id}`;
+  const whatsapp = meta.whatsapp?.replace(/\D/g, "");
+
+  return (
+    <article className="listing-row-card">
+      <Link href={href} className="listing-row-card__media">
+        {afbeeldingUrl ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={afbeeldingUrl} alt={advertentie.titel} className="h-full w-full object-cover" />
+        ) : (
+          <ListingPlaceholder />
+        )}
+      </Link>
+      <div className="listing-row-card__body">
+        <div className="listing-row-card__badges">
+          {heeftPremiumPlaatsing(advertentie) && <Badge variant="premium">Premium</Badge>}
+          {isPlaatsingActief(advertentie) && plaatsingType(advertentie) === "homepage" && (
+            <Badge variant="new">Spotlight</Badge>
+          )}
+          {categorie && <Badge variant="wine">{categorie}</Badge>}
+          {advertentie.beschikbaar && (
+            <Badge variant="online" className="gap-1">
+              <span className="online-dot" aria-hidden />
+              Beschikbaar
+            </Badge>
+          )}
+        </div>
+        <h3 className="listing-row-card__title">
+          <Link href={href}>{advertentie.titel}</Link>
+        </h3>
+        <p className="listing-row-card__meta">
+          {advertentie.stad}
+          {advertentie.leeftijd != null && ` · ${advertentie.leeftijd} jaar`}
+          {advertentie.prijs_vanaf != null && (
+            <span className="listing-row-card__price">
+              {" "}
+              · Vanaf {formatPrijs(advertentie.prijs_vanaf)}
+            </span>
+          )}
+        </p>
+        <div className="listing-row-card__actions">
+          {advertentie.telefoon && (
+            <a href={`tel:${advertentie.telefoon}`} className="listing-row-card__contact">
+              {advertentie.telefoon}
+            </a>
+          )}
+          {whatsapp && (
+            <a
+              href={`https://wa.me/${whatsapp}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="listing-row-card__contact"
+            >
+              WhatsApp
+            </a>
+          )}
+          <Button asChild size="sm" variant="primary">
+            <Link href={href}>Bekijk profiel</Link>
+          </Button>
+        </div>
       </div>
     </article>
   );

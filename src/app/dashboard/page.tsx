@@ -10,14 +10,6 @@ import { zorgProfielBestaat } from "@/lib/profiel";
 import { parseAdvertentieBeschrijving } from "@/lib/advertentie-metadata";
 import { boostActief } from "@/lib/advertentie-boost";
 
-function fotoTipScore(ads: Pick<Advertentie, "beschrijving">[]): number {
-  return ads.reduce((sum, a) => {
-    const { meta } = parseAdvertentieBeschrijving(a.beschrijving ?? "");
-    const mediaCount = meta.mediaItems?.length ?? 0;
-    return sum + Math.min(mediaCount * 2, 10);
-  }, 0);
-}
-
 function telActieveBoosts(ads: Pick<Advertentie, "beschrijving" | "status">[]): number {
   return ads.filter((a) => {
     if (a.status !== "actief") return false;
@@ -26,16 +18,12 @@ function telActieveBoosts(ads: Pick<Advertentie, "beschrijving" | "status">[]): 
   }).length;
 }
 
-function aanbevolenActie(
-  actief: number,
-  actieveBoosts: number,
-  concept: number
-): string {
-  if (actief === 0 && concept > 0) return "Publiceer een concept om zichtbaar te worden";
-  if (actieveBoosts === 0 && actief > 0) return "Kies een boost voor meer zichtbaarheid";
-  if (actief === 0) return "Plaats je eerste advertentie";
-  return "Voeg meer foto's en video toe";
-}
+const PROFIEL_TIPS = [
+  "Voeg meer foto's toe",
+  "Voeg video toe",
+  "Vul werktijden in",
+  "Koop een boost",
+];
 
 export const metadata: Metadata = {
   title: "Dashboard",
@@ -83,27 +71,19 @@ export default async function DashboardPage() {
     return Math.max(max, diff > 0 ? diff : 0);
   }, 0);
 
-  const views = 0;
-  const contactKliks = 0;
-  const whatsappKliks = 0;
-  const profielscore = Math.min(
-    100,
-    actief * 20 + premiumActief * 15 + fotoTipScore(advertenties)
-  );
-
   return (
-    <div>
-      <div className="page-header-band">
+    <div className="dashboard-page">
+      <div className="dashboard-page__header">
         <div className="container">
           <DashboardSubnav />
-          <h1 className="section-title mt-4">Business center</h1>
-          <p className="section-subtitle mt-1">
-            Beheer jouw advertenties, zichtbaarheid en prestaties.
+          <h1 className="dashboard-page__title">Dashboard</h1>
+          <p className="dashboard-page__subtitle">
+            Beheer jouw advertenties en zichtbaarheid.
           </p>
         </div>
       </div>
 
-      <div className="container py-6 sm:py-8">
+      <div className="container dashboard-page__body">
         <div className="dashboard-quick-actions">
           <Button asChild variant="primary" size="sm">
             <Link href="/dashboard/advertenties/nieuw">Nieuwe advertentie</Link>
@@ -119,71 +99,76 @@ export default async function DashboardPage() {
           </Button>
         </div>
 
-        <h2 className="dashboard-section-label">Marketplace</h2>
-        <div className="dashboard-stat-grid">
-          <div className="profile-card p-5">
-            <p className="dashboard-stat-label">Totaal advertenties</p>
-            <p className="dashboard-stat-value">{totaal}</p>
+        <section className="dashboard-panel">
+          <h2 className="dashboard-panel__title">Jouw advertenties</h2>
+          <div className="dashboard-mini-grid">
+            <div className="dashboard-mini-stat">
+              <span className="dashboard-mini-stat__label">Totaal</span>
+              <span className="dashboard-mini-stat__value">{totaal}</span>
+            </div>
+            <div className="dashboard-mini-stat">
+              <span className="dashboard-mini-stat__label">Actief</span>
+              <span className="dashboard-mini-stat__value text-success">{actief}</span>
+            </div>
+            <div className="dashboard-mini-stat">
+              <span className="dashboard-mini-stat__label">Concept</span>
+              <span className="dashboard-mini-stat__value">{concept}</span>
+            </div>
+            <div className="dashboard-mini-stat">
+              <span className="dashboard-mini-stat__label">Premium actief</span>
+              <span className="dashboard-mini-stat__value">{premiumActief}</span>
+            </div>
           </div>
-          <div className="profile-card p-5">
-            <p className="dashboard-stat-label">Actief</p>
-            <p className="dashboard-stat-value text-success">{actief}</p>
-          </div>
-          <div className="profile-card p-5">
-            <p className="dashboard-stat-label">Concept</p>
-            <p className="dashboard-stat-value text-champagne">{concept}</p>
-          </div>
-          <div className="profile-card p-5">
-            <p className="dashboard-stat-label">Premium actief</p>
-            <p className="dashboard-stat-value text-soft-champagne">{premiumActief}</p>
-          </div>
-        </div>
+        </section>
 
-        <h2 className="dashboard-section-label mt-8">Performance</h2>
-        <div className="dashboard-stat-grid">
-          <div className="profile-card p-5">
-            <p className="dashboard-stat-label">Views</p>
-            <p className="dashboard-stat-value">{views}</p>
+        <section className="dashboard-panel">
+          <h2 className="dashboard-panel__title">Zichtbaarheid</h2>
+          <div className="dashboard-mini-grid">
+            <div className="dashboard-mini-stat">
+              <span className="dashboard-mini-stat__label">Actieve boosts</span>
+              <span className="dashboard-mini-stat__value">{actieveBoosts}</span>
+            </div>
+            <div className="dashboard-mini-stat">
+              <span className="dashboard-mini-stat__label">Premium dagen</span>
+              <span className="dashboard-mini-stat__value">{premiumDagen > 0 ? premiumDagen : "—"}</span>
+            </div>
+            <div className="dashboard-mini-stat">
+              <span className="dashboard-mini-stat__label">Credits</span>
+              <span className="dashboard-mini-stat__value">{aiStats.resterendeCredits}</span>
+            </div>
           </div>
-          <div className="profile-card p-5">
-            <p className="dashboard-stat-label">Contactkliks</p>
-            <p className="dashboard-stat-value">{contactKliks}</p>
-          </div>
-          <div className="profile-card p-5">
-            <p className="dashboard-stat-label">WhatsApp-kliks</p>
-            <p className="dashboard-stat-value">{whatsappKliks}</p>
-          </div>
-          <div className="profile-card p-5">
-            <p className="dashboard-stat-label">Profielscore</p>
-            <p className="dashboard-stat-value text-champagne">{Math.round(profielscore)}</p>
-          </div>
-        </div>
+        </section>
 
-        <h2 className="dashboard-section-label mt-8">Zichtbaarheid</h2>
-        <div className="dashboard-stat-grid">
-          <div className="profile-card p-5">
-            <p className="dashboard-stat-label">Actieve boosts</p>
-            <p className="dashboard-stat-value">{actieveBoosts}</p>
+        <section className="dashboard-panel">
+          <h2 className="dashboard-panel__title">Prestaties</h2>
+          <div className="dashboard-mini-grid">
+            <div className="dashboard-mini-stat">
+              <span className="dashboard-mini-stat__label">Views</span>
+              <span className="dashboard-mini-stat__value">0</span>
+            </div>
+            <div className="dashboard-mini-stat">
+              <span className="dashboard-mini-stat__label">Contactkliks</span>
+              <span className="dashboard-mini-stat__value">0</span>
+            </div>
+            <div className="dashboard-mini-stat">
+              <span className="dashboard-mini-stat__label">WhatsApp-kliks</span>
+              <span className="dashboard-mini-stat__value">0</span>
+            </div>
           </div>
-          <div className="profile-card p-5">
-            <p className="dashboard-stat-label">Premium dagen resterend</p>
-            <p className="dashboard-stat-value">{premiumDagen > 0 ? premiumDagen : "—"}</p>
-          </div>
-          <div className="profile-card p-5">
-            <p className="dashboard-stat-label">Credits</p>
-            <p className="dashboard-stat-value">{aiStats.resterendeCredits}</p>
-          </div>
-          <div className="profile-card p-5">
-            <p className="dashboard-stat-label">Aanbevolen actie</p>
-            <p className="mt-2 text-sm text-muted-foreground">
-              {aanbevolenActie(actief, actieveBoosts, concept)}
-            </p>
-          </div>
-        </div>
+        </section>
 
-        <section id="instellingen" className="mt-10 profile-card p-5">
-          <h2 className="font-display text-lg text-foreground">Instellingen</h2>
-          <p className="mt-1 text-sm text-muted-foreground">
+        <section className="dashboard-panel">
+          <h2 className="dashboard-panel__title">Verbeter je profiel</h2>
+          <ul className="dashboard-tips">
+            {PROFIEL_TIPS.map((tip) => (
+              <li key={tip}>{tip}</li>
+            ))}
+          </ul>
+        </section>
+
+        <section id="instellingen" className="dashboard-panel">
+          <h2 className="dashboard-panel__title">Instellingen</h2>
+          <p className="dashboard-panel__text">
             Account- en profielinstellingen komen binnenkort beschikbaar.
           </p>
         </section>

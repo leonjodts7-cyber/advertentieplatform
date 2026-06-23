@@ -1,10 +1,8 @@
-import Link from "next/link";
 import { Suspense } from "react";
 import type { Metadata } from "next";
-import { AdvertentieCard } from "@/components/advertentie-card";
 import { ZoekFilterBar } from "@/components/zoek/zoek-filter-bar";
 import { ZoekActiveChips } from "@/components/zoek/zoek-active-chips";
-import { Button } from "@/components/ui/button";
+import { ZoekResults } from "@/components/zoek/zoek-results";
 import { haalEersteFotos } from "@/lib/advertentie-fotos";
 import type { Advertentie } from "@/lib/types";
 import { createClient } from "@/lib/supabase/server";
@@ -43,12 +41,6 @@ function hasActiveFilters(params: Record<string, string | undefined>) {
     const v = params[k];
     return v != null && v.trim() !== "";
   });
-}
-
-function profielCountLabel(count: number): string {
-  if (count === 0) return "0 profielen gevonden";
-  if (count === 1) return "1 profiel gevonden";
-  return `${count} profielen gevonden`;
 }
 
 function filterAdvertenties(
@@ -186,12 +178,12 @@ export default async function ZoekenPage({ searchParams }: ZoekenPageProps) {
   const filtersActive = hasActiveFilters(params);
 
   return (
-    <div className="search-page">
-      <div className="search-page-top">
+    <div className="search-page search-page--compact">
+      <div className="search-page-top search-page-top--compact">
         <div className="container">
           <h1 className="search-page-top__title">Profielen zoeken</h1>
           <p className="search-page-top__subtitle">
-            Filter snel of gebruik AI zoeken.
+            Zoek snel of verfijn met filters.
           </p>
         </div>
       </div>
@@ -214,44 +206,11 @@ export default async function ZoekenPage({ searchParams }: ZoekenPageProps) {
           </div>
         )}
 
-        <main className="zoek-results">
-          <p className="zoek-results__count">
-            {profielCountLabel(advertenties.length)}
-          </p>
-
-          {advertenties.length > 0 ? (
-            <div className="listing-grid listing-grid--search">
-              {advertenties.map((advertentie) => (
-                <AdvertentieCard
-                  key={advertentie.id}
-                  advertentie={advertentie}
-                  afbeeldingUrl={fotos.get(advertentie.id)}
-                  theme="light"
-                  premium
-                  showPremium={advertentie.premium === true}
-                  showOnline={advertentie.beschikbaar}
-                />
-              ))}
-            </div>
-          ) : (
-            <div className="zoek-empty">
-              <h3 className="zoek-empty__title">Geen profielen gevonden</h3>
-              <p className="zoek-empty__text">
-                Pas je filters aan of bekijk alle actieve profielen.
-              </p>
-              <div className="zoek-empty__actions">
-                {filtersActive && (
-                  <Button asChild variant="secondary-light" size="sm">
-                    <Link href="/zoeken">Filters wissen</Link>
-                  </Button>
-                )}
-                <Button asChild size="sm">
-                  <Link href="/zoeken">Bekijk alle profielen</Link>
-                </Button>
-              </div>
-            </div>
-          )}
-        </main>
+        <ZoekResults
+          advertenties={advertenties}
+          fotos={fotos}
+          filtersActive={filtersActive}
+        />
       </div>
     </div>
   );

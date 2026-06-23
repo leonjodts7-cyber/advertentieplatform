@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import { DashboardSubnav } from "@/components/dashboard-subnav";
 import { Button } from "@/components/ui/button";
 import {
+  AUTO_BOOST_PRIJZEN,
   BOOST_BESCHRIJVINGEN,
   BOOST_DUUR_OPTIES,
   BOOST_PRIJZEN,
@@ -15,9 +16,9 @@ export const metadata: Metadata = {
 };
 
 const BOOST_SECTIES = [
-  { type: "stad" as const, title: "Stad Boost" },
-  { type: "categorie" as const, title: "Categorie Boost" },
-  { type: "homepage" as const, title: "Homepage Spotlight" },
+  { type: "stad" as const, title: "Stad Boost", desc: "Sta bovenaan in gekozen stad." },
+  { type: "categorie" as const, title: "Categorie Boost", desc: "Sta bovenaan binnen jouw categorie." },
+  { type: "homepage" as const, title: "Homepage Spotlight", desc: "Zichtbaar op de homepage." },
 ];
 
 export default async function DashboardBoostsPage() {
@@ -30,33 +31,31 @@ export default async function DashboardBoostsPage() {
   if (!user) redirect("/login");
 
   return (
-    <div>
-      <div className="page-header-band">
+    <div className="dashboard-page">
+      <div className="dashboard-page__header">
         <div className="container">
           <DashboardSubnav />
-          <h1 className="section-title mt-4">Boosts & zichtbaarheid</h1>
-          <p className="section-subtitle mt-1">
-            Kies hoe lang en waar jouw advertentie bovenaan zichtbaar is.
+          <h1 className="dashboard-page__title">Boosts & zichtbaarheid</h1>
+          <p className="dashboard-page__subtitle">
+            Kies waar en hoelang jouw advertentie bovenaan staat.
           </p>
         </div>
       </div>
 
-      <div className="container py-6 sm:py-8">
+      <div className="container dashboard-page__body">
         <div className="boost-stripe-notice">
           <p>Stripe wordt later gekoppeld. Prijzen zijn indicatief.</p>
         </div>
 
-        <div className="mt-6 grid gap-5 lg:grid-cols-3">
+        <div className="boost-products-grid">
           {BOOST_SECTIES.map((sectie) => {
             const duren = BOOST_DUUR_OPTIES[sectie.type];
             const prijzen = BOOST_PRIJZEN[sectie.type];
 
             return (
-              <div key={sectie.type} className="boost-plan-card">
+              <div key={sectie.type} className="boost-plan-card boost-plan-card--light">
                 <h2 className="boost-plan-card__title">{sectie.title}</h2>
-                <p className="boost-plan-card__desc">
-                  {BOOST_BESCHRIJVINGEN[sectie.type]}
-                </p>
+                <p className="boost-plan-card__desc">{sectie.desc}</p>
                 <ul className="boost-plan-card__prices">
                   {duren.map((dagen) => (
                     <li key={dagen}>
@@ -73,11 +72,37 @@ export default async function DashboardBoostsPage() {
               </div>
             );
           })}
+
+          <div className="boost-plan-card boost-plan-card--light">
+            <h2 className="boost-plan-card__title">Auto Boost</h2>
+            <p className="boost-plan-card__desc">
+              Automatisch extra zichtbaarheid op drukke momenten.
+            </p>
+            <ul className="boost-plan-card__prices">
+              <li>
+                <span>Weekend boost</span>
+                <span className="boost-plan-card__price">
+                  {formatEuro(AUTO_BOOST_PRIJZEN.weekend)}/maand
+                </span>
+              </li>
+              <li>
+                <span>Elke avond boost</span>
+                <span className="boost-plan-card__price">
+                  {formatEuro(AUTO_BOOST_PRIJZEN.avond)}/maand
+                </span>
+              </li>
+            </ul>
+            <Button type="button" variant="secondary" className="w-full" disabled>
+              Binnenkort betalen
+            </Button>
+          </div>
         </div>
 
-        <div className="mt-8 flex flex-wrap gap-3">
+        <div className="mt-6 flex flex-wrap gap-3">
           <Button asChild variant="primary">
-            <Link href="/dashboard/advertenties/nieuw">Boost via advertentie wizard</Link>
+            <Link href="/dashboard/advertenties/nieuw?stap=promotie">
+              Boost instellen via advertentie
+            </Link>
           </Button>
           <Button asChild variant="secondary">
             <Link href="/dashboard/advertenties">Mijn advertenties</Link>

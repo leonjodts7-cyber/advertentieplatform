@@ -113,7 +113,7 @@ export function HomeHeroSearch() {
           <Textarea
             id="home-ai"
             variant="dark"
-            placeholder="Bijv. escort in Antwerpen, massage in Gent, video afspraak, geverifieerd profiel onder €200…"
+            placeholder="Beschrijf wat je zoekt, bijvoorbeeld massage in Gent of escort Antwerpen…"
             value={aiQuery}
             onChange={(e) => setAiQuery(e.target.value)}
             className="min-h-[88px]"

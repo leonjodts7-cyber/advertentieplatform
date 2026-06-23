@@ -16,7 +16,7 @@ const mobileLinkClass =
 export function Header({ user }: HeaderProps) {
   return (
     <header className="glass-nav sticky top-0 z-50">
-      <div className="container header-inner header-inner--balanced h-10 sm:h-11">
+      <div className="container header-inner header-inner--balanced h-9 sm:h-10">
         <Link
           href="/"
           className="header-brand min-w-0 shrink-0 rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--champagne)]/30"

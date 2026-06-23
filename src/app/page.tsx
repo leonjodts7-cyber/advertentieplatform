@@ -4,10 +4,12 @@ import { HomeListingSection } from "@/components/home/home-listing-section";
 import { HomeNearbySection } from "@/components/home/home-nearby-section";
 import { CategoryCompactGrid } from "@/components/home/category-compact-grid";
 import { CityLinksSection } from "@/components/home/city-links-section";
+import { SpotlightSection } from "@/components/advertentie-card";
 import { haalEersteFotos } from "@/lib/advertentie-fotos";
 import {
   fetchActieveAdvertenties,
   fetchPremiumAdvertenties,
+  fetchSpotlightAdvertenties,
 } from "@/lib/advertentie-queries";
 import { createClient } from "@/lib/supabase/server";
 
@@ -19,8 +21,9 @@ export default async function HomePage({ searchParams }: HomePageProps) {
   const { stad } = await searchParams;
   const supabase = await createClient();
 
-  const [premium, nieuwste, buurt] = await Promise.all([
-    fetchPremiumAdvertenties(supabase),
+  const [spotlight, premium, nieuwste, buurt] = await Promise.all([
+    fetchSpotlightAdvertenties(supabase, 6),
+    fetchPremiumAdvertenties(supabase, 8),
     fetchActieveAdvertenties(supabase, { limit: 8 }),
     stad?.trim()
       ? fetchActieveAdvertenties(supabase, { stad: stad.trim(), limit: 8 })
@@ -28,6 +31,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
   ]);
 
   const allIds = [
+    ...spotlight.map((a) => a.id),
     ...premium.map((a) => a.id),
     ...nieuwste.map((a) => a.id),
     ...buurt.map((a) => a.id),
@@ -35,8 +39,10 @@ export default async function HomePage({ searchParams }: HomePageProps) {
   const fotos = await haalEersteFotos(supabase, [...new Set(allIds)]);
 
   return (
-    <div className="home-page">
+    <div className="home-page home-page--marketplace">
       <HomeHeroCompact />
+
+      <SpotlightSection advertenties={spotlight} fotos={fotos} />
 
       <HomeListingSection
         title="Premium advertenties"
