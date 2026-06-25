@@ -1,4 +1,8 @@
+"use client";
+
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import { MapPin, Navigation } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { formatPrijs, statusLabel } from "@/lib/helpers";
@@ -253,6 +257,147 @@ export function DashboardAdvertentieCard({
   );
 }
 
+function DemoPhotoFrame({ label = "Profiel" }: { label?: string }) {
+  return (
+    <div className="demo-photo-frame" aria-hidden>
+      <div className="demo-photo-frame__gradient" />
+      <span className="demo-photo-frame__label">{label}</span>
+    </div>
+  );
+}
+
+function SpotlightPlaceholderCard() {
+  return (
+    <article className="spotlight-card spotlight-card--demo" aria-label="Spotlight plaats beschikbaar">
+      <div className="spotlight-card__media">
+        <DemoPhotoFrame label="Spotlight" />
+      </div>
+      <div className="spotlight-card__body">
+        <div className="spotlight-card__badges">
+          <Badge variant="premium" className="demo-badge">SPOTLIGHT</Badge>
+        </div>
+        <h3 className="spotlight-card__title demo-card__title">Premium profiel</h3>
+        <p className="spotlight-card__meta demo-card__meta">Binnenkort zichtbaar</p>
+        <p className="spotlight-card__price demo-card__price">Vanaf € —</p>
+        <span className="demo-card__cta">Bekijk profiel</span>
+      </div>
+    </article>
+  );
+}
+
+function PremiumPlaceholderCard() {
+  return (
+    <article className="demo-listing-card" aria-label="Premium plaats beschikbaar">
+      <div className="demo-listing-card__media">
+        <DemoPhotoFrame label="Premium" />
+        <div className="demo-listing-card__badge-wrap">
+          <Badge variant="premium" className="demo-badge">PREMIUM</Badge>
+        </div>
+      </div>
+      <div className="demo-listing-card__body">
+        <h3 className="demo-card__title">Premium profiel</h3>
+        <p className="demo-card__meta">Binnenkort zichtbaar</p>
+        <p className="demo-card__price">Vanaf € —</p>
+        <span className="demo-card__cta">Bekijk profiel</span>
+      </div>
+    </article>
+  );
+}
+
+interface HomePremiumSectionProps {
+  advertenties: Advertentie[];
+  fotos: Map<string, string | undefined>;
+}
+
+export function HomePremiumSection({ advertenties, fotos }: HomePremiumSectionProps) {
+  return (
+    <section className="home-listing-block home-listing-block--premium">
+      <div className="container">
+        <div className="home-listing-block__header">
+          <div>
+            <h2 className="home-listing-block__title">Premium advertenties</h2>
+            <p className="home-listing-block__subtitle">
+              Uitgelichte profielen met extra zichtbaarheid.
+            </p>
+          </div>
+          {advertenties.length > 0 && (
+            <Link href="/zoeken?premium_profiel=true" className="home-listing-block__link">
+              Alles bekijken →
+            </Link>
+          )}
+        </div>
+        {advertenties.length > 0 ? (
+          <div className="listing-grid listing-grid--home">
+            {advertenties.map((advertentie) => (
+              <AdvertentieCard
+                key={advertentie.id}
+                advertentie={advertentie}
+                afbeeldingUrl={fotos.get(advertentie.id)}
+                theme="light"
+                premium
+                showPremium={heeftPremiumPlaatsing(advertentie)}
+                showOnline={advertentie.beschikbaar}
+              />
+            ))}
+          </div>
+        ) : (
+          <div className="premium-placeholders">
+            {[0, 1, 2, 3].map((i) => (
+              <PremiumPlaceholderCard key={i} />
+            ))}
+          </div>
+        )}
+      </div>
+    </section>
+  );
+}
+
+interface HomeNieuwsteSectionProps {
+  advertenties: Advertentie[];
+  fotos: Map<string, string | undefined>;
+}
+
+export function HomeNieuwsteSection({ advertenties, fotos }: HomeNieuwsteSectionProps) {
+  return (
+    <section className="home-listing-block home-listing-block--compact">
+      <div className="container">
+        <div className="home-listing-block__header">
+          <div>
+            <h2 className="home-listing-block__title">Nieuwste advertenties</h2>
+            <p className="home-listing-block__subtitle">
+              Recent geplaatste actieve profielen.
+            </p>
+          </div>
+          {advertenties.length > 0 && (
+            <Link href="/zoeken" className="home-listing-block__link">
+              Alles bekijken →
+            </Link>
+          )}
+        </div>
+        {advertenties.length > 0 ? (
+          <div className="listing-grid listing-grid--home">
+            {advertenties.map((advertentie) => (
+              <AdvertentieCard
+                key={advertentie.id}
+                advertentie={advertentie}
+                afbeeldingUrl={fotos.get(advertentie.id)}
+                theme="light"
+                premium
+                showPremium={heeftPremiumPlaatsing(advertentie)}
+                showOnline={advertentie.beschikbaar}
+              />
+            ))}
+          </div>
+        ) : (
+          <p className="home-listing-inline-empty">
+            Nieuwe profielen verschijnen hier zodra aanbieders publiceren.
+          </p>
+        )}
+      </div>
+    </section>
+  );
+}
+
 interface SpotlightSectionProps {
   advertenties: Advertentie[];
   fotos: Map<string, string | undefined>;
@@ -281,9 +426,11 @@ export function SpotlightSection({ advertenties, fotos }: SpotlightSectionProps)
             ))}
           </div>
         ) : (
-          <p className="home-listing-inline-empty">
-            Spotlight-posities komen hier binnenkort.
-          </p>
+          <div className="spotlight-placeholders">
+            {[0, 1, 2].map((i) => (
+              <SpotlightPlaceholderCard key={i} />
+            ))}
+          </div>
         )}
       </div>
     </section>
@@ -409,5 +556,92 @@ export function AdvertentieCardHorizontal({
         </div>
       </div>
     </article>
+  );
+}
+
+const LOC_STORAGE_KEY = "veloura_user_location";
+
+export function HomeNearbyCompact() {
+  const [locatieActief, setLocatieActief] = useState(false);
+  const [locatieLaden, setLocatieLaden] = useState(false);
+  const [locatieFout, setLocatieFout] = useState<string | null>(null);
+
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(LOC_STORAGE_KEY);
+      if (raw) setLocatieActief(true);
+    } catch {
+      /* ignore */
+    }
+  }, []);
+
+  function vraagLocatie() {
+    setLocatieFout(null);
+    if (!navigator.geolocation) {
+      setLocatieFout("Locatie wordt niet ondersteund door je browser.");
+      return;
+    }
+    setLocatieLaden(true);
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        try {
+          localStorage.setItem(
+            LOC_STORAGE_KEY,
+            JSON.stringify({
+              lat: pos.coords.latitude,
+              lng: pos.coords.longitude,
+              at: Date.now(),
+            })
+          );
+        } catch {
+          /* ignore */
+        }
+        setLocatieActief(true);
+        setLocatieLaden(false);
+      },
+      () => {
+        setLocatieFout("Locatie niet beschikbaar.");
+        setLocatieLaden(false);
+      },
+      { enableHighAccuracy: false, timeout: 10000 }
+    );
+  }
+
+  return (
+    <section className="home-nearby-compact">
+      <div className="container">
+        <h2 className="home-listing-block__title">Advertenties in jouw buurt</h2>
+        <p className="home-nearby-compact__text">
+          Ontdek profielen dichtbij jou. Sta locatie toe voor relevantere resultaten.
+        </p>
+        <div className="home-nearby-compact__actions">
+          <Button
+            type="button"
+            size="sm"
+            variant="secondary"
+            className="gap-1.5"
+            disabled={locatieLaden}
+            onClick={vraagLocatie}
+          >
+            <Navigation className="h-3.5 w-3.5" />
+            {locatieLaden ? "Locatie ophalen…" : "Gebruik mijn locatie"}
+          </Button>
+          {locatieActief && (
+            <span className="nearby-toolbar__active">
+              <MapPin className="h-3.5 w-3.5" />
+              Locatie actief
+            </span>
+          )}
+          <Link href="/zoeken" className="home-nearby-compact__link">
+            Of zoek per stad
+          </Link>
+        </div>
+        {locatieFout && (
+          <p className="nearby-toolbar__error" role="alert">
+            {locatieFout}
+          </p>
+        )}
+      </div>
+    </section>
   );
 }
