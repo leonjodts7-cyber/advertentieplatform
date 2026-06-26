@@ -39,7 +39,7 @@ export default async function HomePage() {
 
       <HomePremiumSection advertenties={premium} fotos={fotos} />
 
-      <HomeNearbyCompact />
+      <HomeNearbyCompact advertenties={[]} fotos={fotos} />
 
       <HomeNieuwsteSection advertenties={nieuwste} fotos={fotos} />
 

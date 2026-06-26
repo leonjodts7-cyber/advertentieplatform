@@ -279,28 +279,86 @@ function SpotlightPlaceholderCard() {
         <h3 className="spotlight-card__title demo-card__title">Premium profiel</h3>
         <p className="spotlight-card__meta demo-card__meta">Binnenkort zichtbaar</p>
         <p className="spotlight-card__price demo-card__price">Vanaf € —</p>
-        <span className="demo-card__cta">Bekijk profiel</span>
+        <span className="demo-card__cta demo-card__cta--disabled">Bekijk profiel</span>
       </div>
     </article>
   );
 }
 
-function PremiumPlaceholderCard() {
+function DemoListingPlaceholderCard({
+  badge,
+  photoLabel,
+  title,
+  subtitle,
+  showPrice = true,
+  cta = "Binnenkort zichtbaar",
+  ariaLabel,
+}: {
+  badge: string;
+  photoLabel: string;
+  title: string;
+  subtitle: string;
+  showPrice?: boolean;
+  cta?: string;
+  ariaLabel: string;
+}) {
   return (
-    <article className="demo-listing-card" aria-label="Premium plaats beschikbaar">
+    <article className="demo-listing-card" aria-label={ariaLabel}>
       <div className="demo-listing-card__media">
-        <DemoPhotoFrame label="Premium" />
+        <DemoPhotoFrame label={photoLabel} />
         <div className="demo-listing-card__badge-wrap">
-          <Badge variant="premium" className="demo-badge">PREMIUM</Badge>
+          <Badge variant="wine" className="demo-badge">
+            {badge}
+          </Badge>
         </div>
       </div>
       <div className="demo-listing-card__body">
-        <h3 className="demo-card__title">Premium profiel</h3>
-        <p className="demo-card__meta">Binnenkort zichtbaar</p>
-        <p className="demo-card__price">Vanaf € —</p>
-        <span className="demo-card__cta">Bekijk profiel</span>
+        <h3 className="demo-card__title">{title}</h3>
+        <p className="demo-card__meta">{subtitle}</p>
+        {showPrice && <p className="demo-card__price">Vanaf € —</p>}
+        <span className="demo-card__cta">{cta}</span>
       </div>
     </article>
+  );
+}
+
+function NearbyPlaceholderCard() {
+  return (
+    <DemoListingPlaceholderCard
+      badge="IN JOUW BUURT"
+      photoLabel="Buurt"
+      title="Profiel in jouw buurt"
+      subtitle="Profielen verschijnen zodra je locatie of stad actief is"
+      showPrice={false}
+      cta="Binnenkort zichtbaar"
+      ariaLabel="Buurt plaats beschikbaar"
+    />
+  );
+}
+
+function NieuwstePlaceholderCard() {
+  return (
+    <DemoListingPlaceholderCard
+      badge="NIEUW"
+      photoLabel="Nieuw"
+      title="Nieuw profiel"
+      subtitle="Binnenkort zichtbaar"
+      cta="Binnenkort zichtbaar"
+      ariaLabel="Nieuw profiel plaats beschikbaar"
+    />
+  );
+}
+
+function PremiumPlaceholderCard() {
+  return (
+    <DemoListingPlaceholderCard
+      badge="PREMIUM"
+      photoLabel="Premium"
+      title="Premium profiel"
+      subtitle="Binnenkort zichtbaar"
+      cta="Bekijk profiel"
+      ariaLabel="Premium plaats beschikbaar"
+    />
   );
 }
 
@@ -341,7 +399,7 @@ export function HomePremiumSection({ advertenties, fotos }: HomePremiumSectionPr
             ))}
           </div>
         ) : (
-          <div className="premium-placeholders">
+          <div className="premium-placeholders home-placeholders home-placeholders--4">
             {[0, 1, 2, 3].map((i) => (
               <PremiumPlaceholderCard key={i} />
             ))}
@@ -389,9 +447,11 @@ export function HomeNieuwsteSection({ advertenties, fotos }: HomeNieuwsteSection
             ))}
           </div>
         ) : (
-          <p className="home-listing-inline-empty">
-            Nieuwe profielen verschijnen hier zodra aanbieders publiceren.
-          </p>
+          <div className="home-placeholders home-placeholders--4">
+            {[0, 1, 2, 3].map((i) => (
+              <NieuwstePlaceholderCard key={i} />
+            ))}
+          </div>
         )}
       </div>
     </section>
@@ -561,7 +621,15 @@ export function AdvertentieCardHorizontal({
 
 const LOC_STORAGE_KEY = "veloura_user_location";
 
-export function HomeNearbyCompact() {
+interface HomeNearbyCompactProps {
+  advertenties?: Advertentie[];
+  fotos?: Map<string, string | undefined>;
+}
+
+export function HomeNearbyCompact({
+  advertenties = [],
+  fotos = new Map(),
+}: HomeNearbyCompactProps) {
   const [locatieActief, setLocatieActief] = useState(false);
   const [locatieLaden, setLocatieLaden] = useState(false);
   const [locatieFout, setLocatieFout] = useState<string | null>(null);
@@ -608,27 +676,25 @@ export function HomeNearbyCompact() {
   }
 
   return (
-    <section className="home-nearby-compact">
+    <section className="home-nearby-compact home-listing-block">
       <div className="container">
         <h2 className="home-listing-block__title">Advertenties in jouw buurt</h2>
         <p className="home-nearby-compact__text">
           Ontdek profielen dichtbij jou. Sta locatie toe voor relevantere resultaten.
         </p>
         <div className="home-nearby-compact__actions">
-          <Button
+          <button
             type="button"
-            size="sm"
-            variant="secondary"
-            className="gap-1.5"
+            className="home-locatie-btn"
             disabled={locatieLaden}
             onClick={vraagLocatie}
           >
-            <Navigation className="h-3.5 w-3.5" />
+            <Navigation className="h-3.5 w-3.5" aria-hidden />
             {locatieLaden ? "Locatie ophalen…" : "Gebruik mijn locatie"}
-          </Button>
+          </button>
           {locatieActief && (
-            <span className="nearby-toolbar__active">
-              <MapPin className="h-3.5 w-3.5" />
+            <span className="home-locatie-active">
+              <MapPin className="h-3.5 w-3.5" aria-hidden />
               Locatie actief
             </span>
           )}
@@ -637,9 +703,31 @@ export function HomeNearbyCompact() {
           </Link>
         </div>
         {locatieFout && (
-          <p className="nearby-toolbar__error" role="alert">
+          <p className="home-nearby-compact__error" role="alert">
             {locatieFout}
           </p>
+        )}
+
+        {advertenties.length > 0 ? (
+          <div className="listing-grid listing-grid--home mt-4">
+            {advertenties.map((advertentie) => (
+              <AdvertentieCard
+                key={advertentie.id}
+                advertentie={advertentie}
+                afbeeldingUrl={fotos.get(advertentie.id)}
+                theme="light"
+                premium
+                showPremium={heeftPremiumPlaatsing(advertentie)}
+                showOnline={advertentie.beschikbaar}
+              />
+            ))}
+          </div>
+        ) : (
+          <div className="home-placeholders home-placeholders--4 mt-4">
+            {[0, 1, 2, 3].map((i) => (
+              <NearbyPlaceholderCard key={i} />
+            ))}
+          </div>
         )}
       </div>
     </section>
