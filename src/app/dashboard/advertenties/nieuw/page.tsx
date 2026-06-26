@@ -29,9 +29,9 @@ export default async function NieuweAdvertentiePage() {
         </div>
       </div>
       <div className="container dashboard-page__body">
-        <div className="glass-panel mx-auto max-w-3xl p-5 sm:p-7">
-          <Suspense fallback={<p className="text-sm text-muted-foreground">Wizard laden…</p>}>
-            <AdvertentieWizard aanbiederId={user.id} />
+        <div className="dashboard-wizard-shell">
+          <Suspense fallback={<p className="text-sm text-[#a89a92]">Wizard laden…</p>}>
+            <AdvertentieWizard aanbiederId={user.id} dashboard />
           </Suspense>
         </div>
       </div>

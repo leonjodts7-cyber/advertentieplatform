@@ -9,17 +9,16 @@ const TABS = [
   { href: "/dashboard/advertenties", label: "Mijn advertenties", exact: false },
   { href: "/dashboard/advertenties/nieuw", label: "Nieuwe advertentie", exact: true },
   { href: "/dashboard/boosts", label: "Boosts", exact: true },
-  { href: "/dashboard#instellingen", label: "Instellingen", exact: false },
+  { href: "/dashboard/instellingen", label: "Instellingen", exact: true },
 ] as const;
 
 function isActive(pathname: string, href: string, exact: boolean) {
-  if (href === "/dashboard#instellingen") return false;
   if (exact) return pathname === href;
   if (href === "/dashboard/advertenties") {
     return (
       pathname === "/dashboard/advertenties" ||
-      pathname.startsWith("/dashboard/advertenties/") &&
-        !pathname.startsWith("/dashboard/advertenties/nieuw")
+      (pathname.startsWith("/dashboard/advertenties/") &&
+        !pathname.startsWith("/dashboard/advertenties/nieuw"))
     );
   }
   return pathname.startsWith(href);

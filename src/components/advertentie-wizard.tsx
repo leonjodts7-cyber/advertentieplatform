@@ -67,6 +67,7 @@ interface AdvertentieWizardProps {
   aanbiederId: string;
   advertentie?: Advertentie;
   bestaandeFotoUrls?: string[];
+  dashboard?: boolean;
 }
 
 function toggleItem(list: string[], value: string) {
@@ -82,6 +83,7 @@ export function AdvertentieWizard({
   aanbiederId,
   advertentie,
   bestaandeFotoUrls = [],
+  dashboard = false,
 }: AdvertentieWizardProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -182,6 +184,7 @@ export function AdvertentieWizard({
   useEffect(() => {
     const stapParam = searchParams.get("stap");
     if (stapParam === "promotie") setStap(6);
+    if (stapParam === "publiceren") setStap(7);
   }, [searchParams]);
 
   const validatieFouten = useMemo(() => {
@@ -407,7 +410,7 @@ export function AdvertentieWizard({
   const gekozenBoostTekst = boostSamenvatting(boostType, boostDuur);
 
   return (
-    <div className="wizard">
+    <div className={cn("wizard", dashboard && "wizard--dashboard")}>
       <div className="wizard__steps">
         {STAPPEN.map((label, i) => (
           <button

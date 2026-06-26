@@ -2,10 +2,8 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import type { Metadata } from "next";
 import { DashboardSubnav } from "@/components/dashboard-subnav";
-import { Button } from "@/components/ui/button";
 import {
   AUTO_BOOST_PRIJZEN,
-  BOOST_BESCHRIJVINGEN,
   BOOST_DUUR_OPTIES,
   BOOST_PRIJZEN,
   formatEuro,
@@ -53,7 +51,7 @@ export default async function DashboardBoostsPage() {
             const prijzen = BOOST_PRIJZEN[sectie.type];
 
             return (
-              <div key={sectie.type} className="boost-plan-card boost-plan-card--light">
+              <div key={sectie.type} className="boost-plan-card">
                 <h2 className="boost-plan-card__title">{sectie.title}</h2>
                 <p className="boost-plan-card__desc">{sectie.desc}</p>
                 <ul className="boost-plan-card__prices">
@@ -66,14 +64,14 @@ export default async function DashboardBoostsPage() {
                     </li>
                   ))}
                 </ul>
-                <Button type="button" variant="secondary" className="w-full" disabled>
+                <button type="button" className="dashboard-btn dashboard-btn--secondary w-full" disabled>
                   Binnenkort betalen
-                </Button>
+                </button>
               </div>
             );
           })}
 
-          <div className="boost-plan-card boost-plan-card--light">
+          <div className="boost-plan-card">
             <h2 className="boost-plan-card__title">Auto Boost</h2>
             <p className="boost-plan-card__desc">
               Automatisch extra zichtbaarheid op drukke momenten.
@@ -92,21 +90,22 @@ export default async function DashboardBoostsPage() {
                 </span>
               </li>
             </ul>
-            <Button type="button" variant="secondary" className="w-full" disabled>
+            <button type="button" className="dashboard-btn dashboard-btn--secondary w-full" disabled>
               Binnenkort betalen
-            </Button>
+            </button>
           </div>
         </div>
 
-        <div className="mt-6 flex flex-wrap gap-3">
-          <Button asChild variant="primary">
-            <Link href="/dashboard/advertenties/nieuw?stap=promotie">
-              Boost instellen via advertentie
-            </Link>
-          </Button>
-          <Button asChild variant="secondary">
-            <Link href="/dashboard/advertenties">Mijn advertenties</Link>
-          </Button>
+        <div className="dashboard-quick-actions mt-4">
+          <Link
+            href="/dashboard/advertenties/nieuw?stap=promotie"
+            className="dashboard-btn dashboard-btn--primary"
+          >
+            Boost instellen via advertentie
+          </Link>
+          <Link href="/dashboard/advertenties" className="dashboard-btn dashboard-btn--secondary">
+            Mijn advertenties
+          </Link>
         </div>
       </div>
     </div>

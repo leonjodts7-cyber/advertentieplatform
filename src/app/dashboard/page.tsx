@@ -2,7 +2,6 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import type { Metadata } from "next";
 import { DashboardSubnav } from "@/components/dashboard-subnav";
-import { Button } from "@/components/ui/button";
 import type { Advertentie } from "@/lib/types";
 import { haalAiLoungeStats } from "@/lib/ai/queries";
 import { createClient } from "@/lib/supabase/server";
@@ -85,93 +84,105 @@ export default async function DashboardPage() {
 
       <div className="container dashboard-page__body">
         <div className="dashboard-quick-actions">
-          <Button asChild variant="primary" size="sm">
-            <Link href="/dashboard/advertenties/nieuw">Nieuwe advertentie</Link>
-          </Button>
-          <Button asChild variant="secondary" size="sm">
-            <Link href="/dashboard/advertenties">Mijn advertenties</Link>
-          </Button>
-          <Button asChild variant="secondary" size="sm">
-            <Link href="/dashboard/boosts">Boost kopen</Link>
-          </Button>
-          <Button asChild variant="secondary" size="sm">
-            <Link href="/dashboard/advertenties/nieuw">Profiel verbeteren</Link>
-          </Button>
+          <Link href="/dashboard/advertenties/nieuw" className="dashboard-btn dashboard-btn--primary">
+            Nieuwe advertentie
+          </Link>
+          <Link href="/dashboard/advertenties" className="dashboard-btn dashboard-btn--secondary">
+            Mijn advertenties
+          </Link>
+          <Link href="/dashboard/boosts" className="dashboard-btn dashboard-btn--secondary">
+            Boost kopen
+          </Link>
+          <Link
+            href="/dashboard/advertenties/nieuw"
+            className="dashboard-btn dashboard-btn--outline"
+          >
+            Profiel verbeteren
+          </Link>
         </div>
 
-        <section className="dashboard-panel">
-          <h2 className="dashboard-panel__title">Jouw advertenties</h2>
-          <div className="dashboard-mini-grid">
-            <div className="dashboard-mini-stat">
-              <span className="dashboard-mini-stat__label">Totaal</span>
-              <span className="dashboard-mini-stat__value">{totaal}</span>
+        <div className="dashboard-panels">
+          <section className="dashboard-panel">
+            <h2 className="dashboard-panel__title">Jouw advertenties</h2>
+            <div className="dashboard-mini-grid">
+              <div className="dashboard-mini-stat">
+                <span className="dashboard-mini-stat__label">Totaal</span>
+                <span className="dashboard-mini-stat__value">{totaal}</span>
+              </div>
+              <div className="dashboard-mini-stat">
+                <span className="dashboard-mini-stat__label">Actief</span>
+                <span className="dashboard-mini-stat__value dashboard-mini-stat__value--success">
+                  {actief}
+                </span>
+              </div>
+              <div className="dashboard-mini-stat">
+                <span className="dashboard-mini-stat__label">Concept</span>
+                <span className="dashboard-mini-stat__value">{concept}</span>
+              </div>
+              <div className="dashboard-mini-stat">
+                <span className="dashboard-mini-stat__label">Premium actief</span>
+                <span className="dashboard-mini-stat__value">{premiumActief}</span>
+              </div>
             </div>
-            <div className="dashboard-mini-stat">
-              <span className="dashboard-mini-stat__label">Actief</span>
-              <span className="dashboard-mini-stat__value text-success">{actief}</span>
-            </div>
-            <div className="dashboard-mini-stat">
-              <span className="dashboard-mini-stat__label">Concept</span>
-              <span className="dashboard-mini-stat__value">{concept}</span>
-            </div>
-            <div className="dashboard-mini-stat">
-              <span className="dashboard-mini-stat__label">Premium actief</span>
-              <span className="dashboard-mini-stat__value">{premiumActief}</span>
-            </div>
-          </div>
-        </section>
+          </section>
 
-        <section className="dashboard-panel">
-          <h2 className="dashboard-panel__title">Zichtbaarheid</h2>
-          <div className="dashboard-mini-grid">
-            <div className="dashboard-mini-stat">
-              <span className="dashboard-mini-stat__label">Actieve boosts</span>
-              <span className="dashboard-mini-stat__value">{actieveBoosts}</span>
+          <section className="dashboard-panel">
+            <h2 className="dashboard-panel__title">Zichtbaarheid</h2>
+            <div className="dashboard-mini-grid dashboard-mini-grid--3">
+              <div className="dashboard-mini-stat">
+                <span className="dashboard-mini-stat__label">Actieve boosts</span>
+                <span className="dashboard-mini-stat__value">{actieveBoosts}</span>
+              </div>
+              <div className="dashboard-mini-stat">
+                <span className="dashboard-mini-stat__label">Premium dagen</span>
+                <span className="dashboard-mini-stat__value">
+                  {premiumDagen > 0 ? premiumDagen : "—"}
+                </span>
+              </div>
+              <div className="dashboard-mini-stat">
+                <span className="dashboard-mini-stat__label">Credits</span>
+                <span className="dashboard-mini-stat__value">{aiStats.resterendeCredits}</span>
+              </div>
             </div>
-            <div className="dashboard-mini-stat">
-              <span className="dashboard-mini-stat__label">Premium dagen</span>
-              <span className="dashboard-mini-stat__value">{premiumDagen > 0 ? premiumDagen : "—"}</span>
-            </div>
-            <div className="dashboard-mini-stat">
-              <span className="dashboard-mini-stat__label">Credits</span>
-              <span className="dashboard-mini-stat__value">{aiStats.resterendeCredits}</span>
-            </div>
-          </div>
-        </section>
+          </section>
 
-        <section className="dashboard-panel">
-          <h2 className="dashboard-panel__title">Prestaties</h2>
-          <div className="dashboard-mini-grid">
-            <div className="dashboard-mini-stat">
-              <span className="dashboard-mini-stat__label">Views</span>
-              <span className="dashboard-mini-stat__value">0</span>
+          <section className="dashboard-panel">
+            <h2 className="dashboard-panel__title">Prestaties</h2>
+            <div className="dashboard-mini-grid dashboard-mini-grid--3">
+              <div className="dashboard-mini-stat">
+                <span className="dashboard-mini-stat__label">Views</span>
+                <span className="dashboard-mini-stat__value">0</span>
+              </div>
+              <div className="dashboard-mini-stat">
+                <span className="dashboard-mini-stat__label">Contactkliks</span>
+                <span className="dashboard-mini-stat__value">0</span>
+              </div>
+              <div className="dashboard-mini-stat">
+                <span className="dashboard-mini-stat__label">WhatsApp-kliks</span>
+                <span className="dashboard-mini-stat__value">0</span>
+              </div>
             </div>
-            <div className="dashboard-mini-stat">
-              <span className="dashboard-mini-stat__label">Contactkliks</span>
-              <span className="dashboard-mini-stat__value">0</span>
-            </div>
-            <div className="dashboard-mini-stat">
-              <span className="dashboard-mini-stat__label">WhatsApp-kliks</span>
-              <span className="dashboard-mini-stat__value">0</span>
-            </div>
-          </div>
-        </section>
+          </section>
 
-        <section className="dashboard-panel">
-          <h2 className="dashboard-panel__title">Verbeter je profiel</h2>
-          <ul className="dashboard-tips">
-            {PROFIEL_TIPS.map((tip) => (
-              <li key={tip}>{tip}</li>
-            ))}
-          </ul>
-        </section>
+          <section className="dashboard-panel">
+            <h2 className="dashboard-panel__title">Verbeter je profiel</h2>
+            <ul className="dashboard-tips">
+              {PROFIEL_TIPS.map((tip) => (
+                <li key={tip}>{tip}</li>
+              ))}
+            </ul>
+          </section>
 
-        <section id="instellingen" className="dashboard-panel">
-          <h2 className="dashboard-panel__title">Instellingen</h2>
-          <p className="dashboard-panel__text">
-            Account- en profielinstellingen komen binnenkort beschikbaar.
-          </p>
-        </section>
+          <section className="dashboard-panel dashboard-panel--full">
+            <h2 className="dashboard-panel__title">Instellingen</h2>
+            <p className="dashboard-panel__text">
+              Beheer account, profiel en publicatievoorkeuren.
+            </p>
+            <Link href="/dashboard/instellingen" className="dashboard-btn dashboard-btn--secondary dashboard-btn--sm mt-3">
+              Naar instellingen
+            </Link>
+          </section>
+        </div>
       </div>
     </div>
   );

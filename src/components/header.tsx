@@ -44,6 +44,9 @@ export function Header({ user }: HeaderProps) {
               <Link href="/dashboard/boosts" className={navLinkClass}>
                 Boosts
               </Link>
+              <Link href="/dashboard/instellingen" className={navLinkClass}>
+                Instellingen
+              </Link>
             </>
           )}
         </nav>
@@ -75,9 +78,14 @@ export function Header({ user }: HeaderProps) {
               AI
             </Link>
             {user && (
-              <Link href="/dashboard" className={mobileLinkClass}>
-                Dashboard
-              </Link>
+              <>
+                <Link href="/dashboard" className={mobileLinkClass}>
+                  Dashboard
+                </Link>
+                <Link href="/dashboard/instellingen" className={mobileLinkClass}>
+                  Instellingen
+                </Link>
+              </>
             )}
             {!user && (
               <Link href="/login" className={mobileLinkClass}>

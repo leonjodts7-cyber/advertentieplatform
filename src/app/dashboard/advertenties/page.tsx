@@ -3,7 +3,6 @@ import { redirect } from "next/navigation";
 import type { Metadata } from "next";
 import { DashboardAdvertentieCard } from "@/components/advertentie-card";
 import { DashboardSubnav } from "@/components/dashboard-subnav";
-import { Button } from "@/components/ui/button";
 import { haalEersteFotos } from "@/lib/advertentie-fotos";
 import type { Advertentie } from "@/lib/types";
 import { createClient } from "@/lib/supabase/server";
@@ -37,20 +36,26 @@ export default async function DashboardAdvertentiesPage() {
       <div className="dashboard-page__header">
         <div className="container">
           <DashboardSubnav />
-          <div className="mt-3 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+          <div className="mt-2 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
             <div>
               <h1 className="dashboard-page__title">Mijn advertenties</h1>
               <p className="dashboard-page__subtitle">
                 Concept · In beoordeling · Actief
               </p>
             </div>
-            <div className="flex flex-wrap gap-2">
-              <Button asChild variant="primary" size="sm">
-                <Link href="/dashboard/advertenties/nieuw">Nieuwe advertentie</Link>
-              </Button>
-              <Button asChild variant="secondary" size="sm">
-                <Link href="/dashboard/boosts">Boost kopen</Link>
-              </Button>
+            <div className="dashboard-quick-actions !mb-0">
+              <Link
+                href="/dashboard/advertenties/nieuw"
+                className="dashboard-btn dashboard-btn--primary dashboard-btn--sm"
+              >
+                Nieuwe advertentie
+              </Link>
+              <Link
+                href="/dashboard/boosts"
+                className="dashboard-btn dashboard-btn--secondary dashboard-btn--sm"
+              >
+                Boost kopen
+              </Link>
             </div>
           </div>
         </div>
@@ -58,7 +63,7 @@ export default async function DashboardAdvertentiesPage() {
 
       <div className="container dashboard-page__body">
         {advertenties.length > 0 ? (
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="dashboard-grid--ads">
             {advertenties.map((advertentie) => (
               <DashboardAdvertentieCard
                 key={advertentie.id}
@@ -68,20 +73,18 @@ export default async function DashboardAdvertentiesPage() {
             ))}
           </div>
         ) : (
-          <div className="velvet-card p-8 text-center sm:p-12">
-            <p className="font-display text-xl text-foreground">
-              Nog geen advertenties
-            </p>
-            <p className="mt-2 text-sm text-muted-foreground">
+          <div className="dashboard-empty-state">
+            <p className="dashboard-empty-state__title">Nog geen advertenties</p>
+            <p className="dashboard-empty-state__text">
               Start met je eerste profiel als aanbieder op Veloura.
             </p>
-            <div className="mt-5 flex flex-wrap justify-center gap-2">
-              <Button asChild variant="primary">
-                <Link href="/dashboard/advertenties/nieuw">Nieuwe advertentie</Link>
-              </Button>
-              <Button asChild variant="secondary">
-                <Link href="/dashboard/boosts">Boost kopen</Link>
-              </Button>
+            <div className="dashboard-empty-state__actions">
+              <Link href="/dashboard/advertenties/nieuw" className="dashboard-btn dashboard-btn--primary">
+                Nieuwe advertentie
+              </Link>
+              <Link href="/dashboard/boosts" className="dashboard-btn dashboard-btn--secondary">
+                Boost kopen
+              </Link>
             </div>
           </div>
         )}

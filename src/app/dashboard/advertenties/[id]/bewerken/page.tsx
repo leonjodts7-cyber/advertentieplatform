@@ -42,23 +42,24 @@ export default async function BewerkAdvertentiePage({ params }: BewerkAdvertenti
   const bestaandeFotoUrls = (fotosRaw ?? []).map((f) => f.url);
 
   return (
-    <div>
-      <div className="page-header-band">
+    <div className="dashboard-page">
+      <div className="dashboard-page__header">
         <div className="container">
           <DashboardSubnav />
-          <h1 className="section-title mt-4">Advertentie bewerken</h1>
-          <p className="section-subtitle mt-2">
+          <h1 className="dashboard-page__title">Advertentie bewerken</h1>
+          <p className="dashboard-page__subtitle">
             Pas alle profielgegevens, media en zichtbaarheid aan.
           </p>
         </div>
       </div>
-      <div className="container py-8 sm:py-10">
-        <div className="glass-panel mx-auto max-w-3xl p-6 sm:p-8">
-          <Suspense fallback={<p className="text-sm text-muted-foreground">Wizard laden…</p>}>
+      <div className="container dashboard-page__body">
+        <div className="dashboard-wizard-shell">
+          <Suspense fallback={<p className="text-sm text-[#a89a92]">Wizard laden…</p>}>
             <AdvertentieWizard
               aanbiederId={user.id}
               advertentie={advertentie}
               bestaandeFotoUrls={bestaandeFotoUrls}
+              dashboard
             />
           </Suspense>
         </div>
