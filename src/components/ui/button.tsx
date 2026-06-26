@@ -18,27 +18,27 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 const variantClasses: Record<NonNullable<ButtonProps["variant"]>, string> = {
   primary:
-    "bg-gradient-to-r from-[#4a1d2f] via-[#7b2f49] to-[#b87955] text-[#fff6ef] border border-[#d6b36b]/22 shadow-sm hover:brightness-[1.04] hover:shadow-warm-glow",
+    "bg-gradient-to-r from-[var(--wine)] via-[#8f3a52] to-[var(--bronze)] text-[var(--text-main)] border border-[var(--gold)]/25 shadow-[0_2px_10px_rgba(123,41,70,0.28)] hover:brightness-[1.06] hover:shadow-[0_4px_16px_rgba(123,41,70,0.35)]",
   premium:
-    "bg-gradient-to-r from-[#4a1d2f] to-[#7b2f49] text-[#fff6ef] border border-[#9d4963]/35 hover:brightness-105",
+    "bg-gradient-to-r from-[var(--wine-deep)] to-[var(--wine)] text-[var(--text-main)] border border-[var(--wine)]/40 hover:brightness-105",
   rose:
-    "bg-[#7b2f49] text-[#fff6ef] border border-[#9d4963]/40 hover:bg-[#8a3a55]",
+    "bg-[var(--wine)] text-[var(--text-main)] border border-[var(--rose-wine)]/40 hover:bg-[#8f3450]",
   secondary:
-    "bg-white/[0.06] text-[#fff6ef] border border-white/[0.14] hover:bg-white/[0.1] hover:border-[#d6b36b]/28",
+    "bg-[var(--panel-soft)] text-[var(--text-main)] border border-[var(--border-soft)] hover:bg-[#3a2d34] hover:border-[var(--gold)]/28",
   "secondary-light":
-    "bg-[#fffaf6] text-[#24191f] border border-[#e6d8cf] hover:border-[#7b2f49]/28 hover:bg-[#f4ede7]",
+    "bg-[var(--cream-card)] text-[var(--text-dark)] border border-[#e0d4ca] hover:border-[var(--wine)]/35 hover:bg-[var(--cream)]",
   ghost:
-    "bg-transparent text-[#c2b4ab] border border-transparent hover:bg-white/[0.05] hover:text-[#fff6ef]",
+    "bg-transparent text-[var(--text-muted)] border border-transparent hover:bg-white/[0.06] hover:text-[var(--text-main)]",
   danger:
-    "bg-[#8b3040] text-[#fff6ef] border border-[#8b3040]/40 hover:opacity-90",
+    "bg-[var(--danger)] text-[var(--text-main)] border border-[var(--danger)]/40 hover:opacity-90",
   outline:
-    "border border-white/[0.14] bg-transparent text-[#fff6ef] hover:bg-white/[0.05] hover:border-[#d6b36b]/28",
+    "border border-[var(--gold)]/35 bg-transparent text-[var(--text-main)] hover:bg-[var(--gold)]/10 hover:border-[var(--gold)]/50",
 };
 
 const sizeClasses: Record<NonNullable<ButtonProps["size"]>, string> = {
-  sm: "h-8 min-h-[32px] px-3 text-xs",
-  md: "h-9 min-h-[36px] px-4 text-sm",
-  lg: "h-10 min-h-[40px] px-5 text-sm",
+  sm: "min-h-[44px] h-11 px-3.5 text-xs",
+  md: "min-h-[44px] h-11 px-4 text-sm",
+  lg: "min-h-[44px] h-11 px-5 text-sm",
 };
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
@@ -62,9 +62,9 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         type={asChild ? undefined : type}
         disabled={disabled}
         className={cn(
-          "inline-flex items-center justify-center gap-2 rounded-full font-medium tracking-wide transition-all duration-200",
-          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d6b36b]/40 focus-visible:ring-offset-2 focus-visible:ring-offset-[#1b1519]",
-          "disabled:pointer-events-none disabled:opacity-50",
+          "inline-flex items-center justify-center gap-2 rounded-full font-semibold tracking-wide transition-all duration-200",
+          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--gold)]/45 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background-dark)]",
+          "disabled:pointer-events-none disabled:opacity-55 disabled:bg-[var(--panel-soft)] disabled:text-[var(--text-muted)] disabled:border-[var(--border-soft)] disabled:shadow-none disabled:from-transparent disabled:to-transparent",
           "active:scale-[0.98]",
           variantClasses[variant],
           sizeClasses[size],

@@ -39,9 +39,6 @@ export default async function DashboardInstellingenPage() {
         <div className="dashboard-settings-stack">
           <section className="dashboard-settings-section">
             <h2 className="dashboard-settings-section__title">Account</h2>
-            <p className="dashboard-settings-section__desc">
-              Jouw inloggegevens en accountstatus.
-            </p>
             <div className="dashboard-settings-row">
               <span className="dashboard-settings-row__label">E-mailadres</span>
               <span className="dashboard-settings-row__value">{email}</span>
@@ -54,63 +51,49 @@ export default async function DashboardInstellingenPage() {
 
           <section className="dashboard-settings-section">
             <h2 className="dashboard-settings-section__title">Profielvoorkeuren</h2>
-            <p className="dashboard-settings-section__desc">
-              Standaardwaarden voor nieuwe advertenties.
-            </p>
             <div className="dashboard-settings-row">
               <span className="dashboard-settings-row__label">Standaard stad</span>
               <span className="dashboard-settings-row__placeholder">Nog niet ingesteld</span>
             </div>
             <div className="dashboard-settings-row">
               <span className="dashboard-settings-row__label">Standaard taal</span>
-              <span className="dashboard-settings-row__placeholder">Nederlands</span>
+              <span className="dashboard-settings-row__value">Nederlands</span>
             </div>
             <div className="dashboard-settings-row">
               <span className="dashboard-settings-row__label">Meldingen</span>
-              <span className="dashboard-settings-row__placeholder">Binnenkort beschikbaar</span>
+              <span className="dashboard-settings-row__placeholder">Binnenkort</span>
             </div>
           </section>
 
           <section className="dashboard-settings-section">
             <h2 className="dashboard-settings-section__title">Veiligheid</h2>
-            <p className="dashboard-settings-section__desc">
-              Beheer toegang tot jouw account.
-            </p>
             <div className="dashboard-settings-row">
               <span className="dashboard-settings-row__label">Wachtwoord wijzigen</span>
-              <span className="dashboard-settings-row__placeholder">Binnenkort beschikbaar</span>
+              <span className="dashboard-settings-row__placeholder">Binnenkort</span>
             </div>
-            <div className="dashboard-settings-row">
-              <span className="dashboard-settings-row__label">Uitloggen</span>
+            <div className="dashboard-settings-logout">
               <UitloggenKnop />
             </div>
           </section>
 
           <section className="dashboard-settings-section">
-            <h2 className="dashboard-settings-section__title">Publicatie-instellingen</h2>
-            <p className="dashboard-settings-section__desc">
-              Hoe jouw advertenties worden opgeslagen en gepubliceerd.
-            </p>
+            <h2 className="dashboard-settings-section__title">Publicatie</h2>
             <div className="dashboard-settings-row">
               <span className="dashboard-settings-row__label">Standaard status</span>
-              <span className="dashboard-settings-row__value">Concept of direct publiceren</span>
+              <span className="dashboard-settings-row__value">Concept of publiceren</span>
             </div>
-            <p className="dashboard-panel__text mt-2">
-              Concepten zijn alleen zichtbaar voor jou. Na publiceren verschijnt je profiel
-              als actieve advertentie op Veloura.
+            <p className="dashboard-settings-note">
+              Concepten zijn alleen zichtbaar voor jou. Na publiceren verschijnt je profiel live.
             </p>
             <div className="dashboard-settings-row">
               <span className="dashboard-settings-row__label">Verificatie</span>
-              <span className="dashboard-settings-row__placeholder">Binnenkort beschikbaar</span>
+              <span className="dashboard-settings-row__placeholder">Binnenkort</span>
             </div>
           </section>
 
-          <div className="dashboard-quick-actions">
+          <div className="dashboard-quick-actions dashboard-quick-actions--footer">
             <Link href="/dashboard" className="dashboard-btn dashboard-btn--secondary">
               Terug naar overzicht
-            </Link>
-            <Link href="/dashboard/advertenties" className="dashboard-btn dashboard-btn--outline">
-              Mijn advertenties
             </Link>
           </div>
         </div>

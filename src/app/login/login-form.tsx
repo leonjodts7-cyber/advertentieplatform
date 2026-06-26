@@ -426,7 +426,7 @@ export function LoginForm() {
                   variant="light"
                   required
                   autoComplete="current-password"
-                  placeholder="••••••••"
+                  placeholder=""
                   value={wachtwoord}
                   onChange={(e) => setWachtwoord(e.target.value)}
                 />
@@ -472,7 +472,7 @@ export function LoginForm() {
                   variant="light"
                   required
                   autoComplete="new-password"
-                  placeholder="Minimaal 8 tekens"
+                  placeholder=""
                   minLength={8}
                   value={wachtwoord}
                   onChange={(e) => setWachtwoord(e.target.value)}
@@ -488,7 +488,7 @@ export function LoginForm() {
                   variant="light"
                   required
                   autoComplete="new-password"
-                  placeholder="Herhaal wachtwoord"
+                  placeholder=""
                   minLength={8}
                   value={wachtwoordBevestig}
                   onChange={(e) => setWachtwoordBevestig(e.target.value)}

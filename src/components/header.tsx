@@ -8,32 +8,29 @@ interface HeaderProps {
 }
 
 const navLinkClass =
-  "rounded-full px-2 py-0.5 text-[0.8125rem] text-[var(--muted-light)] transition-colors hover:bg-white/[0.06] hover:text-[var(--text-light)] whitespace-nowrap";
-
-const mobileLinkClass =
-  "rounded-full px-1.5 py-1 text-[0.6875rem] text-[var(--muted-light)] hover:text-[var(--text-light)] sm:text-xs whitespace-nowrap";
+  "header-nav-link rounded-full px-2.5 py-1.5 text-[0.8125rem] font-medium text-[var(--text-muted)] transition-colors hover:bg-white/[0.06] hover:text-[var(--text-main)] whitespace-nowrap shrink-0";
 
 export function Header({ user }: HeaderProps) {
   return (
     <header className="glass-nav sticky top-0 z-50">
-      <div className="container header-inner header-inner--balanced h-9 sm:h-10">
+      <div className="container header-shell">
         <Link
           href="/"
-          className="header-brand min-w-0 shrink-0 rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--champagne)]/30"
+          className="header-brand shrink-0 rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--gold)]/35"
         >
-          <span className="font-display text-[0.9375rem] font-medium tracking-tight text-[var(--text-light)] sm:text-base">
+          <span className="font-display text-[0.9375rem] font-medium tracking-tight text-[var(--text-main)] sm:text-base">
             Veloura
           </span>
         </Link>
 
-        <nav className="header-nav-center hidden items-center gap-0.5 lg:flex">
+        <nav className="header-nav-scroll" aria-label="Hoofdnavigatie">
           <Link href="/zoeken" className={navLinkClass}>
             Zoeken
           </Link>
           <Link href="/ai-lounge" className={navLinkClass}>
             AI Lounge
           </Link>
-          {user && (
+          {user ? (
             <>
               <Link href="/dashboard" className={navLinkClass}>
                 Dashboard
@@ -47,58 +44,37 @@ export function Header({ user }: HeaderProps) {
               <Link href="/dashboard/instellingen" className={navLinkClass}>
                 Instellingen
               </Link>
+              <span className="header-nav-scroll__mobile-only">
+                <UitloggenKnop compact />
+              </span>
             </>
+          ) : (
+            <Link href="/login" className={navLinkClass}>
+              Login
+            </Link>
           )}
+          <Link
+            href="/dashboard/advertenties/nieuw"
+            className="header-nav-link header-nav-link--cta header-nav-scroll__mobile-only rounded-full px-2.5 py-1.5 text-[0.8125rem] font-semibold whitespace-nowrap shrink-0"
+          >
+            Plaats advertentie
+          </Link>
         </nav>
 
-        <div className="header-actions header-actions--balanced">
-          <div className="hidden items-center gap-1.5 lg:flex">
-            {user ? (
+        <div className="header-cta-group">
+          {user && (
+            <span className="header-cta-group__desktop-only">
               <UitloggenKnop />
-            ) : (
-              <Link href="/login" className={navLinkClass}>
-                Login
-              </Link>
-            )}
-            <Button
-              asChild
-              size="sm"
-              variant="primary"
-              className="h-7 min-h-0 shrink-0 px-2.5 text-[0.6875rem] sm:text-xs"
-            >
-              <Link href="/dashboard/advertenties/nieuw">Plaats advertentie</Link>
-            </Button>
-          </div>
-
-          <div className="flex min-w-0 items-center gap-1 lg:hidden">
-            <Link href="/zoeken" className={mobileLinkClass}>
-              Zoeken
-            </Link>
-            <Link href="/ai-lounge" className={mobileLinkClass}>
-              AI
-            </Link>
-            {user && (
-              <>
-                <Link href="/dashboard" className={mobileLinkClass}>
-                  Dashboard
-                </Link>
-                <Link href="/dashboard/instellingen" className={mobileLinkClass}>
-                  Instellingen
-                </Link>
-              </>
-            )}
-            {!user && (
-              <Link href="/login" className={mobileLinkClass}>
-                Login
-              </Link>
-            )}
-            <Link
-              href="/dashboard/advertenties/nieuw"
-              className="rounded-full px-2 py-1 text-[0.6875rem] font-medium text-[var(--champagne)] hover:text-[var(--text-light)] sm:text-xs whitespace-nowrap"
-            >
-              Plaatsen
-            </Link>
-          </div>
+            </span>
+          )}
+          <Button
+            asChild
+            size="sm"
+            variant="primary"
+            className="header-cta-group__desktop-only shrink-0"
+          >
+            <Link href="/dashboard/advertenties/nieuw">Plaats advertentie</Link>
+          </Button>
         </div>
       </div>
     </header>

@@ -38,8 +38,8 @@ const variantClasses = {
 };
 
 const sizeClasses = {
-  default: "h-10 min-h-[40px] px-3.5 py-2",
-  compact: "h-9 min-h-[36px] px-3 py-1.5 text-sm",
+  default: "h-11 min-h-[44px] px-3.5 py-2",
+  compact: "h-11 min-h-[44px] px-3 py-1.5 text-sm",
 };
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(

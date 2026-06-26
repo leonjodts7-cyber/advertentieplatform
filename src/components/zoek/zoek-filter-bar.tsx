@@ -21,6 +21,7 @@ import {
   type ZoekFilterValues,
 } from "@/lib/zoek-filters";
 import { Sparkles } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 const AI_VOORBEELDEN = [
   "Blonde escort in Antwerpen onder €200",
@@ -290,14 +291,20 @@ export function ZoekFilterBar() {
           <div className="zoek-filter-bar__meta">
             <button
               type="button"
-              className="zoek-filter-bar__extend-btn"
+              className={cn(
+                "zoek-filter-bar__extend-btn",
+                extendedOpen && "zoek-filter-bar__extend-btn--active"
+              )}
               onClick={() => setExtendedOpen(true)}
             >
               Filters
             </button>
             <button
               type="button"
-              className="zoek-filter-bar__ai-link"
+              className={cn(
+                "zoek-filter-bar__ai-link",
+                aiOpen && "zoek-filter-bar__ai-link--active"
+              )}
               onClick={() => setAiOpen(true)}
             >
               AI zoeken
