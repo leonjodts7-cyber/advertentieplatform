@@ -28,7 +28,6 @@ export function AiLoungeHomeSection() {
               key={companion.id}
               companion={companion}
               ingelogd
-              compact
             />
           ))}
         </div>

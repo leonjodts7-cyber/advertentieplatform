@@ -31,34 +31,23 @@ export function Header({ user }: HeaderProps) {
             AI Lounge
           </Link>
           {user ? (
-            <>
-              <Link href="/dashboard" className={navLinkClass}>
-                Dashboard
-              </Link>
-              <Link href="/dashboard/advertenties" className={navLinkClass}>
-                Mijn advertenties
-              </Link>
-              <Link href="/dashboard/boosts" className={navLinkClass}>
-                Boosts
-              </Link>
-              <Link href="/dashboard/instellingen" className={navLinkClass}>
-                Instellingen
-              </Link>
-              <span className="header-nav-scroll__mobile-only">
-                <UitloggenKnop compact />
-              </span>
-            </>
+            <Link href="/dashboard" className={navLinkClass}>
+              Dashboard
+            </Link>
           ) : (
             <Link href="/login" className={navLinkClass}>
               Login
             </Link>
           )}
-          <Link
-            href="/dashboard/advertenties/nieuw"
-            className="header-nav-link header-nav-link--cta header-nav-scroll__mobile-only rounded-full px-2.5 py-1.5 text-[0.8125rem] font-semibold whitespace-nowrap shrink-0"
-          >
-            Plaats advertentie
-          </Link>
+          <span className="header-nav-scroll__mobile-only flex items-center gap-1">
+            {user && <UitloggenKnop compact />}
+            <Link
+              href="/dashboard/advertenties/nieuw"
+              className="header-nav-link header-nav-link--cta rounded-full px-2.5 py-1.5 text-[0.8125rem] font-semibold whitespace-nowrap shrink-0"
+            >
+              Plaatsen
+            </Link>
+          </span>
         </nav>
 
         <div className="header-cta-group">

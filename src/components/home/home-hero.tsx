@@ -10,10 +10,11 @@ export function HomeHeroCompact() {
               Vind discrete profielen in jouw regio
             </h1>
             <p className="home-hero-compact__subtitle">
-              Zoek snel op regio, categorie en voorkeuren.
+              Zoek snel op regio, categorie en voorkeuren. Discreet, premium en
+              alleen 18+.
             </p>
             <p className="home-hero-compact__trust">
-              Alleen 18+ · Discreet · Geverifieerde profielen
+              Geverifieerde profielen · Discreet contact · Premium listings
             </p>
           </div>
           <div className="home-hero-compact__search">

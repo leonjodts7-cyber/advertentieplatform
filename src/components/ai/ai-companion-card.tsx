@@ -9,68 +9,65 @@ import { MessageCircle } from "lucide-react";
 interface AiCompanionCardProps {
   companion: AiCompanion;
   ingelogd?: boolean;
-  compact?: boolean;
 }
 
 export function AiCompanionCard({
   companion,
   ingelogd = false,
-  compact = false,
 }: AiCompanionCardProps) {
   return (
-    <article className="profile-card group overflow-hidden transition-all duration-300 hover:-translate-y-0.5 hover:shadow-warm-glow">
-      <div className="relative">
+    <article className="ai-companion-card group">
+      <div className="ai-companion-card__media">
         <ProfilePhotoPlaceholder
           variant={companion.photoVariant as ProfilePhotoVariant}
+          aspect="cover"
+          className="!aspect-auto h-full min-h-[7.5rem] w-full"
         />
-        <div className="absolute inset-x-0 top-0 flex flex-wrap gap-1.5 p-3">
-          <Badge variant="online">
+        <div className="ai-companion-card__badges">
+          <Badge variant="online" className="text-[0.5625rem]">
             <span className="mr-1 inline-block h-1.5 w-1.5 animate-pulse rounded-full bg-success" />
             Online
           </Badge>
-          <Badge variant="fictief">Fictief 21+</Badge>
-          <Badge variant="credits">{companion.kostenPerBericht} credits</Badge>
-        </div>
-        <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[#141014]/95 via-[#141014]/55 to-transparent p-4 pt-14">
-          <p className="font-display text-xl font-medium text-foreground">
-            {companion.naam}
-            <span className="ml-2 text-base font-normal text-soft-champagne">
-              {companion.leeftijd}
-            </span>
-          </p>
-          <p className="mt-0.5 text-sm text-champagne/90">{companion.type}</p>
+          <Badge variant="fictief" className="text-[0.5625rem]">
+            Fictief 21+
+          </Badge>
         </div>
       </div>
 
-      {!compact && (
-        <div className="flex flex-col gap-3 p-4">
-          <p className="text-sm leading-relaxed text-muted-foreground">
-            {companion.beschrijving}
-          </p>
-          {ingelogd ? (
-            <Button asChild className="w-full gap-2">
-              <Link href={`/ai/${companion.id}`}>
-                <MessageCircle className="h-4 w-4" />
-                Start gesprek
-              </Link>
-            </Button>
-          ) : (
-            <Button asChild variant="secondary" className="w-full">
-              <Link href={`/login?redirect=/ai/${companion.id}`}>
-                Inloggen om te chatten
-              </Link>
-            </Button>
-          )}
+      <div className="ai-companion-card__body">
+        <div className="ai-companion-card__head">
+          <h2 className="ai-companion-card__name">
+            {companion.naam}
+            <span className="ai-companion-card__age">{companion.leeftijd}</span>
+          </h2>
+          <p className="ai-companion-card__type">{companion.type}</p>
         </div>
-      )}
 
-      {compact && (
-        <div className="p-3">
-          <Button asChild size="sm" variant="secondary" className="w-full">
-            <Link href={`/ai/${companion.id}`}>Start gesprek</Link>
-          </Button>
+        <div className="ai-companion-card__tags">
+          <span className="ai-companion-card__tag">{companion.badge}</span>
         </div>
-      )}
+
+        <p className="ai-companion-card__desc">{companion.beschrijving}</p>
+
+        <p className="ai-companion-card__price">
+          {companion.kostenPerBericht} credits per bericht
+        </p>
+
+        {ingelogd ? (
+          <Button asChild className="ai-companion-card__cta w-full gap-2" size="sm">
+            <Link href={`/ai/${companion.id}`}>
+              <MessageCircle className="h-4 w-4" aria-hidden />
+              Chat nu
+            </Link>
+          </Button>
+        ) : (
+          <Button asChild variant="secondary" className="ai-companion-card__cta w-full" size="sm">
+            <Link href={`/login?redirect=/ai/${companion.id}`}>
+              Inloggen om te chatten
+            </Link>
+          </Button>
+        )}
+      </div>
     </article>
   );
 }

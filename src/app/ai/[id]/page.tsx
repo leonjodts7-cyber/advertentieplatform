@@ -1,10 +1,11 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { AiChatInterface } from "@/components/ai/ai-chat-interface";
-import { ProfilePhotoPlaceholder } from "@/components/profile-photo-placeholder";
-import { Badge } from "@/components/ui/badge";
 import { getCompanionById } from "@/lib/ai-companions";
+import { haalGesprekBerichten, haalAiPersonage } from "@/lib/ai/queries";
+import { haalCreditSaldo } from "@/lib/credits";
+import { createClient } from "@/lib/supabase/server";
+import { zorgProfielBestaat } from "@/lib/profiel";
 
 interface AiChatPageProps {
   params: Promise<{ id: string }>;
@@ -27,42 +28,49 @@ export default async function AiChatPage({ params }: AiChatPageProps) {
   const companion = getCompanionById(id);
   if (!companion) notFound();
 
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  let creditsSaldo = 0;
+  let initialBerichten: { rol: "user" | "assistant"; inhoud: string }[] | undefined;
+
+  if (user) {
+    await zorgProfielBestaat(user.id, user.email ?? "");
+    creditsSaldo = await haalCreditSaldo(user.id);
+
+    const personage = await haalAiPersonage(id);
+    if (personage) {
+      const { data: gesprek } = await supabase
+        .from("ai_gesprekken")
+        .select("id")
+        .eq("gebruiker_id", user.id)
+        .eq("personage_id", personage.id)
+        .maybeSingle();
+
+      if (gesprek?.id) {
+        const opgeslagen = await haalGesprekBerichten(gesprek.id);
+        if (opgeslagen.length > 0) {
+          initialBerichten = opgeslagen
+            .filter((b) => b.rol === "user" || b.rol === "assistant")
+            .map((b) => ({
+              rol: b.rol as "user" | "assistant",
+              inhoud: b.inhoud,
+            }));
+        }
+      }
+    }
+  }
+
   return (
-    <div className="flex min-h-[calc(100vh-3.5rem)] flex-col sm:min-h-[calc(100vh-3.75rem)]">
-      <div className="glass-nav border-b border-white/10">
-        <div className="container flex items-center gap-3 py-3">
-          <Link
-            href="/ai-lounge"
-            className="shrink-0 text-sm text-muted-foreground hover:text-soft-champagne"
-          >
-            ← Lounge
-          </Link>
-
-          <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-xl lg:hidden">
-            <ProfilePhotoPlaceholder
-              variant={companion.photoVariant}
-              className="!aspect-square h-full w-full"
-            />
-          </div>
-
-          <div className="min-w-0 flex-1">
-            <div className="flex flex-wrap items-center gap-2">
-              <p className="font-display text-base text-foreground sm:text-lg">
-                {companion.naam}, {companion.leeftijd}
-              </p>
-              <Badge variant="online">
-                <span className="mr-1 inline-block h-1.5 w-1.5 animate-pulse rounded-full bg-success" />
-                Online
-              </Badge>
-            </div>
-            <p className="truncate text-xs text-muted-foreground sm:text-sm">
-              {companion.type} · Fictief 21+
-            </p>
-          </div>
-        </div>
-      </div>
-
-      <AiChatInterface companion={companion} previewMode />
+    <div className="ai-chat-page">
+      <AiChatInterface
+        companion={companion}
+        ingelogd={!!user}
+        creditsSaldo={creditsSaldo}
+        initialBerichten={initialBerichten}
+      />
     </div>
   );
 }

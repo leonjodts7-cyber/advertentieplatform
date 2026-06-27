@@ -293,6 +293,7 @@ function DemoListingPlaceholderCard({
   subtitle,
   showPrice = true,
   cta = "Binnenkort zichtbaar",
+  ctaDisabled = true,
   ariaLabel,
 }: {
   badge: string;
@@ -301,6 +302,7 @@ function DemoListingPlaceholderCard({
   subtitle: string;
   showPrice?: boolean;
   cta?: string;
+  ctaDisabled?: boolean;
   ariaLabel: string;
 }) {
   return (
@@ -317,7 +319,14 @@ function DemoListingPlaceholderCard({
         <h3 className="demo-card__title">{title}</h3>
         <p className="demo-card__meta">{subtitle}</p>
         {showPrice && <p className="demo-card__price">Vanaf € —</p>}
-        <span className="demo-card__cta">{cta}</span>
+        <span
+          className={cn(
+            "demo-card__cta",
+            ctaDisabled && "demo-card__cta--disabled"
+          )}
+        >
+          {cta}
+        </span>
       </div>
     </article>
   );
