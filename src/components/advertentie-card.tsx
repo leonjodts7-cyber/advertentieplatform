@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { MapPin, Navigation } from "lucide-react";
+import { HorizontalListingsCarousel } from "@/components/home/horizontal-listings-carousel";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { formatPrijs, statusLabel } from "@/lib/helpers";
@@ -123,10 +124,10 @@ export function AdvertentieCard({
               Geverifieerd
             </Badge>
           )}
-          {(showOnline || advertentie.beschikbaar) && !dashboard && (
+          {showOnline && !dashboard && (
             <Badge variant="online" className="text-[0.5625rem] gap-1">
               <span className="online-dot" aria-hidden />
-              Beschikbaar
+              Online
             </Badge>
           )}
           {categorie && !dashboard && (
@@ -395,18 +396,13 @@ export function HomePremiumSection({ advertenties, fotos }: HomePremiumSectionPr
           )}
         </div>
         {advertenties.length > 0 ? (
-          <div className="listing-grid listing-grid--home">
-            {advertenties.map((advertentie) => (
-              <AdvertentieCard
-                key={advertentie.id}
-                advertentie={advertentie}
-                afbeeldingUrl={fotos.get(advertentie.id)}
-                theme="light"
-                premium
-                showPremium={heeftPremiumPlaatsing(advertentie)}
-                showOnline={advertentie.beschikbaar}
-              />
-            ))}
+          <div className="listings-carousel-wrap">
+            <HorizontalListingsCarousel
+              advertenties={advertenties}
+              fotos={fotos}
+              variant="premium"
+              ariaLabel="Premium advertenties"
+            />
           </div>
         ) : (
           <div className="premium-placeholders home-placeholders home-placeholders--4">
@@ -443,18 +439,12 @@ export function HomeNieuwsteSection({ advertenties, fotos }: HomeNieuwsteSection
           )}
         </div>
         {advertenties.length > 0 ? (
-          <div className="listing-grid listing-grid--home">
-            {advertenties.map((advertentie) => (
-              <AdvertentieCard
-                key={advertentie.id}
-                advertentie={advertentie}
-                afbeeldingUrl={fotos.get(advertentie.id)}
-                theme="light"
-                premium
-                showPremium={heeftPremiumPlaatsing(advertentie)}
-                showOnline={advertentie.beschikbaar}
-              />
-            ))}
+          <div className="listings-carousel-wrap">
+            <HorizontalListingsCarousel
+              advertenties={advertenties}
+              fotos={fotos}
+              ariaLabel="Nieuwste advertenties"
+            />
           </div>
         ) : (
           <div className="home-placeholders home-placeholders--4">
@@ -486,14 +476,13 @@ export function SpotlightSection({ advertenties, fotos }: SpotlightSectionProps)
           </div>
         </div>
         {advertenties.length > 0 ? (
-          <div className="spotlight-track">
-            {advertenties.map((ad) => (
-              <SpotlightCard
-                key={ad.id}
-                advertentie={ad}
-                afbeeldingUrl={fotos.get(ad.id)}
-              />
-            ))}
+          <div className="listings-carousel-wrap">
+            <HorizontalListingsCarousel
+              advertenties={advertenties}
+              fotos={fotos}
+              variant="spotlight"
+              ariaLabel="Homepage Spotlight advertenties"
+            />
           </div>
         ) : (
           <div className="spotlight-placeholders">
@@ -504,52 +493,6 @@ export function SpotlightSection({ advertenties, fotos }: SpotlightSectionProps)
         )}
       </div>
     </section>
-  );
-}
-
-function SpotlightCard({
-  advertentie,
-  afbeeldingUrl,
-}: {
-  advertentie: Advertentie;
-  afbeeldingUrl?: string | null;
-}) {
-  const { meta } = parseAdvertentieBeschrijving(advertentie.beschrijving);
-  const categorie = categorieLabel(meta.categorie);
-  const href = `/advertentie/${advertentie.id}`;
-
-  return (
-    <article className="spotlight-card">
-      <Link href={href} className="spotlight-card__media">
-        {afbeeldingUrl ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src={afbeeldingUrl} alt={advertentie.titel} className="h-full w-full object-cover" />
-        ) : (
-          <ListingPlaceholder />
-        )}
-      </Link>
-      <div className="spotlight-card__body">
-        <div className="spotlight-card__badges">
-          <Badge variant="premium">Spotlight</Badge>
-          {heeftPremiumPlaatsing(advertentie) && <Badge variant="premium">Premium</Badge>}
-          {categorie && <Badge variant="wine">{categorie}</Badge>}
-          {advertentie.geverifieerd && <Badge variant="verified">Geverifieerd</Badge>}
-        </div>
-        <h3 className="spotlight-card__title">
-          <Link href={href}>{advertentie.titel}</Link>
-        </h3>
-        <p className="spotlight-card__meta">
-          {advertentie.stad}
-          {advertentie.leeftijd != null && ` · ${advertentie.leeftijd} jaar`}
-        </p>
-        {advertentie.prijs_vanaf != null && (
-          <p className="spotlight-card__price">Vanaf {formatPrijs(advertentie.prijs_vanaf)}</p>
-        )}
-        <Button asChild size="sm" variant="primary" className="mt-3">
-          <Link href={href}>Bekijk profiel</Link>
-        </Button>
-      </div>
-    </article>
   );
 }
 
@@ -584,12 +527,6 @@ export function AdvertentieCardHorizontal({
             <Badge variant="new">Spotlight</Badge>
           )}
           {categorie && <Badge variant="wine">{categorie}</Badge>}
-          {advertentie.beschikbaar && (
-            <Badge variant="online" className="gap-1">
-              <span className="online-dot" aria-hidden />
-              Beschikbaar
-            </Badge>
-          )}
         </div>
         <h3 className="listing-row-card__title">
           <Link href={href}>{advertentie.titel}</Link>
@@ -719,18 +656,12 @@ export function HomeNearbyCompact({
         )}
 
         {advertenties.length > 0 ? (
-          <div className="listing-grid listing-grid--home mt-4">
-            {advertenties.map((advertentie) => (
-              <AdvertentieCard
-                key={advertentie.id}
-                advertentie={advertentie}
-                afbeeldingUrl={fotos.get(advertentie.id)}
-                theme="light"
-                premium
-                showPremium={heeftPremiumPlaatsing(advertentie)}
-                showOnline={advertentie.beschikbaar}
-              />
-            ))}
+          <div className="listings-carousel-wrap mt-4">
+            <HorizontalListingsCarousel
+              advertenties={advertenties}
+              fotos={fotos}
+              ariaLabel="Advertenties in jouw buurt"
+            />
           </div>
         ) : (
           <div className="home-placeholders home-placeholders--4 mt-4">

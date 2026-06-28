@@ -10,7 +10,13 @@ interface HeaderProps {
 const navLinkClass =
   "header-nav-link rounded-full px-2.5 py-1.5 text-[0.8125rem] font-medium text-[var(--text-muted)] transition-colors hover:bg-white/[0.06] hover:text-[var(--text-main)] whitespace-nowrap shrink-0";
 
+const PLAATS_REDIRECT = encodeURIComponent("/dashboard/advertenties/nieuw");
+
 export function Header({ user }: HeaderProps) {
+  const plaatsHref = user
+    ? "/dashboard/advertenties/nieuw"
+    : `/login?redirect=${PLAATS_REDIRECT}`;
+
   return (
     <header className="glass-nav sticky top-0 z-50">
       <div className="container header-shell">
@@ -35,14 +41,19 @@ export function Header({ user }: HeaderProps) {
               Dashboard
             </Link>
           ) : (
-            <Link href="/login" className={navLinkClass}>
-              Login
-            </Link>
+            <>
+              <Link href="/login" className={navLinkClass}>
+                Login
+              </Link>
+              <Link href="/login?tab=registreren" className={navLinkClass}>
+                Registreren
+              </Link>
+            </>
           )}
           <span className="header-nav-scroll__mobile-only flex items-center gap-1">
             {user && <UitloggenKnop compact />}
             <Link
-              href="/dashboard/advertenties/nieuw"
+              href={plaatsHref}
               className="header-nav-link header-nav-link--cta rounded-full px-2.5 py-1.5 text-[0.8125rem] font-semibold whitespace-nowrap shrink-0"
             >
               Plaatsen
@@ -62,7 +73,7 @@ export function Header({ user }: HeaderProps) {
             variant="primary"
             className="header-cta-group__desktop-only shrink-0"
           >
-            <Link href="/dashboard/advertenties/nieuw">Plaats advertentie</Link>
+            <Link href={plaatsHref}>Plaats advertentie</Link>
           </Button>
         </div>
       </div>

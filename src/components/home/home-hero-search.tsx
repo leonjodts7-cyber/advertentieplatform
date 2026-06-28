@@ -9,6 +9,7 @@ import { CategoryChip } from "@/components/ui/category-chip";
 import { MARKETPLACE_CATEGORIEEN } from "@/lib/marketplace";
 import { cn } from "@/lib/utils";
 import { Sparkles } from "lucide-react";
+import { fetchAiZoekParams } from "@/lib/ai-zoek-nav";
 
 const AI_VOORBEELDEN = [
   "Escort Antwerpen",
@@ -25,6 +26,7 @@ export function HomeHeroSearch() {
   const [stad, setStad] = useState("");
   const [categorie, setCategorie] = useState<string | null>(null);
   const [aiQuery, setAiQuery] = useState("");
+  const [aiLaden, setAiLaden] = useState(false);
 
   function handleSnelSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -34,15 +36,15 @@ export function HomeHeroSearch() {
     router.push(`/zoeken${params.toString() ? `?${params}` : ""}`);
   }
 
-  function handleAiSubmit(e: React.FormEvent) {
+  async function handleAiSubmit(e: React.FormEvent) {
     e.preventDefault();
-    const trimmed = aiQuery.trim();
-    if (!trimmed) {
-      router.push("/zoeken?ai=1");
-      return;
+    setAiLaden(true);
+    try {
+      const params = await fetchAiZoekParams(aiQuery);
+      router.push(`/zoeken?${params}`);
+    } finally {
+      setAiLaden(false);
     }
-    const params = new URLSearchParams({ q: trimmed, ai: "1" });
-    router.push(`/zoeken?${params}`);
   }
 
   return (
@@ -130,9 +132,9 @@ export function HomeHeroSearch() {
               </button>
             ))}
           </div>
-          <Button type="submit" size="md" className="mt-3 w-full gap-2">
+          <Button type="submit" size="md" className="mt-3 w-full gap-2" disabled={aiLaden}>
             <Sparkles className="h-4 w-4" />
-            Zoek met AI
+            {aiLaden ? "AI analyseert…" : "Zoek met AI"}
           </Button>
         </form>
       )}

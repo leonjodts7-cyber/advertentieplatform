@@ -50,7 +50,8 @@ export default async function CreditsPage({ searchParams }: CreditsPageProps) {
       <div className="container py-6 sm:py-8">
         {success === "1" && (
           <div className="mb-6 rounded-xl border border-success/30 bg-success/10 px-4 py-3 text-sm text-success">
-            Betaling geslaagd! Je credits worden toegevoegd.
+            Betaling ontvangen. Je credits worden binnen enkele seconden
+            bijgewerkt — ververs de pagina als je saldo nog niet is aangepast.
           </div>
         )}
         {cancelled === "1" && (

@@ -37,7 +37,7 @@ function filterPremium(ads: Advertentie[], limit: number): Advertentie[] {
 
 export async function fetchSpotlightAdvertenties(
   supabase: SupabaseClient,
-  limit = 6
+  limit = 24
 ): Promise<Advertentie[]> {
   const { data, error } = await supabase
     .from("advertenties")
@@ -64,7 +64,7 @@ export async function fetchSpotlightAdvertenties(
 
 export async function fetchPremiumAdvertenties(
   supabase: SupabaseClient,
-  limit = 8
+  limit = 24
 ): Promise<Advertentie[]> {
   const { data, error } = await supabase
     .from("advertenties")
@@ -93,7 +93,7 @@ export async function fetchActieveAdvertenties(
   supabase: SupabaseClient,
   options: { stad?: string; limit?: number } = {}
 ) {
-  const { stad, limit = 8 } = options;
+  const { stad, limit = 24 } = options;
 
   let query = supabase
     .from("advertenties")

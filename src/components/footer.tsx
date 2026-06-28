@@ -37,7 +37,7 @@ export function Footer() {
               </li>
               <li>
                 <Link
-                  href="/dashboard/advertenties/nieuw"
+                  href="/login?redirect=%2Fdashboard%2Fadvertenties%2Fnieuw"
                   className="text-muted-foreground hover:text-champagne-light"
                 >
                   Plaats advertentie
@@ -58,9 +58,30 @@ export function Footer() {
               Juridisch
             </p>
             <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
-              <li>Privacybeleid</li>
-              <li>Gebruiksvoorwaarden</li>
-              <li>Contact</li>
+              <li>
+                <Link
+                  href="/juridisch/privacy"
+                  className="hover:text-champagne-light"
+                >
+                  Privacybeleid
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/juridisch/voorwaarden"
+                  className="hover:text-champagne-light"
+                >
+                  Gebruiksvoorwaarden
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/juridisch/contact"
+                  className="hover:text-champagne-light"
+                >
+                  Contact
+                </Link>
+              </li>
             </ul>
           </div>
         </div>

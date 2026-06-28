@@ -6,7 +6,7 @@ import {
   haalGesprekBerichten,
   haalOfMaakGesprek,
 } from "@/lib/ai/queries";
-import { CREDITS_PER_BERICHT, trekCreditsAf } from "@/lib/credits";
+import { CREDITS_PER_BERICHT, trekCreditsAf, voegCreditsToe } from "@/lib/credits";
 import { zorgProfielBestaat } from "@/lib/profiel";
 import type { AiBericht } from "@/lib/ai-types";
 
@@ -85,14 +85,23 @@ export async function POST(request: Request) {
     );
   }
 
-  const { error: userMsgError } = await supabase.from("ai_berichten").insert({
-    gesprek_id: gesprek.id,
-    rol: "user",
-    inhoud: bericht,
-    credits_gebruikt: CREDITS_PER_BERICHT,
-  });
+  const { data: userMsg, error: userMsgError } = await supabase
+    .from("ai_berichten")
+    .insert({
+      gesprek_id: gesprek.id,
+      rol: "user",
+      inhoud: bericht,
+      credits_gebruikt: CREDITS_PER_BERICHT,
+    })
+    .select("id")
+    .single();
 
   if (userMsgError) {
+    await voegCreditsToe(
+      user.id,
+      CREDITS_PER_BERICHT,
+      `Terugbetaling — bericht opslaan mislukt (${personage.naam})`
+    );
     return NextResponse.json(
       { error: "Bericht opslaan mislukt." },
       { status: 500 }
@@ -107,6 +116,14 @@ export async function POST(request: Request) {
       bericht
     );
   } catch (err) {
+    await voegCreditsToe(
+      user.id,
+      CREDITS_PER_BERICHT,
+      `Terugbetaling — AI antwoord mislukt (${personage.naam})`
+    );
+    if (userMsg?.id) {
+      await supabase.from("ai_berichten").delete().eq("id", userMsg.id);
+    }
     const message =
       err instanceof Error ? err.message : "AI antwoord mislukt.";
     return NextResponse.json({ error: message }, { status: 503 });

@@ -22,6 +22,7 @@ import {
 } from "@/lib/zoek-filters";
 import { Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { fetchAiZoekParams } from "@/lib/ai-zoek-nav";
 
 const AI_VOORBEELDEN = [
   "Blonde escort in Antwerpen onder €200",
@@ -95,6 +96,7 @@ export function ZoekFilterBar() {
   const [aiQuery, setAiQuery] = useState(
     searchParams.get("ai") === "1" ? searchParams.get("q") ?? "" : ""
   );
+  const [aiLaden, setAiLaden] = useState(false);
 
   function getValues(): ZoekFilterValues {
     const activeCategorie = categorie ?? (extCategorie || null);
@@ -138,14 +140,17 @@ export function ZoekFilterBar() {
     navigate(buildFilterParams(getValues()));
   }
 
-  function handleAiSubmit(e: React.FormEvent) {
+  async function handleAiSubmit(e: React.FormEvent) {
     e.preventDefault();
-    const trimmed = aiQuery.trim();
-    if (!trimmed) {
-      navigate(new URLSearchParams({ ai: "1" }));
-      return;
+    setAiLaden(true);
+    try {
+      const params = await fetchAiZoekParams(aiQuery);
+      startTransition(() => {
+        router.push(`/zoeken?${params}`);
+      });
+    } finally {
+      setAiLaden(false);
     }
-    navigate(new URLSearchParams({ q: trimmed, ai: "1" }));
   }
 
   function handleClear() {
@@ -227,11 +232,11 @@ export function ZoekFilterBar() {
           <Button
             type="submit"
             size="md"
-            disabled={isPending}
+            disabled={isPending || aiLaden}
             className="mt-3 w-full gap-2 sm:w-auto"
           >
             <Sparkles className="h-4 w-4" />
-            Zoek met AI
+            {aiLaden ? "AI analyseert…" : "Zoek met AI"}
           </Button>
         </form>
       ) : (

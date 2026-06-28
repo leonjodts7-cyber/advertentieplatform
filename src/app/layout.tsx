@@ -29,6 +29,18 @@ export const metadata: Metadata = {
       process.env.NEXT_PUBLIC_APP_URL ??
       "http://localhost:3000"
   ),
+  openGraph: {
+    type: "website",
+    locale: "nl_BE",
+    siteName: "Veloura",
+    title: "Veloura — Premium adult marketplace",
+    description:
+      "Ontdek en plaats discrete profielen op een stijlvol, professioneel adult marketplace platform.",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export default async function RootLayout({

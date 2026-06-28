@@ -405,6 +405,37 @@ export function AdvertentieWizard({
     router.refresh();
   }
 
+  async function handleVerwijderen() {
+    if (!advertentie?.id) return;
+    const bevestigd = window.confirm(
+      "Weet je zeker dat je deze advertentie wilt verwijderen? Dit kan niet ongedaan worden gemaakt."
+    );
+    if (!bevestigd) return;
+
+    setFout(null);
+    setLaden(true);
+    const supabase = createClient();
+
+    await supabase
+      .from("advertentie_fotos")
+      .delete()
+      .eq("advertentie_id", advertentie.id);
+
+    const { error } = await supabase
+      .from("advertenties")
+      .delete()
+      .eq("id", advertentie.id);
+
+    if (error) {
+      setLaden(false);
+      setFout(error.message);
+      return;
+    }
+
+    router.push("/dashboard/advertenties");
+    router.refresh();
+  }
+
   const boostOpties = BOOST_DUUR_OPTIES;
 
   const gekozenBoostTekst = boostSamenvatting(boostType, boostDuur);
@@ -869,6 +900,17 @@ export function AdvertentieWizard({
               {laden ? "Bezig…" : "Nu publiceren"}
             </Button>
           </>
+        )}
+        {isEdit && advertentie?.id && (
+          <Button
+            type="button"
+            variant="ghost"
+            className="text-red-400 hover:text-red-300"
+            disabled={laden}
+            onClick={() => void handleVerwijderen()}
+          >
+            Advertentie verwijderen
+          </Button>
         )}
         <Button asChild variant="ghost">
           <Link href="/dashboard/advertenties">Annuleren</Link>

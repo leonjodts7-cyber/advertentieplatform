@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { vertaalAuthFout } from "@/lib/auth-errors";
-import { getAuthCallbackUrl } from "@/lib/auth-redirect";
+import { getAuthCallbackUrl, getSafeRedirectPath } from "@/lib/auth-redirect";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
@@ -30,6 +30,12 @@ export function LoginForm() {
   const [laden, setLaden] = useState(false);
   const [fout, setFout] = useState<string | null>(null);
   const [succes, setSucces] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (searchParams.get("tab") === "registreren") {
+      setView("registreren");
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     if (searchParams.get("confirmed") === "1") {
@@ -81,7 +87,8 @@ export function LoginForm() {
         return;
       }
 
-      router.push("/dashboard");
+      const redirect = getSafeRedirectPath(searchParams.get("redirect"));
+      router.push(redirect);
       router.refresh();
     } catch (err) {
       setFout(vertaalAuthFout(err instanceof Error ? err : new Error(String(err))));
