@@ -52,7 +52,7 @@ export function CarouselPlaceholderCard({
           </p>
           <span className="carousel-listing-card__category">{item.categorie}</span>
           <span className="carousel-listing-card__cta carousel-listing-card__cta--disabled">
-            Binnenkort beschikbaar
+            Bekijk profiel
           </span>
         </div>
       </div>

@@ -6253,9 +6253,8 @@ body {
 .listings-carousel {
   --carousel-gap: 0.875rem;
   position: relative;
-  container-type: inline-size;
-  container-name: carousel;
   min-height: 20rem;
+  width: 100%;
 }
 
 .listings-carousel__viewport {
@@ -6265,6 +6264,7 @@ body {
   scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch;
   overscroll-behavior-x: contain;
+  width: 100%;
 }
 
 .listings-carousel__viewport:focus-visible {
@@ -6277,6 +6277,8 @@ body {
   display: flex;
   gap: var(--carousel-gap);
   padding-block: 0.125rem 0.375rem;
+  width: max-content;
+  min-width: 100%;
 }
 
 .listings-carousel__slide {
@@ -6285,44 +6287,47 @@ body {
   scroll-snap-stop: normal;
 }
 
-/* Standard: premium / nearby / latest — ~1.25 mobiel, 4–5 desktop */
+/* Standard: ~1.2 kaart mobiel, 4 desktop */
 .listings-carousel--standard .listings-carousel__slide {
-  width: calc(100cqw / 1.25);
+  width: clamp(240px, 80vw, 300px);
 }
 
-@container carousel (min-width: 640px) {
+@media (min-width: 640px) {
   .listings-carousel--standard .listings-carousel__slide {
-    width: calc((100cqw - var(--carousel-gap)) / 2.2);
+    width: clamp(220px, 44vw, 290px);
   }
 }
 
-@container carousel (min-width: 1024px) {
+@media (min-width: 1024px) {
   .listings-carousel--standard .listings-carousel__slide {
-    width: calc((100cqw - 3 * var(--carousel-gap)) / 4);
+    width: clamp(210px, calc((100vw - 4rem) / 4.2), 280px);
   }
 }
 
-@container carousel (min-width: 1280px) {
-  .listings-carousel--standard .listings-carousel__slide {
-    width: calc((100cqw - 4 * var(--carousel-gap)) / 5);
-  }
-}
-
-/* Spotlight: bredere kaarten — 1 mobiel, 2–3 desktop */
+/* Spotlight: 1 mobiel, 2–3 desktop */
 .listings-carousel--spotlight .listings-carousel__slide {
-  width: calc(100cqw - 0.5rem);
+  width: clamp(260px, 88vw, 380px);
 }
 
-@container carousel (min-width: 768px) {
+@media (min-width: 768px) {
   .listings-carousel--spotlight .listings-carousel__slide {
-    width: calc((100cqw - var(--carousel-gap)) / 2);
+    width: clamp(280px, 46vw, 400px);
   }
 }
 
-@container carousel (min-width: 1024px) {
+@media (min-width: 1024px) {
   .listings-carousel--spotlight .listings-carousel__slide {
-    width: calc((100cqw - 2 * var(--carousel-gap)) / 3);
+    width: clamp(300px, calc((100vw - 4rem) / 3.1), 420px);
   }
+}
+
+.home-page--marketplace .home-spotlight {
+  padding: 0.75rem 0 1.25rem;
+}
+
+.home-page--marketplace [data-home-carousel] {
+  display: block;
+  visibility: visible;
 }
 
 .listings-carousel__fade {
