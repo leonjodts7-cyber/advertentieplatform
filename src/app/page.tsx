@@ -1,12 +1,8 @@
 import Link from "next/link";
 import { HomeHeroCompact } from "@/components/home/home-hero";
 import { CategoryCompactGrid } from "@/components/home/category-compact-grid";
-import {
-  HomeNearbyCompact,
-  HomeNieuwsteSection,
-  HomePremiumSection,
-  SpotlightSection,
-} from "@/components/advertentie-card";
+import { HorizontalListingsCarousel } from "@/components/home/horizontal-listings-carousel";
+import { HomeNearbyCarouselSection } from "@/components/home/home-nearby-carousel-section";
 import { haalEersteFotos } from "@/lib/advertentie-fotos";
 import { isPremiumListing } from "@/lib/advertentie-boost";
 import {
@@ -19,7 +15,7 @@ import type { Advertentie } from "@/lib/types";
 
 const LISTING_LIMIT = 24;
 
-function sortNearby(advertenties: Advertentie[]): Advertentie[] {
+function sortPremiumFirst(advertenties: Advertentie[]): Advertentie[] {
   return [...advertenties].sort((a, b) => {
     const ap = isPremiumListing(a) ? 1 : 0;
     const bp = isPremiumListing(b) ? 1 : 0;
@@ -40,7 +36,7 @@ export default async function HomePage() {
     fetchActieveAdvertenties(supabase, { limit: LISTING_LIMIT }),
   ]);
 
-  const nearby = sortNearby(nearbyRaw);
+  const nearby = sortPremiumFirst(nearbyRaw);
 
   const allIds = [
     ...spotlight.map((a) => a.id),
@@ -51,16 +47,37 @@ export default async function HomePage() {
   const fotos = await haalEersteFotos(supabase, [...new Set(allIds)]);
 
   return (
-    <div className="home-page home-page--marketplace">
+    <div className="home-page home-page--marketplace overflow-x-hidden">
       <HomeHeroCompact />
 
-      <SpotlightSection advertenties={spotlight} fotos={fotos} />
+      <HorizontalListingsCarousel
+        title="Homepage Spotlight"
+        subtitle="Topprofielen met maximale zichtbaarheid."
+        items={spotlight}
+        fotos={fotos}
+        variant="spotlight"
+        viewAllHref="/zoeken?premium_profiel=true"
+      />
 
-      <HomePremiumSection advertenties={premium} fotos={fotos} />
+      <HorizontalListingsCarousel
+        title="Premium advertenties"
+        subtitle="Uitgelichte profielen met extra zichtbaarheid."
+        items={premium}
+        fotos={fotos}
+        variant="premium"
+        viewAllHref="/zoeken?premium_profiel=true"
+      />
 
-      <HomeNearbyCompact advertenties={nearby} fotos={fotos} />
+      <HomeNearbyCarouselSection advertenties={nearby} fotos={fotos} />
 
-      <HomeNieuwsteSection advertenties={nieuwste} fotos={fotos} />
+      <HorizontalListingsCarousel
+        title="Nieuwste advertenties"
+        subtitle="Recent geplaatste actieve profielen."
+        items={nieuwste}
+        fotos={fotos}
+        variant="latest"
+        viewAllHref="/zoeken"
+      />
 
       <CategoryCompactGrid />
 
@@ -68,7 +85,10 @@ export default async function HomePage() {
         <div className="container">
           <p className="home-provider-cta__text">
             Ben jij aanbieder?{" "}
-            <Link href="/login?redirect=%2Fdashboard%2Fadvertenties%2Fnieuw" className="home-provider-cta__link">
+            <Link
+              href="/login?redirect=%2Fdashboard%2Fadvertenties%2Fnieuw"
+              className="home-provider-cta__link"
+            >
               Plaats je advertentie op Veloura
             </Link>
           </p>

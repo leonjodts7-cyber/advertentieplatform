@@ -53,19 +53,23 @@ export type CarouselCardVariant = "default" | "premium" | "spotlight";
 interface CarouselListingCardProps {
   advertentie: Advertentie;
   afbeeldingUrl?: string | null;
+  href?: string;
   variant?: CarouselCardVariant;
   priority?: boolean;
+  wide?: boolean;
 }
 
 export function CarouselListingCard({
   advertentie,
   afbeeldingUrl,
+  href,
   variant = "default",
   priority = false,
+  wide = false,
 }: CarouselListingCardProps) {
   const { meta } = parseAdvertentieBeschrijving(advertentie.beschrijving);
   const categorie = categorieLabel(meta.categorie);
-  const href = `/advertentie/${advertentie.id}`;
+  const linkHref = href ?? `/advertentie/${advertentie.id}`;
   const isPremium =
     isPremiumListing(advertentie) || boostActief(meta);
   const isSpotlight =
@@ -93,11 +97,12 @@ export function CarouselListingCard({
     <article
       className={cn(
         "carousel-listing-card group",
+        wide && "carousel-listing-card--wide",
         variant === "premium" && "carousel-listing-card--premium",
         isPremium && "carousel-listing-card--is-premium"
       )}
     >
-      <Link href={href} className="carousel-listing-card__link">
+      <Link href={linkHref} className="carousel-listing-card__link">
         <div className="carousel-listing-card__media">
           {afbeeldingUrl ? (
             // eslint-disable-next-line @next/next/no-img-element

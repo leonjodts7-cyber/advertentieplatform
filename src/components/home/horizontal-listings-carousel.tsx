@@ -1,60 +1,88 @@
 "use client";
 
+import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import {
-  CarouselListingCard,
-  type CarouselCardVariant,
-} from "@/components/home/carousel-listing-card";
+import { CarouselListingCard } from "@/components/home/carousel-listing-card";
 import type { Advertentie } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
-const GAP_PX = 14;
+export type ListingCarouselVariant = "spotlight" | "premium" | "nearby" | "latest";
 
-interface HorizontalListingsCarouselProps {
-  advertenties: Advertentie[];
+export interface HorizontalListingsCarouselProps {
+  title: string;
+  subtitle?: string;
+  items: Advertentie[];
   fotos: Map<string, string | undefined>;
-  variant?: CarouselCardVariant;
+  variant?: ListingCarouselVariant;
+  hrefBase?: string;
+  viewAllHref?: string;
   ariaLabel?: string;
   className?: string;
+  toolbar?: React.ReactNode;
 }
 
+const GAP_PX = 14;
+
+const SECTION_CLASS: Record<ListingCarouselVariant, string> = {
+  spotlight: "home-spotlight",
+  premium: "home-listing-block home-listing-block--premium",
+  nearby: "home-nearby-compact home-listing-block",
+  latest: "home-listing-block home-listing-block--compact",
+};
+
+const CAROUSEL_MODE: Record<ListingCarouselVariant, "spotlight" | "standard"> = {
+  spotlight: "spotlight",
+  premium: "standard",
+  nearby: "standard",
+  latest: "standard",
+};
+
 export function HorizontalListingsCarousel({
-  advertenties,
+  title,
+  subtitle,
+  items,
   fotos,
-  variant = "default",
-  ariaLabel = "Advertenties carrousel",
+  variant = "latest",
+  hrefBase = "/advertentie/",
+  viewAllHref,
+  ariaLabel,
   className,
+  toolbar,
 }: HorizontalListingsCarouselProps) {
   const viewportRef = useRef<HTMLDivElement>(null);
   const [canPrev, setCanPrev] = useState(false);
   const [canNext, setCanNext] = useState(false);
+  const [scrollable, setScrollable] = useState(false);
 
   const updateArrows = useCallback(() => {
     const el = viewportRef.current;
     if (!el) return;
-    const maxScroll = el.scrollWidth - el.clientWidth;
-    setCanPrev(el.scrollLeft > 4);
-    setCanNext(el.scrollLeft < maxScroll - 4);
+    const maxScroll = Math.max(0, el.scrollWidth - el.clientWidth);
+    const hasScroll = maxScroll > 8;
+    setScrollable(hasScroll);
+    setCanPrev(el.scrollLeft > 8);
+    setCanNext(el.scrollLeft < maxScroll - 8);
   }, []);
 
   useEffect(() => {
     const el = viewportRef.current;
     if (!el) return;
 
-    updateArrows();
+    const runUpdate = () => requestAnimationFrame(updateArrows);
+    runUpdate();
+    const t = window.setTimeout(runUpdate, 150);
 
-    const onScroll = () => updateArrows();
-    el.addEventListener("scroll", onScroll, { passive: true });
-
-    const ro = new ResizeObserver(() => updateArrows());
+    el.addEventListener("scroll", updateArrows, { passive: true });
+    const ro = new ResizeObserver(runUpdate);
     ro.observe(el);
 
     return () => {
-      el.removeEventListener("scroll", onScroll);
+      window.clearTimeout(t);
+      el.removeEventListener("scroll", updateArrows);
       ro.disconnect();
     };
-  }, [advertenties.length, updateArrows]);
+  }, [items.length, updateArrows]);
 
   useEffect(() => {
     const el = viewportRef.current;
@@ -62,8 +90,9 @@ export function HorizontalListingsCarousel({
 
     const onWheel = (e: WheelEvent) => {
       if (Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return;
+      if (el.scrollWidth <= el.clientWidth + 8) return;
       e.preventDefault();
-      el.scrollLeft += e.deltaY;
+      el.scrollBy({ left: e.deltaY, behavior: "auto" });
     };
 
     el.addEventListener("wheel", onWheel, { passive: false });
@@ -74,69 +103,123 @@ export function HorizontalListingsCarousel({
     const el = viewportRef.current;
     if (!el) return;
 
-    const slide = el.querySelector<HTMLElement>(".listings-carousel__slide");
+    const slide = el.querySelector<HTMLElement>("[data-carousel-slide]");
     if (!slide) return;
 
-    const slideWidth = slide.offsetWidth;
-    const step = slideWidth + GAP_PX;
-    const visible = Math.max(1, Math.round(el.clientWidth / step));
-    const amount = visible * step;
-
-    el.scrollBy({ left: direction * amount, behavior: "smooth" });
+    const step = slide.offsetWidth + GAP_PX;
+    const visible = Math.max(1, Math.floor(el.clientWidth / step));
+    el.scrollBy({ left: direction * visible * step, behavior: "smooth" });
   }
 
-  if (advertenties.length === 0) return null;
+  if (items.length === 0) {
+    return null;
+  }
+
+  const label = ariaLabel ?? title;
+  const mode = CAROUSEL_MODE[variant];
 
   return (
-    <div className={cn("listings-carousel", className)}>
-      <div className="listings-carousel__fade listings-carousel__fade--left" aria-hidden />
+    <section
+      className={cn(SECTION_CLASS[variant], className)}
+      data-home-carousel={variant}
+      data-carousel-count={items.length}
+    >
+      <div className="container">
+        <div className="home-listing-block__header">
+          <div>
+            <h2 className="home-listing-block__title">{title}</h2>
+            {subtitle && (
+              <p className="home-listing-block__subtitle">{subtitle}</p>
+            )}
+          </div>
+          {viewAllHref && (
+            <Link href={viewAllHref} className="home-listing-block__link">
+              Alles bekijken →
+            </Link>
+          )}
+        </div>
 
-      <button
-        type="button"
-        className="listings-carousel__arrow listings-carousel__arrow--prev"
-        aria-label="Vorige advertenties"
-        disabled={!canPrev}
-        onClick={() => scrollByGroup(-1)}
-      >
-        <ChevronLeft className="h-5 w-5" aria-hidden />
-      </button>
+        {toolbar}
 
-      <div
-        ref={viewportRef}
-        className="listings-carousel__viewport"
-        aria-label={ariaLabel}
-        role="region"
-        tabIndex={0}
-      >
-        <div className="listings-carousel__track">
-          {advertenties.map((advertentie, index) => (
-            <div
-              key={advertentie.id}
-              className="listings-carousel__slide"
-              style={{ contentVisibility: index > 7 ? "auto" : undefined }}
-            >
-              <CarouselListingCard
-                advertentie={advertentie}
-                afbeeldingUrl={fotos.get(advertentie.id)}
-                variant={variant}
-                priority={index < 5}
-              />
+        <div
+          className={cn(
+            "listings-carousel",
+            `listings-carousel--${mode}`,
+            scrollable && "listings-carousel--scrollable"
+          )}
+        >
+          <div
+            className="listings-carousel__fade listings-carousel__fade--left"
+            aria-hidden
+          />
+
+          <button
+            type="button"
+            className="listings-carousel__arrow listings-carousel__arrow--prev"
+            aria-label="Vorige advertenties"
+            disabled={!canPrev}
+            onClick={() => scrollByGroup(-1)}
+          >
+            <ChevronLeft className="h-5 w-5" aria-hidden />
+          </button>
+
+          <div
+            ref={viewportRef}
+            className="listings-carousel__viewport scrollbar-hide"
+            aria-label={label}
+            role="region"
+            tabIndex={0}
+          >
+            <div className="listings-carousel__track">
+              {items.map((advertentie, index) => (
+                <div
+                  key={advertentie.id}
+                  data-carousel-slide
+                  className="listings-carousel__slide"
+                  style={
+                    index > 7
+                      ? {
+                          contentVisibility: "auto",
+                          containIntrinsicSize: "260px 420px",
+                        }
+                      : undefined
+                  }
+                >
+                  <CarouselListingCard
+                    advertentie={advertentie}
+                    afbeeldingUrl={fotos.get(advertentie.id)}
+                    href={`${hrefBase}${advertentie.id}`}
+                    variant={
+                      variant === "spotlight"
+                        ? "spotlight"
+                        : variant === "premium"
+                          ? "premium"
+                          : "default"
+                    }
+                    priority={index < 6}
+                    wide={variant === "spotlight"}
+                  />
+                </div>
+              ))}
             </div>
-          ))}
+          </div>
+
+          <button
+            type="button"
+            className="listings-carousel__arrow listings-carousel__arrow--next"
+            aria-label="Volgende advertenties"
+            disabled={!canNext}
+            onClick={() => scrollByGroup(1)}
+          >
+            <ChevronRight className="h-5 w-5" aria-hidden />
+          </button>
+
+          <div
+            className="listings-carousel__fade listings-carousel__fade--right"
+            aria-hidden
+          />
         </div>
       </div>
-
-      <button
-        type="button"
-        className="listings-carousel__arrow listings-carousel__arrow--next"
-        aria-label="Volgende advertenties"
-        disabled={!canNext}
-        onClick={() => scrollByGroup(1)}
-      >
-        <ChevronRight className="h-5 w-5" aria-hidden />
-      </button>
-
-      <div className="listings-carousel__fade listings-carousel__fade--right" aria-hidden />
-    </div>
-  )
+    </section>
+  );
 }
