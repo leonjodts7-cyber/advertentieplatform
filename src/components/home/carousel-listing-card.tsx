@@ -171,7 +171,7 @@ export function CarouselListingCard({
         onClick={toggleFavoriet}
       >
         <Heart
-          className="h-4 w-4"
+          className="h-3.5 w-3.5"
           fill={favoriet ? "currentColor" : "none"}
           aria-hidden
         />

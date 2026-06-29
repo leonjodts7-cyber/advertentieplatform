@@ -168,7 +168,7 @@ export function HorizontalListingsCarousel({
             disabled={!canPrev}
             onClick={() => scrollByGroup(-1)}
           >
-            <ChevronLeft className="h-5 w-5" aria-hidden />
+            <ChevronLeft className="h-4 w-4" aria-hidden />
           </button>
 
           <div
@@ -199,10 +199,10 @@ export function HorizontalListingsCarousel({
                       className="listings-carousel__slide snap-start"
                       style={
                         index > 7
-                          ? {
-                              contentVisibility: "auto",
-                              containIntrinsicSize: "260px 420px",
-                            }
+                      ? {
+                          contentVisibility: "auto",
+                          containIntrinsicSize: "220px 380px",
+                        }
                           : undefined
                       }
                     >
@@ -232,7 +232,7 @@ export function HorizontalListingsCarousel({
             disabled={!canNext}
             onClick={() => scrollByGroup(1)}
           >
-            <ChevronRight className="h-5 w-5" aria-hidden />
+            <ChevronRight className="h-4 w-4" aria-hidden />
           </button>
 
           <div
