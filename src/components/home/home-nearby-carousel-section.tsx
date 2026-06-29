@@ -61,10 +61,6 @@ export function HomeNearbyCarouselSection({
     );
   }
 
-  if (advertenties.length === 0) {
-    return null;
-  }
-
   return (
     <HorizontalListingsCarousel
       title="Advertenties in jouw buurt"

@@ -156,6 +156,7 @@ export function CarouselListingCard({
           {categorie && (
             <span className="carousel-listing-card__category">{categorie}</span>
           )}
+          <span className="carousel-listing-card__cta">Bekijk profiel</span>
         </div>
       </Link>
 

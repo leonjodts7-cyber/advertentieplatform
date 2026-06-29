@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { HomeHeroCompact } from "@/components/home/home-hero";
+import { CityLinksSection } from "@/components/home/city-links-section";
 import { CategoryCompactGrid } from "@/components/home/category-compact-grid";
 import { HorizontalListingsCarousel } from "@/components/home/horizontal-listings-carousel";
 import { HomeNearbyCarouselSection } from "@/components/home/home-nearby-carousel-section";
@@ -80,6 +81,8 @@ export default async function HomePage() {
       />
 
       <CategoryCompactGrid />
+
+      <CityLinksSection />
 
       <section className="home-provider-cta">
         <div className="container">

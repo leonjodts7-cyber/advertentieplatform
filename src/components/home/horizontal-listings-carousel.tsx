@@ -1,9 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { CarouselListingCard } from "@/components/home/carousel-listing-card";
+import { CarouselPlaceholderCard } from "@/components/home/carousel-placeholder-card";
+import { getCarouselPlaceholders } from "@/lib/home-carousel-placeholders";
 import type { Advertentie } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
@@ -55,6 +57,13 @@ export function HorizontalListingsCarousel({
   const [canNext, setCanNext] = useState(false);
   const [scrollable, setScrollable] = useState(false);
 
+  const usePlaceholders = items.length === 0;
+  const placeholders = useMemo(
+    () => (usePlaceholders ? getCarouselPlaceholders(variant) : []),
+    [usePlaceholders, variant]
+  );
+  const slideCount = usePlaceholders ? placeholders.length : items.length;
+
   const updateArrows = useCallback(() => {
     const el = viewportRef.current;
     if (!el) return;
@@ -72,6 +81,7 @@ export function HorizontalListingsCarousel({
     const runUpdate = () => requestAnimationFrame(updateArrows);
     runUpdate();
     const t = window.setTimeout(runUpdate, 150);
+    const t2 = window.setTimeout(runUpdate, 400);
 
     el.addEventListener("scroll", updateArrows, { passive: true });
     const ro = new ResizeObserver(runUpdate);
@@ -79,10 +89,11 @@ export function HorizontalListingsCarousel({
 
     return () => {
       window.clearTimeout(t);
+      window.clearTimeout(t2);
       el.removeEventListener("scroll", updateArrows);
       ro.disconnect();
     };
-  }, [items.length, updateArrows]);
+  }, [slideCount, updateArrows]);
 
   useEffect(() => {
     const el = viewportRef.current;
@@ -111,10 +122,6 @@ export function HorizontalListingsCarousel({
     el.scrollBy({ left: direction * visible * step, behavior: "smooth" });
   }
 
-  if (items.length === 0) {
-    return null;
-  }
-
   const label = ariaLabel ?? title;
   const mode = CAROUSEL_MODE[variant];
 
@@ -122,7 +129,8 @@ export function HorizontalListingsCarousel({
     <section
       className={cn(SECTION_CLASS[variant], className)}
       data-home-carousel={variant}
-      data-carousel-count={items.length}
+      data-carousel-count={slideCount}
+      data-carousel-demo={usePlaceholders ? "true" : "false"}
     >
       <div className="container">
         <div className="home-listing-block__header">
@@ -165,42 +173,55 @@ export function HorizontalListingsCarousel({
 
           <div
             ref={viewportRef}
-            className="listings-carousel__viewport scrollbar-hide"
+            className="listings-carousel__viewport scrollbar-hide overflow-x-auto scroll-smooth snap-x snap-mandatory"
             aria-label={label}
             role="region"
             tabIndex={0}
           >
             <div className="listings-carousel__track">
-              {items.map((advertentie, index) => (
-                <div
-                  key={advertentie.id}
-                  data-carousel-slide
-                  className="listings-carousel__slide"
-                  style={
-                    index > 7
-                      ? {
-                          contentVisibility: "auto",
-                          containIntrinsicSize: "260px 420px",
+              {usePlaceholders
+                ? placeholders.map((placeholder, index) => (
+                    <div
+                      key={placeholder.id}
+                      data-carousel-slide
+                      className="listings-carousel__slide snap-start"
+                    >
+                      <CarouselPlaceholderCard
+                        item={placeholder}
+                        wide={variant === "spotlight"}
+                      />
+                    </div>
+                  ))
+                : items.map((advertentie, index) => (
+                    <div
+                      key={advertentie.id}
+                      data-carousel-slide
+                      className="listings-carousel__slide snap-start"
+                      style={
+                        index > 7
+                          ? {
+                              contentVisibility: "auto",
+                              containIntrinsicSize: "260px 420px",
+                            }
+                          : undefined
+                      }
+                    >
+                      <CarouselListingCard
+                        advertentie={advertentie}
+                        afbeeldingUrl={fotos.get(advertentie.id)}
+                        href={`${hrefBase}${advertentie.id}`}
+                        variant={
+                          variant === "spotlight"
+                            ? "spotlight"
+                            : variant === "premium"
+                              ? "premium"
+                              : "default"
                         }
-                      : undefined
-                  }
-                >
-                  <CarouselListingCard
-                    advertentie={advertentie}
-                    afbeeldingUrl={fotos.get(advertentie.id)}
-                    href={`${hrefBase}${advertentie.id}`}
-                    variant={
-                      variant === "spotlight"
-                        ? "spotlight"
-                        : variant === "premium"
-                          ? "premium"
-                          : "default"
-                    }
-                    priority={index < 6}
-                    wide={variant === "spotlight"}
-                  />
-                </div>
-              ))}
+                        priority={index < 6}
+                        wide={variant === "spotlight"}
+                      />
+                    </div>
+                  ))}
             </div>
           </div>
 
