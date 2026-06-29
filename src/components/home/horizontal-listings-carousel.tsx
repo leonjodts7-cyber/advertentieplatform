@@ -22,9 +22,11 @@ export interface HorizontalListingsCarouselProps {
   ariaLabel?: string;
   className?: string;
   toolbar?: React.ReactNode;
+  /** Compact section for search page fallbacks */
+  embedded?: boolean;
 }
 
-const GAP_PX = 14;
+const GAP_PX = 10;
 
 const SECTION_CLASS: Record<ListingCarouselVariant, string> = {
   spotlight: "home-spotlight",
@@ -51,6 +53,7 @@ export function HorizontalListingsCarousel({
   ariaLabel,
   className,
   toolbar,
+  embedded = false,
 }: HorizontalListingsCarouselProps) {
   const viewportRef = useRef<HTMLDivElement>(null);
   const [canPrev, setCanPrev] = useState(false);
@@ -127,7 +130,10 @@ export function HorizontalListingsCarousel({
 
   return (
     <section
-      className={cn(SECTION_CLASS[variant], className)}
+      className={cn(
+        embedded ? "search-carousel-section" : SECTION_CLASS[variant],
+        className
+      )}
       data-home-carousel={variant}
       data-carousel-count={slideCount}
       data-carousel-demo={usePlaceholders ? "true" : "false"}

@@ -4,6 +4,10 @@ import { ZoekFilterBar } from "@/components/zoek/zoek-filter-bar";
 import { ZoekActiveChips } from "@/components/zoek/zoek-active-chips";
 import { ZoekResults } from "@/components/zoek/zoek-results";
 import { haalEersteFotos } from "@/lib/advertentie-fotos";
+import {
+  fetchActieveAdvertenties,
+  fetchPremiumAdvertenties,
+} from "@/lib/advertentie-queries";
 import type { Advertentie } from "@/lib/types";
 import { createClient } from "@/lib/supabase/server";
 import {
@@ -177,6 +181,22 @@ export default async function ZoekenPage({ searchParams }: ZoekenPageProps) {
   const fotos = await haalEersteFotos(supabase, advertenties.map((a) => a.id));
   const filtersActive = hasActiveFilters(params);
 
+  let fallbackPremium: Advertentie[] = [];
+  let fallbackLatest: Advertentie[] = [];
+  let fallbackFotos = new Map<string, string | undefined>();
+
+  if (advertenties.length === 0) {
+    [fallbackPremium, fallbackLatest] = await Promise.all([
+      fetchPremiumAdvertenties(supabase, 24),
+      fetchActieveAdvertenties(supabase, { limit: 24 }),
+    ]);
+    const fallbackIds = [
+      ...fallbackPremium.map((a) => a.id),
+      ...fallbackLatest.map((a) => a.id),
+    ];
+    fallbackFotos = await haalEersteFotos(supabase, [...new Set(fallbackIds)]);
+  }
+
   return (
     <div className="search-page search-page--compact">
       <div className="search-page-top search-page-top--compact">
@@ -210,6 +230,9 @@ export default async function ZoekenPage({ searchParams }: ZoekenPageProps) {
           advertenties={advertenties}
           fotos={fotos}
           filtersActive={filtersActive}
+          fallbackPremium={fallbackPremium}
+          fallbackLatest={fallbackLatest}
+          fallbackFotos={fallbackFotos}
         />
       </div>
     </div>
