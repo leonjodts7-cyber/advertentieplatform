@@ -48,7 +48,7 @@ function ListingPlaceholder() {
   );
 }
 
-export type CarouselCardVariant = "default" | "premium" | "spotlight";
+export type CarouselCardVariant = "default" | "premium" | "spotlight" | "latest";
 
 interface CarouselListingCardProps {
   advertentie: Advertentie;
@@ -99,6 +99,7 @@ export function CarouselListingCard({
         "carousel-listing-card group",
         wide && "carousel-listing-card--wide",
         variant === "premium" && "carousel-listing-card--premium",
+        variant === "latest" && "carousel-listing-card--compact",
         isPremium && "carousel-listing-card--is-premium"
       )}
     >
@@ -119,12 +120,20 @@ export function CarouselListingCard({
           <div className="carousel-listing-card__overlay" />
 
           <div className="carousel-listing-card__badges">
-            {isSpotlight && (
+            {variant === "latest" && (
+              <Badge
+                variant="default"
+                className="carousel-listing-card__badge carousel-listing-card__badge--nieuw"
+              >
+                Nieuw
+              </Badge>
+            )}
+            {isSpotlight && variant !== "latest" && (
               <Badge variant="premium" className="carousel-listing-card__badge">
                 Spotlight
               </Badge>
             )}
-            {isPremium && (
+            {isPremium && variant !== "latest" && (
               <Badge variant="premium" className="carousel-listing-card__badge">
                 Premium
               </Badge>
@@ -153,10 +162,17 @@ export function CarouselListingCard({
               Vanaf {formatPrijs(advertentie.prijs_vanaf)}
             </p>
           )}
-          {categorie && (
+          {categorie && variant !== "latest" && (
             <span className="carousel-listing-card__category">{categorie}</span>
           )}
-          <span className="carousel-listing-card__cta">Bekijk profiel</span>
+          <span
+            className={cn(
+              "carousel-listing-card__cta",
+              variant === "latest" && "carousel-listing-card__cta--hover-only"
+            )}
+          >
+            Bekijk profiel
+          </span>
         </div>
       </Link>
 

@@ -32,14 +32,14 @@ const SECTION_CLASS: Record<ListingCarouselVariant, string> = {
   spotlight: "home-spotlight",
   premium: "home-listing-block home-listing-block--premium",
   nearby: "home-nearby-compact home-listing-block",
-  latest: "home-listing-block home-listing-block--compact",
+  latest: "home-listing-block home-listing-block--compact home-listing-block--latest",
 };
 
-const CAROUSEL_MODE: Record<ListingCarouselVariant, "spotlight" | "standard"> = {
+const CAROUSEL_MODE: Record<ListingCarouselVariant, "spotlight" | "standard" | "latest"> = {
   spotlight: "spotlight",
   premium: "standard",
   nearby: "standard",
-  latest: "standard",
+  latest: "latest",
 };
 
 export function HorizontalListingsCarousel({
@@ -195,6 +195,7 @@ export function HorizontalListingsCarousel({
                       <CarouselPlaceholderCard
                         item={placeholder}
                         wide={variant === "spotlight"}
+                        compact={variant === "latest"}
                       />
                     </div>
                   ))
@@ -205,10 +206,11 @@ export function HorizontalListingsCarousel({
                       className="listings-carousel__slide snap-start"
                       style={
                         index > 7
-                      ? {
-                          contentVisibility: "auto",
-                          containIntrinsicSize: "220px 380px",
-                        }
+                          ? {
+                              contentVisibility: "auto",
+                              containIntrinsicSize:
+                                variant === "latest" ? "190px 340px" : "220px 380px",
+                            }
                           : undefined
                       }
                     >
@@ -221,7 +223,9 @@ export function HorizontalListingsCarousel({
                             ? "spotlight"
                             : variant === "premium"
                               ? "premium"
-                              : "default"
+                              : variant === "latest"
+                                ? "latest"
+                                : "default"
                         }
                         priority={index < 6}
                         wide={variant === "spotlight"}

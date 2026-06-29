@@ -15,17 +15,20 @@ function DemoPhotoFrame({ label }: { label: string }) {
 interface CarouselPlaceholderCardProps {
   item: CarouselPlaceholderItem;
   wide?: boolean;
+  compact?: boolean;
 }
 
 export function CarouselPlaceholderCard({
   item,
   wide = false,
+  compact = false,
 }: CarouselPlaceholderCardProps) {
   return (
     <article
       className={cn(
         "carousel-listing-card carousel-listing-card--placeholder group",
-        wide && "carousel-listing-card--wide"
+        wide && "carousel-listing-card--wide",
+        compact && "carousel-listing-card--compact"
       )}
       aria-label={`${item.title} — binnenkort beschikbaar`}
     >
@@ -51,7 +54,12 @@ export function CarouselPlaceholderCard({
             Vanaf {formatPrijs(item.prijs)}
           </p>
           <span className="carousel-listing-card__category">{item.categorie}</span>
-          <span className="carousel-listing-card__cta carousel-listing-card__cta--disabled">
+          <span
+            className={cn(
+              "carousel-listing-card__cta carousel-listing-card__cta--disabled",
+              compact && "carousel-listing-card__cta--hover-only"
+            )}
+          >
             Bekijk profiel
           </span>
         </div>
