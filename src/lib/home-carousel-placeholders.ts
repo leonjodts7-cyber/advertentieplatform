@@ -62,28 +62,28 @@ function maakPlaceholders(
 export const SPOTLIGHT_PLACEHOLDERS = maakPlaceholders(
   "spotlight",
   "SPOTLIGHT",
-  12,
+  6,
   "Spotlight profiel"
 );
 
 export const PREMIUM_PLACEHOLDERS = maakPlaceholders(
   "premium",
   "PREMIUM",
-  20,
+  8,
   "Premium profiel"
 );
 
 export const NEARBY_PLACEHOLDERS = maakPlaceholders(
   "nearby",
   "BUURT",
-  20,
+  8,
   "Profiel in de buurt"
 );
 
 export const LATEST_PLACEHOLDERS = maakPlaceholders(
   "latest",
   "NIEUW",
-  20,
+  8,
   "Nieuw profiel"
 );
 

@@ -37,7 +37,7 @@ export default async function AiLoungePage() {
             persoonlijkheid — betaal per bericht met credits.
           </p>
           <div className="ai-lounge-meta">
-            <span>{companions.length} companions online</span>
+            <span>{companions.length} companions beschikbaar</span>
             <span>{CREDITS_PER_BERICHT} credits per bericht</span>
             <span>Fictief 21+</span>
           </div>
@@ -61,7 +61,7 @@ export default async function AiLoungePage() {
                   <Link href="/login?redirect=/ai-lounge">Inloggen om te chatten</Link>
                 </Button>
                 <Button asChild size="sm" variant="secondary">
-                  <Link href="/credits">Credits bekijken</Link>
+                  <Link href="/login?redirect=/credits">Prijzen & credits</Link>
                 </Button>
               </>
             )}
@@ -76,6 +76,7 @@ export default async function AiLoungePage() {
               key={companion.id}
               companion={companion}
               ingelogd={!!user}
+              creditsSaldo={creditsSaldo}
             />
           ))}
         </div>

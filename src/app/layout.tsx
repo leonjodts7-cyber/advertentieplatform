@@ -58,7 +58,7 @@ export default async function RootLayout({
       <body className="marketplace-bg relative flex min-h-screen flex-col antialiased">
         <Header user={user} />
         <main className="relative z-10 flex-1">{children}</main>
-        <Footer />
+        <Footer user={user} />
       </body>
     </html>
   );

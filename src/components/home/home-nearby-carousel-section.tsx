@@ -64,7 +64,7 @@ export function HomeNearbyCarouselSection({
   return (
     <HorizontalListingsCarousel
       title="Advertenties in jouw buurt"
-      subtitle="Ontdek profielen dichtbij jou. Sta locatie toe voor relevantere resultaten."
+      subtitle="Populaire profielen op Veloura. Locatiefilter volgt binnenkort."
       items={advertenties}
       fotos={fotos}
       variant="nearby"
@@ -85,7 +85,7 @@ export function HomeNearbyCarouselSection({
             {locatieActief && (
               <span className="home-locatie-active">
                 <MapPin className="h-3.5 w-3.5" aria-hidden />
-                Locatie actief
+                Locatie opgeslagen (filter volgt)
               </span>
             )}
             <Link href="/zoeken" className="home-nearby-compact__link">

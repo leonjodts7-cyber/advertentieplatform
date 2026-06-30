@@ -13,9 +13,14 @@ export default function NotFound() {
       <p className="mt-2 max-w-md text-muted-foreground">
         De pagina die je zoekt bestaat niet of is niet meer beschikbaar.
       </p>
-      <Button asChild className="mt-8" size="lg">
-        <Link href="/zoeken">Naar profielen</Link>
-      </Button>
+      <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+        <Button asChild size="lg">
+          <Link href="/">Naar home</Link>
+        </Button>
+        <Button asChild size="lg" variant="secondary">
+          <Link href="/zoeken">Profielen zoeken</Link>
+        </Button>
+      </div>
     </div>
   );
 }

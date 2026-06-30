@@ -1,6 +1,13 @@
 import Link from "next/link";
+import type { User } from "@supabase/supabase-js";
 
-export function Footer() {
+const PLAATS_REDIRECT = encodeURIComponent("/dashboard/advertenties/nieuw");
+
+interface FooterProps {
+  user?: User | null;
+}
+
+export function Footer({ user = null }: FooterProps) {
   return (
     <footer className="mt-auto border-t border-white/10 bg-[#08070a]/80">
       <div className="container py-10 sm:py-12">
@@ -45,10 +52,10 @@ export function Footer() {
               </li>
               <li>
                 <Link
-                  href="/dashboard"
+                  href={user ? "/dashboard" : `/login?redirect=${encodeURIComponent("/dashboard")}`}
                   className="text-muted-foreground hover:text-champagne-light"
                 >
-                  Dashboard
+                  {user ? "Dashboard" : "Inloggen"}
                 </Link>
               </li>
             </ul>

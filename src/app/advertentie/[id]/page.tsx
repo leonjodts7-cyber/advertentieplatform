@@ -14,7 +14,7 @@ import { boostActief, boostLabel } from "@/lib/advertentie-boost";
 import { beschikbaarLabel, formatPrijs } from "@/lib/helpers";
 import type { Advertentie, AdvertentieFoto } from "@/lib/types";
 import { createClient } from "@/lib/supabase/server";
-import { MapPin, MessageCircle, Phone } from "lucide-react";
+import { MapPin, Phone } from "lucide-react";
 
 interface AdvertentieDetailPageProps {
   params: Promise<{ id: string }>;
@@ -78,9 +78,10 @@ export default async function AdvertentieDetailPage({
       : `https://t.me/${meta.telegram.replace(/^@/, "")}`
     : null;
   const isPremium = advertentie.premium || boostActief(meta);
+  const hasMobileContact = Boolean(advertentie.telefoon || whatsappUrl);
 
   return (
-    <div className="pb-24 lg:pb-0">
+    <div className={hasMobileContact ? "pb-24 lg:pb-0" : "pb-6 lg:pb-0"}>
       <div className="section-dark pb-6">
         <div className="container py-4">
           <Link href="/zoeken" className="text-sm text-[#b7aaa2] hover:text-[#fff7ef]">
@@ -254,10 +255,6 @@ export default async function AdvertentieDetailPage({
                       </a>
                     </Button>
                   )}
-                  <Button size="lg" variant="secondary-light" className="w-full gap-2" disabled>
-                    <MessageCircle className="h-4 w-4" />
-                    Bericht sturen (binnenkort)
-                  </Button>
                 </div>
               </div>
             </aside>
@@ -265,11 +262,19 @@ export default async function AdvertentieDetailPage({
         </div>
       </div>
 
-      {advertentie.telefoon && (
+      {hasMobileContact && (
         <div className="mobile-contact-bar lg:hidden">
-          <Button asChild size="lg" variant="primary" className="w-full">
-            <a href={`tel:${advertentie.telefoon}`}>Neem contact op</a>
-          </Button>
+          {advertentie.telefoon ? (
+            <Button asChild size="lg" variant="primary" className="w-full">
+              <a href={`tel:${advertentie.telefoon}`}>Neem contact op</a>
+            </Button>
+          ) : whatsappUrl ? (
+            <Button asChild size="lg" variant="primary" className="w-full">
+              <a href={whatsappUrl} target="_blank" rel="noopener noreferrer">
+                WhatsApp
+              </a>
+            </Button>
+          ) : null}
         </div>
       )}
     </div>

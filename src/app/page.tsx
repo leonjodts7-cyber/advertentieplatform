@@ -57,7 +57,7 @@ export default async function HomePage() {
         items={spotlight}
         fotos={fotos}
         variant="spotlight"
-        viewAllHref="/zoeken?premium_profiel=true"
+        viewAllHref="/zoeken?spotlight=1"
       />
 
       <HorizontalListingsCarousel

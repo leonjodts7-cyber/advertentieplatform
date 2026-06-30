@@ -29,13 +29,8 @@ export function SearchResultsFallback({
         </p>
         <div className="zoek-empty__actions">
           <Link href="/zoeken" className="zoek-empty__cta zoek-empty__cta--primary">
-            Bekijk alle profielen
+            {filtersActive ? "Filters wissen & alles bekijken" : "Bekijk alle profielen"}
           </Link>
-          {filtersActive && (
-            <Link href="/zoeken" className="zoek-empty__cta zoek-empty__cta--secondary">
-              Filters wissen
-            </Link>
-          )}
         </div>
       </div>
 

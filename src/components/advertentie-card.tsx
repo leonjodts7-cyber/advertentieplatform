@@ -249,7 +249,7 @@ export function DashboardAdvertentieCard({
           href={`${bewerkUrl}?stap=promotie`}
           className="dashboard-btn dashboard-btn--outline dashboard-btn--sm"
         >
-          Boost kopen
+          Boost instellen
         </Link>
       </div>
     </article>

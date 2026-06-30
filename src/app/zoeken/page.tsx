@@ -22,7 +22,7 @@ import {
   metaBevatTerm,
   parseAdvertentieBeschrijving,
 } from "@/lib/advertentie-metadata";
-import { sorteerAdvertenties } from "@/lib/advertentie-boost";
+import { sorteerAdvertenties, isPlaatsingActief, plaatsingType } from "@/lib/advertentie-boost";
 
 export const metadata: Metadata = {
   title: "Profielen zoeken",
@@ -113,6 +113,12 @@ function filterAdvertenties(
     if (isTruthyFilter(params.beschikbaar) && !ad.beschikbaar) return false;
     if (isTruthyFilter(params.nieuw_profiel) && !isNieuwProfiel(ad.aangemaakt_op)) return false;
     if (isTruthyFilter(params.premium_profiel) && ad.premium !== true) return false;
+
+    if (isTruthyFilter(params.spotlight)) {
+      const spotlight =
+        isPlaatsingActief(ad) && plaatsingType(ad) === "homepage";
+      if (!spotlight) return false;
+    }
 
     return true;
   });

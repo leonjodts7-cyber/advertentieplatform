@@ -4,6 +4,7 @@ import { useState } from "react";
 import { AdvertentieCardHorizontal } from "@/components/advertentie-card";
 import { ListingCard } from "@/components/listing-card";
 import { SearchResultsFallback } from "@/components/zoek/search-results-fallback";
+import { getListingCardVariant } from "@/lib/listing-card-variant";
 import type { Advertentie } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
@@ -34,7 +35,7 @@ export function ZoekResults({
   const isEmpty = advertenties.length === 0;
 
   return (
-    <main className="zoek-results">
+    <section className="zoek-results" aria-label="Zoekresultaten">
       <div className="zoek-results__toolbar">
         <p className="zoek-results__count">{profielCountLabel(advertenties.length)}</p>
         {!isEmpty && (
@@ -71,7 +72,7 @@ export function ZoekResults({
                 key={advertentie.id}
                 advertentie={advertentie}
                 afbeeldingUrl={fotos.get(advertentie.id)}
-                variant="premium"
+                variant={getListingCardVariant(advertentie)}
               />
             ))}
           </div>
@@ -94,6 +95,6 @@ export function ZoekResults({
           filtersActive={filtersActive}
         />
       )}
-    </main>
+    </section>
   );
 }

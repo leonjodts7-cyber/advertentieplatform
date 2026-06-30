@@ -25,6 +25,7 @@ const BOOL_LABELS: Record<string, string> = {
   discreet_contact: "Discreet contact",
   nieuw_profiel: "Nieuw profiel",
   premium_profiel: "Premium profiel",
+  spotlight: "Spotlight",
   verplaatsing_mogelijk: "Verplaatsing mogelijk",
   koppels_welkom: "Koppels welkom",
 };

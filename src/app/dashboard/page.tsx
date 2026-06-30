@@ -18,11 +18,11 @@ function telActieveBoosts(ads: Pick<Advertentie, "beschrijving" | "status">[]): 
 }
 
 const PROFIEL_TIPS = [
-  "Voeg meer foto's toe",
-  "Voeg video toe",
-  "Vul werktijden in",
-  "Koop een boost",
-];
+  { text: "Voeg meer foto's toe", href: "/dashboard/advertenties" },
+  { text: "Voeg video toe", href: "/dashboard/advertenties" },
+  { text: "Vul werktijden in", href: "/dashboard/advertenties" },
+  { text: "Koop een boost", href: "/dashboard/boosts" },
+] as const;
 
 export const metadata: Metadata = {
   title: "Dashboard",
@@ -70,6 +70,13 @@ export default async function DashboardPage() {
     return Math.max(max, diff > 0 ? diff : 0);
   }, 0);
 
+  const verbeterTarget =
+    advertenties.find((a) => a.status === "concept") ??
+    advertenties.find((a) => a.status === "actief");
+  const verbeterHref = verbeterTarget
+    ? `/dashboard/advertenties/${verbeterTarget.id}/bewerken?stap=media`
+    : "/dashboard/advertenties/nieuw";
+
   return (
     <div className="dashboard-page">
       <div className="dashboard-page__header">
@@ -91,12 +98,9 @@ export default async function DashboardPage() {
             Mijn advertenties
           </Link>
           <Link href="/dashboard/boosts" className="dashboard-btn dashboard-btn--secondary">
-            Boost kopen
+            Boost instellen
           </Link>
-          <Link
-            href="/dashboard/advertenties/nieuw"
-            className="dashboard-btn dashboard-btn--outline"
-          >
+          <Link href={verbeterHref} className="dashboard-btn dashboard-btn--outline">
             Profiel verbeteren
           </Link>
         </div>
@@ -128,7 +132,7 @@ export default async function DashboardPage() {
 
           <section className="dashboard-panel">
             <h2 className="dashboard-panel__title">Zichtbaarheid</h2>
-            <div className="dashboard-mini-grid dashboard-mini-grid--3">
+            <div className="dashboard-mini-grid dashboard-mini-grid--2">
               <div className="dashboard-mini-stat">
                 <span className="dashboard-mini-stat__label">Actieve boosts</span>
                 <span className="dashboard-mini-stat__value">{actieveBoosts}</span>
@@ -139,36 +143,40 @@ export default async function DashboardPage() {
                   {premiumDagen > 0 ? premiumDagen : "—"}
                 </span>
               </div>
-              <div className="dashboard-mini-stat">
-                <span className="dashboard-mini-stat__label">Credits</span>
-                <span className="dashboard-mini-stat__value">{aiStats.resterendeCredits}</span>
-              </div>
+            </div>
+          </section>
+
+          <section className="dashboard-panel">
+            <h2 className="dashboard-panel__title">AI Lounge</h2>
+            <p className="dashboard-panel__text">
+              {aiStats.resterendeCredits} credits beschikbaar voor AI-chat.
+            </p>
+            <div className="dashboard-quick-actions dashboard-quick-actions--inline mt-3">
+              <Link href="/ai-lounge" className="dashboard-btn dashboard-btn--secondary dashboard-btn--sm">
+                Naar AI Lounge
+              </Link>
+              <Link href="/credits" className="dashboard-btn dashboard-btn--outline dashboard-btn--sm">
+                Credits kopen
+              </Link>
             </div>
           </section>
 
           <section className="dashboard-panel">
             <h2 className="dashboard-panel__title">Prestaties</h2>
-            <div className="dashboard-mini-grid dashboard-mini-grid--3">
-              <div className="dashboard-mini-stat">
-                <span className="dashboard-mini-stat__label">Views</span>
-                <span className="dashboard-mini-stat__value">0</span>
-              </div>
-              <div className="dashboard-mini-stat">
-                <span className="dashboard-mini-stat__label">Contactkliks</span>
-                <span className="dashboard-mini-stat__value">0</span>
-              </div>
-              <div className="dashboard-mini-stat">
-                <span className="dashboard-mini-stat__label">WhatsApp-kliks</span>
-                <span className="dashboard-mini-stat__value">0</span>
-              </div>
-            </div>
+            <p className="dashboard-panel__text dashboard-panel__text--muted">
+              Statistieken worden binnenkort beschikbaar.
+            </p>
           </section>
 
           <section className="dashboard-panel">
             <h2 className="dashboard-panel__title">Verbeter je profiel</h2>
             <ul className="dashboard-tips">
               {PROFIEL_TIPS.map((tip) => (
-                <li key={tip}>{tip}</li>
+                <li key={tip.text}>
+                  <Link href={tip.href} className="dashboard-tip-link">
+                    {tip.text} →
+                  </Link>
+                </li>
               ))}
             </ul>
           </section>

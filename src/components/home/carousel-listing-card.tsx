@@ -133,7 +133,7 @@ export function CarouselListingCard({
                 Spotlight
               </Badge>
             )}
-            {isPremium && variant !== "latest" && (
+            {isPremium && !isSpotlight && variant !== "latest" && (
               <Badge variant="premium" className="carousel-listing-card__badge">
                 Premium
               </Badge>
