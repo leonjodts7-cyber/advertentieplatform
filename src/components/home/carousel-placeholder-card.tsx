@@ -1,6 +1,7 @@
 import { Badge } from "@/components/ui/badge";
 import { formatPrijs } from "@/lib/helpers";
 import type { CarouselPlaceholderItem } from "@/lib/home-carousel-placeholders";
+import type { CarouselTier } from "@/components/home/carousel-listing-card";
 import { cn } from "@/lib/utils";
 
 function DemoPhotoFrame({ label }: { label: string }) {
@@ -14,22 +15,27 @@ function DemoPhotoFrame({ label }: { label: string }) {
 
 interface CarouselPlaceholderCardProps {
   item: CarouselPlaceholderItem;
+  carouselTier?: CarouselTier;
   wide?: boolean;
   compact?: boolean;
 }
 
 export function CarouselPlaceholderCard({
   item,
+  carouselTier,
   wide = false,
   compact = false,
 }: CarouselPlaceholderCardProps) {
+  const tier = carouselTier ?? (compact ? "latest" : wide ? "spotlight" : undefined);
+  const isLatest = tier === "latest";
+
   return (
     <article
       className={cn(
         "carousel-listing-card carousel-listing-card--placeholder group",
-        wide && "carousel-listing-card--wide",
-        compact && "carousel-listing-card--compact"
+        tier === "latest" && "carousel-listing-card--compact"
       )}
+      data-carousel-tier={tier}
       aria-label={`${item.title} — binnenkort beschikbaar`}
     >
       <div className="carousel-listing-card__link">
@@ -53,15 +59,19 @@ export function CarouselPlaceholderCard({
           <p className="carousel-listing-card__price">
             Vanaf {formatPrijs(item.prijs)}
           </p>
-          <span className="carousel-listing-card__category">{item.categorie}</span>
-          <span
-            className={cn(
-              "carousel-listing-card__cta carousel-listing-card__cta--disabled",
-              compact && "carousel-listing-card__cta--hover-only"
-            )}
-          >
-            Bekijk profiel
-          </span>
+          {!isLatest && tier !== "nearby" && (
+            <span className="carousel-listing-card__category">{item.categorie}</span>
+          )}
+          {!isLatest && (
+            <span className="carousel-listing-card__cta carousel-listing-card__cta--disabled carousel-listing-card__cta--compact">
+              Bekijk profiel
+            </span>
+          )}
+          {isLatest && (
+            <span className="carousel-listing-card__cta carousel-listing-card__cta--disabled carousel-listing-card__cta--link-only">
+              Bekijk
+            </span>
+          )}
         </div>
       </div>
     </article>

@@ -71,7 +71,7 @@ export function HomeNearbyCarouselSection({
       viewAllHref="/zoeken"
       ariaLabel="Advertenties in jouw buurt"
       toolbar={
-        <div className="mb-4">
+        <div className="mb-2">
           <div className="home-nearby-compact__actions">
             <button
               type="button"

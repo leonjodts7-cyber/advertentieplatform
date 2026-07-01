@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { ProfilePhotoPlaceholder } from "@/components/profile-photo-placeholder";
+import { CompanionVisual } from "@/components/ai/companion-visual";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import type { AiCompanion } from "@/lib/ai-companions";
@@ -123,11 +123,7 @@ export function AiChatInterface({
       <aside className="ai-chat-sidebar">
         <div className="ai-chat-sidebar__card">
           <div className="ai-chat-sidebar__media">
-            <ProfilePhotoPlaceholder
-              variant={companion.photoVariant}
-              aspect="cover"
-              className="!aspect-auto h-full min-h-[10rem] w-full"
-            />
+            <CompanionVisual companion={companion} priority />
           </div>
           <div className="ai-chat-sidebar__content">
             <div className="flex flex-wrap items-center gap-2">
@@ -140,7 +136,11 @@ export function AiChatInterface({
             </div>
             <p className="ai-chat-sidebar__type">{companion.type}</p>
             <div className="ai-chat-sidebar__tags">
-              <span className="ai-companion-card__tag">{companion.badge}</span>
+              {companion.traits.slice(0, 2).map((trait) => (
+                <span key={trait} className="ai-companion-card__tag">
+                  {trait}
+                </span>
+              ))}
               <span className="ai-companion-card__tag">Fictief 21+</span>
             </div>
             <p className="ai-chat-sidebar__bio">{companion.beschrijving}</p>

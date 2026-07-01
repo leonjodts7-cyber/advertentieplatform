@@ -49,12 +49,14 @@ function ListingPlaceholder() {
 }
 
 export type CarouselCardVariant = "default" | "premium" | "spotlight" | "latest";
+export type CarouselTier = "spotlight" | "premium" | "nearby" | "latest";
 
 interface CarouselListingCardProps {
   advertentie: Advertentie;
   afbeeldingUrl?: string | null;
   href?: string;
   variant?: CarouselCardVariant;
+  carouselTier?: CarouselTier;
   priority?: boolean;
   wide?: boolean;
 }
@@ -64,9 +66,11 @@ export function CarouselListingCard({
   afbeeldingUrl,
   href,
   variant = "default",
+  carouselTier,
   priority = false,
   wide = false,
 }: CarouselListingCardProps) {
+  const tier = carouselTier ?? (variant === "latest" ? "latest" : variant === "spotlight" ? "spotlight" : variant === "premium" ? "premium" : undefined);
   const { meta } = parseAdvertentieBeschrijving(advertentie.beschrijving);
   const categorie = categorieLabel(meta.categorie);
   const linkHref = href ?? `/advertentie/${advertentie.id}`;
@@ -99,9 +103,10 @@ export function CarouselListingCard({
         "carousel-listing-card group",
         wide && "carousel-listing-card--wide",
         variant === "premium" && "carousel-listing-card--premium",
-        variant === "latest" && "carousel-listing-card--compact",
+        tier === "latest" && "carousel-listing-card--compact",
         isPremium && "carousel-listing-card--is-premium"
       )}
+      data-carousel-tier={tier}
     >
       <Link href={linkHref} className="carousel-listing-card__link">
         <div className="carousel-listing-card__media">
@@ -138,7 +143,7 @@ export function CarouselListingCard({
                 Premium
               </Badge>
             )}
-            {advertentie.geverifieerd && (
+            {advertentie.geverifieerd && tier !== "latest" && (
               <Badge variant="verified" className="carousel-listing-card__badge">
                 Geverifieerd
               </Badge>
@@ -162,17 +167,26 @@ export function CarouselListingCard({
               Vanaf {formatPrijs(advertentie.prijs_vanaf)}
             </p>
           )}
-          {categorie && variant !== "latest" && (
+          {categorie && tier !== "latest" && tier !== "nearby" && (
             <span className="carousel-listing-card__category">{categorie}</span>
           )}
-          <span
-            className={cn(
-              "carousel-listing-card__cta",
-              variant === "latest" && "carousel-listing-card__cta--hover-only"
-            )}
-          >
-            Bekijk profiel
-          </span>
+          {tier !== "latest" && (
+            <span
+              className={cn(
+                "carousel-listing-card__cta",
+                (tier === "spotlight" || tier === "premium") &&
+                  "carousel-listing-card__cta--compact",
+                tier === "nearby" && "carousel-listing-card__cta--subtle"
+              )}
+            >
+              Bekijk profiel
+            </span>
+          )}
+          {tier === "latest" && (
+            <span className="carousel-listing-card__cta carousel-listing-card__cta--link-only">
+              Bekijk
+            </span>
+          )}
         </div>
       </Link>
 

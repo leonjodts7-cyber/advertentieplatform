@@ -26,20 +26,20 @@ export interface HorizontalListingsCarouselProps {
   embedded?: boolean;
 }
 
-const GAP_PX = 10;
+const GAP_PX = 8;
 
 const SECTION_CLASS: Record<ListingCarouselVariant, string> = {
   spotlight: "home-spotlight",
   premium: "home-listing-block home-listing-block--premium",
-  nearby: "home-nearby-compact home-listing-block",
+  nearby: "home-nearby-compact home-listing-block home-listing-block--nearby",
   latest: "home-listing-block home-listing-block--compact home-listing-block--latest",
 };
 
-const CAROUSEL_MODE: Record<ListingCarouselVariant, "spotlight" | "standard" | "latest"> = {
-  spotlight: "spotlight",
-  premium: "standard",
-  nearby: "standard",
-  latest: "latest",
+const INTRINSIC_SIZE: Record<ListingCarouselVariant, string> = {
+  spotlight: "390px 360px",
+  premium: "235px 320px",
+  nearby: "220px 300px",
+  latest: "195px 280px",
 };
 
 export function HorizontalListingsCarousel({
@@ -126,7 +126,6 @@ export function HorizontalListingsCarousel({
   }
 
   const label = ariaLabel ?? title;
-  const mode = CAROUSEL_MODE[variant];
 
   return (
     <section
@@ -148,7 +147,7 @@ export function HorizontalListingsCarousel({
           </div>
           {viewAllHref && (
             <Link href={viewAllHref} className="home-listing-block__link">
-              Alles bekijken →
+              Alles bekijken
             </Link>
           )}
         </div>
@@ -158,7 +157,7 @@ export function HorizontalListingsCarousel({
         <div
           className={cn(
             "listings-carousel",
-            `listings-carousel--${mode}`,
+            `listings-carousel--${variant}`,
             scrollable && "listings-carousel--scrollable"
           )}
         >
@@ -194,8 +193,7 @@ export function HorizontalListingsCarousel({
                     >
                       <CarouselPlaceholderCard
                         item={placeholder}
-                        wide={variant === "spotlight"}
-                        compact={variant === "latest"}
+                        carouselTier={variant}
                       />
                     </div>
                   ))
@@ -208,8 +206,7 @@ export function HorizontalListingsCarousel({
                         index > 7
                           ? {
                               contentVisibility: "auto",
-                              containIntrinsicSize:
-                                variant === "latest" ? "190px 340px" : "220px 380px",
+                              containIntrinsicSize: INTRINSIC_SIZE[variant],
                             }
                           : undefined
                       }
@@ -218,6 +215,7 @@ export function HorizontalListingsCarousel({
                         advertentie={advertentie}
                         afbeeldingUrl={fotos.get(advertentie.id)}
                         href={`${hrefBase}${advertentie.id}`}
+                        carouselTier={variant}
                         variant={
                           variant === "spotlight"
                             ? "spotlight"
@@ -228,7 +226,6 @@ export function HorizontalListingsCarousel({
                                 : "default"
                         }
                         priority={index < 6}
-                        wide={variant === "spotlight"}
                       />
                     </div>
                   ))}
