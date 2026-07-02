@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Cormorant_Garamond, DM_Sans } from "next/font/google";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
+import { FavoritesProvider } from "@/contexts/favorites-context";
+import { haalFavorietIds } from "@/lib/favorieten-queries";
 import { createClient } from "@/lib/supabase/server";
 import "./globals.css";
 
@@ -53,12 +55,19 @@ export default async function RootLayout({
     data: { user },
   } = await supabase.auth.getUser();
 
+  let favoriteIds: string[] = [];
+  if (user) {
+    favoriteIds = await haalFavorietIds(supabase, user.id);
+  }
+
   return (
     <html lang="nl" className={`${display.variable} ${sans.variable}`}>
       <body className="marketplace-bg relative flex min-h-screen flex-col antialiased">
-        <Header user={user} />
-        <main className="relative z-10 flex-1">{children}</main>
-        <Footer user={user} />
+        <FavoritesProvider initialIds={favoriteIds} isLoggedIn={!!user}>
+          <Header user={user} />
+          <main className="relative z-10 flex-1">{children}</main>
+          <Footer user={user} />
+        </FavoritesProvider>
       </body>
     </html>
   );

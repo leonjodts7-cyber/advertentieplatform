@@ -35,6 +35,13 @@ export interface AdvertentieFoto {
   aangemaakt_op: string;
 }
 
+export interface Favoriet {
+  id: string;
+  user_id: string;
+  advertentie_id: string;
+  created_at: string;
+}
+
 export interface Database {
   public: {
     Tables: {
@@ -103,6 +110,22 @@ export interface Database {
           url?: string;
           volgorde?: number;
           aangemaakt_op?: string;
+        };
+        Relationships: [];
+      };
+      favorieten: {
+        Row: Favoriet;
+        Insert: {
+          id?: string;
+          user_id: string;
+          advertentie_id: string;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          user_id?: string;
+          advertentie_id?: string;
+          created_at?: string;
         };
         Relationships: [];
       };

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
+import { FavoriteButton } from "@/components/favorite-button";
 import { Button } from "@/components/ui/button";
 import { formatPrijs, statusLabel } from "@/lib/helpers";
 import {
@@ -272,14 +273,17 @@ export function AdvertentieCardHorizontal({
 
   return (
     <article className="listing-row-card">
-      <Link href={href} className="listing-row-card__media">
+      <div className="listing-row-card__media-wrap">
+        <Link href={href} className="listing-row-card__media">
         {afbeeldingUrl ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img src={afbeeldingUrl} alt={advertentie.titel} className="h-full w-full object-cover" />
         ) : (
           <ListingPlaceholder />
         )}
-      </Link>
+        </Link>
+        <FavoriteButton advertentieId={advertentie.id} />
+      </div>
       <div className="listing-row-card__body">
         <div className="listing-row-card__badges">
           {heeftPremiumPlaatsing(advertentie) && <Badge variant="premium">Premium</Badge>}

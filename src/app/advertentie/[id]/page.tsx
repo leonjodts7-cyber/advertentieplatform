@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { FavoriteButton } from "@/components/favorite-button";
 import { ProfilePhotoPlaceholder } from "@/components/profile-photo-placeholder";
 import {
   BESCHIKBAARHEID_OPTIES,
@@ -124,9 +125,12 @@ export default async function AdvertentieDetailPage({
             </Badge>
           </div>
 
-          <h1 className="mt-3 font-display text-2xl font-medium text-[#fff6ef] sm:text-3xl">
-            {advertentie.titel}
-          </h1>
+          <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
+            <h1 className="font-display text-2xl font-medium text-[#fff6ef] sm:text-3xl">
+              {advertentie.titel}
+            </h1>
+            <FavoriteButton advertentieId={advertentie.id} variant="inline" />
+          </div>
           <p className="mt-1 text-sm text-[#c2b4ab]">
             {advertentie.leeftijd} jaar · {advertentie.stad} ·{" "}
             <span className="font-semibold text-[#d6b36b]">

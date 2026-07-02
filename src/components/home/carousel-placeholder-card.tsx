@@ -1,4 +1,5 @@
 import { Badge } from "@/components/ui/badge";
+import { FavoriteButton } from "@/components/favorite-button";
 import { formatPrijs } from "@/lib/helpers";
 import type { CarouselPlaceholderItem } from "@/lib/home-carousel-placeholders";
 import type { CarouselTier } from "@/components/home/carousel-listing-card";
@@ -38,6 +39,7 @@ export function CarouselPlaceholderCard({
       data-carousel-tier={tier}
       aria-label={`${item.title} — binnenkort beschikbaar`}
     >
+      <FavoriteButton advertentieId={item.id} disabled />
       <div className="carousel-listing-card__link">
         <div className="carousel-listing-card__media">
           <DemoPhotoFrame label={item.photoLabel} />

@@ -1,9 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import { Heart } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { FavoriteButton } from "@/components/favorite-button";
 import { formatPrijs } from "@/lib/helpers";
 import {
   categorieLabel,
@@ -17,25 +16,6 @@ import {
 } from "@/lib/advertentie-boost";
 import type { Advertentie } from "@/lib/types";
 import { cn } from "@/lib/utils";
-
-const FAV_KEY = "veloura_favorites";
-
-function readFavorites(): string[] {
-  try {
-    const raw = localStorage.getItem(FAV_KEY);
-    return raw ? (JSON.parse(raw) as string[]) : [];
-  } catch {
-    return [];
-  }
-}
-
-function writeFavorites(ids: string[]) {
-  try {
-    localStorage.setItem(FAV_KEY, JSON.stringify(ids));
-  } catch {
-    /* ignore */
-  }
-}
 
 function ListingPlaceholder() {
   return (
@@ -79,23 +59,6 @@ export function CarouselListingCard({
   const isSpotlight =
     variant === "spotlight" ||
     (isPlaatsingActief(advertentie) && plaatsingType(advertentie) === "homepage");
-
-  const [favoriet, setFavoriet] = useState(false);
-
-  useEffect(() => {
-    setFavoriet(readFavorites().includes(advertentie.id));
-  }, [advertentie.id]);
-
-  function toggleFavoriet(e: React.MouseEvent) {
-    e.preventDefault();
-    e.stopPropagation();
-    const ids = readFavorites();
-    const next = ids.includes(advertentie.id)
-      ? ids.filter((id) => id !== advertentie.id)
-      : [...ids, advertentie.id];
-    writeFavorites(next);
-    setFavoriet(next.includes(advertentie.id));
-  }
 
   return (
     <article
@@ -190,22 +153,7 @@ export function CarouselListingCard({
         </div>
       </Link>
 
-      <button
-        type="button"
-        className={cn(
-          "carousel-listing-card__fav",
-          favoriet && "carousel-listing-card__fav--active"
-        )}
-        aria-label={favoriet ? "Verwijder uit favorieten" : "Voeg toe aan favorieten"}
-        aria-pressed={favoriet}
-        onClick={toggleFavoriet}
-      >
-        <Heart
-          className="h-3.5 w-3.5"
-          fill={favoriet ? "currentColor" : "none"}
-          aria-hidden
-        />
-      </button>
+      <FavoriteButton advertentieId={advertentie.id} />
     </article>
   );
 }

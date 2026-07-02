@@ -37,9 +37,14 @@ export function Header({ user }: HeaderProps) {
             AI Lounge
           </Link>
           {user ? (
-            <Link href="/dashboard" className={navLinkClass}>
-              Dashboard
-            </Link>
+            <>
+              <Link href="/favorieten" className={navLinkClass}>
+                Favorieten
+              </Link>
+              <Link href="/dashboard" className={navLinkClass}>
+                Dashboard
+              </Link>
+            </>
           ) : (
             <>
               <Link href="/login" className={navLinkClass}>
