@@ -22,6 +22,7 @@ import {
 } from "@/lib/zoek-filters";
 import { Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "@/contexts/locale-context";
 import { fetchAiZoekParams } from "@/lib/ai-zoek-nav";
 
 const AI_VOORBEELDEN = [
@@ -38,6 +39,7 @@ function boolFromParam(value: string | null) {
 export function ZoekFilterBar() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { t } = useTranslation();
   const [isPending, startTransition] = useTransition();
   const [extendedOpen, setExtendedOpen] = useState(false);
   const [aiOpen, setAiOpen] = useState(searchParams.get("ai") === "1");
@@ -199,11 +201,11 @@ export function ZoekFilterBar() {
               className="zoek-filter-bar__back"
               onClick={() => setAiOpen(false)}
             >
-              ← Snel zoeken
+              {t("search.backQuick")}
             </button>
             <span className="zoek-filter-bar__ai-title">
               <Sparkles className="h-4 w-4" aria-hidden />
-              AI zoeken
+              {t("search.aiSearch")}
             </span>
           </div>
           <label htmlFor="zoek-ai" className="filter-label">
@@ -270,7 +272,7 @@ export function ZoekFilterBar() {
             </div>
             <div className="zoek-filter-bar__field zoek-filter-bar__field--btn">
               <Button type="submit" size="md" disabled={isPending} className="w-full">
-                Toon profielen
+                {t("search.showProfiles")}
               </Button>
             </div>
           </div>
@@ -302,7 +304,7 @@ export function ZoekFilterBar() {
               )}
               onClick={() => setExtendedOpen(true)}
             >
-              Filters
+              {t("search.filters")}
             </button>
             <button
               type="button"
@@ -312,7 +314,7 @@ export function ZoekFilterBar() {
               )}
               onClick={() => setAiOpen(true)}
             >
-              AI zoeken
+              {t("search.aiSearch")}
             </button>
             {hasFilters && (
               <button
@@ -320,7 +322,7 @@ export function ZoekFilterBar() {
                 className="zoek-filter-bar__clear"
                 onClick={handleClear}
               >
-                Filters wissen
+                {t("search.clearFiltersBtn")}
               </button>
             )}
           </div>
@@ -337,13 +339,13 @@ export function ZoekFilterBar() {
           />
           <aside className="zoek-filter-drawer" aria-label="Uitgebreide filters">
             <div className="zoek-filter-drawer__head">
-              <h2 className="zoek-filter-drawer__title">Filters</h2>
+              <h2 className="zoek-filter-drawer__title">{t("search.filters")}</h2>
               <button
                 type="button"
                 className="zoek-filter-drawer__close"
                 onClick={() => setExtendedOpen(false)}
               >
-                Sluiten
+                {t("nav.close")}
               </button>
             </div>
             <div className="zoek-filter-drawer__body">
@@ -463,7 +465,7 @@ export function ZoekFilterBar() {
                   setExtendedOpen(false);
                 }}
               >
-                Toon profielen
+                {t("search.showProfiles")}
               </Button>
               {hasFilters && (
                 <Button
@@ -476,7 +478,7 @@ export function ZoekFilterBar() {
                     setExtendedOpen(false);
                   }}
                 >
-                  Filters wissen
+                  {t("search.clearFiltersBtn")}
                 </Button>
               )}
             </div>

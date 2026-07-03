@@ -1,16 +1,12 @@
-import { HomeHeroCompact } from "@/components/home/home-hero";
-import { HomeProviderCta } from "@/components/home/home-provider-cta";
-import { HorizontalListingsCarousel } from "@/components/home/horizontal-listings-carousel";
-import { HomeNearbyCarouselSection } from "@/components/home/home-nearby-carousel-section";
-import { RecentBekekenSection } from "@/components/recent-bekeken-section";
-import { haalEersteFotos, haalFotoAantallen } from "@/lib/advertentie-fotos";
-import { isPremiumListing } from "@/lib/advertentie-boost";
 import {
   fetchActieveAdvertenties,
   fetchPopulaireAdvertenties,
   fetchPremiumAdvertenties,
   fetchSpotlightAdvertenties,
 } from "@/lib/advertentie-queries";
+import { haalEersteFotos, haalFotoAantallen } from "@/lib/advertentie-fotos";
+import { isPremiumListing } from "@/lib/advertentie-boost";
+import { HomeMarketplaceContent } from "@/components/home/home-marketplace-content";
 import { createClient } from "@/lib/supabase/server";
 import type { Advertentie } from "@/lib/types";
 
@@ -47,62 +43,19 @@ export default async function HomePage() {
     ...nearby.map((a) => a.id),
     ...populaire.map((a) => a.id),
   ];
-  const fotos = await haalEersteFotos(supabase, [...new Set(allIds)]);
-  const fotoCounts = await haalFotoAantallen(supabase, [...new Set(allIds)]);
+  const uniqueIds = [...new Set(allIds)];
+  const fotos = await haalEersteFotos(supabase, uniqueIds);
+  const fotoCounts = await haalFotoAantallen(supabase, uniqueIds);
 
   return (
-    <div className="home-page home-page--marketplace overflow-x-hidden">
-      <HomeHeroCompact />
-
-      <HorizontalListingsCarousel
-        title="Homepage Spotlight"
-        subtitle="Topprofielen met maximale zichtbaarheid."
-        items={spotlight}
-        fotos={fotos}
-        variant="spotlight"
-        viewAllHref="/zoeken?spotlight=1"
-        fotoCounts={fotoCounts}
-      />
-
-      <HorizontalListingsCarousel
-        title="Premium advertenties"
-        subtitle="Uitgelichte profielen met extra zichtbaarheid."
-        items={premium}
-        fotos={fotos}
-        variant="premium"
-        viewAllHref="/zoeken?premium_profiel=true"
-        fotoCounts={fotoCounts}
-      />
-
-      <HomeNearbyCarouselSection
-        advertenties={nearby}
-        fotos={fotos}
-        fotoCounts={fotoCounts}
-      />
-
-      <HorizontalListingsCarousel
-        title="Nieuwste advertenties"
-        subtitle="Recent geplaatste actieve profielen."
-        items={nieuwste}
-        fotos={fotos}
-        variant="latest"
-        viewAllHref="/zoeken"
-        fotoCounts={fotoCounts}
-      />
-
-      <HorizontalListingsCarousel
-        title="Populaire advertenties"
-        subtitle="Veel bekeken en uitgelichte profielen op Veloura."
-        items={populaire}
-        fotos={fotos}
-        variant="popular"
-        viewAllHref="/zoeken?sort=premium"
-        fotoCounts={fotoCounts}
-      />
-
-      <RecentBekekenSection />
-
-      <HomeProviderCta />
-    </div>
+    <HomeMarketplaceContent
+      spotlight={spotlight}
+      premium={premium}
+      nieuwste={nieuwste}
+      nearby={nearby}
+      populaire={populaire}
+      fotos={fotos}
+      fotoCounts={fotoCounts}
+    />
   );
 }

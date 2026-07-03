@@ -6,17 +6,26 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { vertaalAuthFout } from "@/lib/auth-errors";
 import { getAuthCallbackUrl, getSafeRedirectPath } from "@/lib/auth-redirect";
+import { RoleChoicePanel } from "@/components/role-choice-panel";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useTranslation } from "@/contexts/locale-context";
+import {
+  getRoleFromUser,
+  isProviderRole,
+  needsRoleChoice,
+} from "@/lib/user-role";
+import { setUserRole } from "@/lib/user-role-client";
 import { cn } from "@/lib/utils";
 import { Mail } from "lucide-react";
 
 type Tab = "inloggen" | "registreren";
-type View = Tab | "bevestiging" | "verlopen";
+type View = Tab | "bevestiging" | "verlopen" | "rolkeuze";
 
 export function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { t } = useTranslation();
 
   const [view, setView] = useState<View>("inloggen");
   const [wachtwoordVergeten, setWachtwoordVergeten] = useState(false);
@@ -40,9 +49,7 @@ export function LoginForm() {
   useEffect(() => {
     if (searchParams.get("confirmed") === "1") {
       setView("inloggen");
-      setSucces(
-        "Je e-mailadres is succesvol bevestigd. Je kan nu inloggen."
-      );
+      setSucces(t("auth.confirmed"));
       setFout(null);
     } else if (searchParams.get("error") === "expired") {
       setView("verlopen");
@@ -50,11 +57,9 @@ export function LoginForm() {
       setSucces(null);
     } else if (searchParams.get("error") === "auth") {
       setView("inloggen");
-      setFout(
-        "Activatie mislukt. Vraag een nieuwe bevestigingsmail aan of probeer opnieuw in te loggen."
-      );
+      setFout(t("auth.authFailed"));
     }
-  }, [searchParams]);
+  }, [searchParams, t]);
 
   function resetMeldingen() {
     setFout(null);
@@ -68,6 +73,36 @@ export function LoginForm() {
     setWachtwoord("");
     setWachtwoordBevestig("");
     setLeeftijdBevestigd(false);
+  }
+
+  async function navigateAfterAuth() {
+    const supabase = createClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    const redirectParam =
+      searchParams.get("redirect") ?? searchParams.get("next");
+    const intent = searchParams.get("intent");
+
+    if (intent === "provider" && user) {
+      await setUserRole("provider");
+    }
+
+    if (redirectParam) {
+      router.push(getSafeRedirectPath(redirectParam, "/zoeken"));
+      router.refresh();
+      return;
+    }
+
+    if (user && needsRoleChoice(user)) {
+      setView("rolkeuze");
+      return;
+    }
+
+    const role = getRoleFromUser(user);
+    router.push(isProviderRole(role) ? "/dashboard" : "/zoeken");
+    router.refresh();
   }
 
   async function handleInloggen(e: React.FormEvent<HTMLFormElement>) {
@@ -87,9 +122,7 @@ export function LoginForm() {
         return;
       }
 
-      const redirect = getSafeRedirectPath(searchParams.get("redirect"));
-      router.push(redirect);
-      router.refresh();
+      await navigateAfterAuth();
     } catch (err) {
       setFout(vertaalAuthFout(err instanceof Error ? err : new Error(String(err))));
     } finally {
@@ -102,15 +135,15 @@ export function LoginForm() {
     resetMeldingen();
 
     if (wachtwoord.length < 8) {
-      setFout("Het wachtwoord moet minimaal 8 tekens bevatten.");
+      setFout(t("auth.passwordMin"));
       return;
     }
     if (wachtwoord !== wachtwoordBevestig) {
-      setFout("De wachtwoorden komen niet overeen.");
+      setFout(t("auth.passwordMismatch"));
       return;
     }
     if (!leeftijdBevestigd) {
-      setFout("Je moet bevestigen dat je 18+ bent.");
+      setFout(t("auth.ageRequired"));
       return;
     }
 
@@ -149,7 +182,7 @@ export function LoginForm() {
   async function handleBevestigingOpnieuw(overrideEmail?: string) {
     const targetEmail = (overrideEmail ?? pendingEmail ?? email).trim();
     if (!targetEmail) {
-      setFout("Voer je e-mailadres in om een nieuwe bevestigingsmail te ontvangen.");
+      setFout(t("auth.email"));
       return;
     }
 
@@ -172,7 +205,7 @@ export function LoginForm() {
       }
 
       setPendingEmail(targetEmail);
-      setSucces("Nieuwe bevestigingsmail verstuurd. Controleer je inbox.");
+      setSucces(t("auth.resend"));
     } catch (err) {
       setFout(vertaalAuthFout(err instanceof Error ? err : new Error(String(err))));
     } finally {
@@ -185,7 +218,7 @@ export function LoginForm() {
     resetMeldingen();
 
     if (!email.trim()) {
-      setFout("Voer je e-mailadres in om een resetlink te ontvangen.");
+      setFout(t("auth.email"));
       return;
     }
 
@@ -202,9 +235,7 @@ export function LoginForm() {
         return;
       }
 
-      setSucces(
-        "Resetlink verstuurd. Controleer je e-mail om je wachtwoord te wijzigen."
-      );
+      setSucces(t("auth.resetPassword"));
       setWachtwoordVergeten(false);
     } catch (err) {
       setFout(vertaalAuthFout(err instanceof Error ? err : new Error(String(err))));
@@ -215,23 +246,20 @@ export function LoginForm() {
 
   return (
     <div className="login-card glass-panel relative mx-auto max-w-md overflow-hidden p-6 sm:p-8">
-      {view === "bevestiging" ? (
+      {view === "rolkeuze" ? (
+        <RoleChoicePanel />
+      ) : view === "bevestiging" ? (
         <div className="login-confirm-screen">
           <div className="login-confirm-screen__icon" aria-hidden>
             <Mail className="h-6 w-6" />
           </div>
           <h1 className="login-card__title font-display text-2xl text-foreground">
-            Controleer je e-mail
+            {t("auth.checkEmail")}
           </h1>
           <p className="login-card__subtitle mt-2 text-sm text-muted-foreground">
-            We hebben een activatielink gestuurd naar{" "}
+            {t("auth.checkEmailText")}{" "}
             <strong className="text-foreground">{pendingEmail}</strong>.
           </p>
-          <ol className="login-confirm-screen__steps mt-5 space-y-2 text-sm text-muted-foreground">
-            <li>1. Open je inbox (controleer ook spam).</li>
-            <li>2. Klik op <strong className="text-foreground">Account activeren</strong>.</li>
-            <li>3. Kom terug en log in met je gegevens.</li>
-          </ol>
           {succes && (
             <p className="login-alert login-alert--success mt-4" role="status">
               {succes}
@@ -249,9 +277,9 @@ export function LoginForm() {
               className="w-full"
               size="lg"
               disabled={laden}
-              onClick={() => handleBevestigingOpnieuw()}
+              onClick={() => void handleBevestigingOpnieuw()}
             >
-              {laden ? "Bezig…" : "Bevestigingsmail opnieuw sturen"}
+              {laden ? t("auth.loading") : t("auth.resend")}
             </Button>
             <Button
               type="button"
@@ -263,17 +291,17 @@ export function LoginForm() {
                 resetMeldingen();
               }}
             >
-              Naar inloggen
+              {t("auth.backLogin")}
             </Button>
           </div>
         </div>
       ) : view === "verlopen" ? (
         <div className="login-confirm-screen">
           <h1 className="login-card__title font-display text-2xl text-foreground">
-            Activatielink verlopen
+            {t("auth.expiredTitle")}
           </h1>
           <p className="login-alert login-alert--error mt-4" role="alert">
-            Deze activatielink is verlopen. Vraag een nieuwe bevestigingsmail aan.
+            {t("auth.expiredText")}
           </p>
           {succes && (
             <p className="login-alert login-alert--success mt-4" role="status">
@@ -294,7 +322,7 @@ export function LoginForm() {
           >
             <div>
               <label htmlFor="resend-email" className="form-label">
-                E-mailadres
+                {t("auth.email")}
               </label>
               <Input
                 id="resend-email"
@@ -308,7 +336,7 @@ export function LoginForm() {
               />
             </div>
             <Button type="submit" className="w-full" size="lg" disabled={laden}>
-              {laden ? "Bezig…" : "Nieuwe bevestigingsmail sturen"}
+              {laden ? t("auth.loading") : t("auth.resend")}
             </Button>
             <button
               type="button"
@@ -318,17 +346,17 @@ export function LoginForm() {
                 resetMeldingen();
               }}
             >
-              ← Terug naar inloggen
+              ← {t("auth.backLogin")}
             </button>
           </form>
         </div>
       ) : (
         <>
           <h1 className="login-card__title font-display text-2xl text-foreground">
-            Welkom bij Veloura
+            {t("auth.welcome")}
           </h1>
           <p className="login-card__subtitle mt-2 text-sm text-muted-foreground">
-            Log in of maak een account aan om jouw dashboard te gebruiken.
+            {t("auth.welcomeSubtitle")}
           </p>
 
           {!wachtwoordVergeten && (
@@ -343,7 +371,7 @@ export function LoginForm() {
                 )}
                 onClick={() => switchTab("inloggen")}
               >
-                Inloggen
+                {t("auth.login")}
               </button>
               <button
                 type="button"
@@ -355,7 +383,7 @@ export function LoginForm() {
                 )}
                 onClick={() => switchTab("registreren")}
               >
-                Registreren
+                {t("auth.register")}
               </button>
             </div>
           )}
@@ -373,13 +401,10 @@ export function LoginForm() {
 
           {wachtwoordVergeten ? (
             <form onSubmit={handleWachtwoordReset} className="mt-5 space-y-4">
-              <p className="text-sm text-muted-foreground">
-                Vul je e-mailadres in. We sturen je een link om je wachtwoord te
-                resetten.
-              </p>
+              <p className="text-sm text-muted-foreground">{t("auth.resetHint")}</p>
               <div>
                 <label htmlFor="reset-email" className="form-label">
-                  E-mailadres
+                  {t("auth.email")}
                 </label>
                 <Input
                   id="reset-email"
@@ -393,7 +418,7 @@ export function LoginForm() {
                 />
               </div>
               <Button type="submit" className="w-full" size="lg" disabled={laden}>
-                {laden ? "Bezig…" : "Resetlink sturen"}
+                {laden ? t("auth.loading") : t("auth.resetPassword")}
               </Button>
               <button
                 type="button"
@@ -403,14 +428,14 @@ export function LoginForm() {
                   resetMeldingen();
                 }}
               >
-                ← Terug naar inloggen
+                ← {t("auth.backLogin")}
               </button>
             </form>
           ) : view === "inloggen" ? (
             <form onSubmit={handleInloggen} className="mt-5 space-y-4">
               <div>
                 <label htmlFor="login-email" className="form-label">
-                  E-mailadres
+                  {t("auth.email")}
                 </label>
                 <Input
                   id="login-email"
@@ -425,7 +450,7 @@ export function LoginForm() {
               </div>
               <div>
                 <label htmlFor="login-password" className="form-label">
-                  Wachtwoord
+                  {t("auth.password")}
                 </label>
                 <Input
                   id="login-password"
@@ -446,17 +471,17 @@ export function LoginForm() {
                   resetMeldingen();
                 }}
               >
-                Wachtwoord vergeten
+                {t("auth.forgotPassword")}
               </button>
               <Button type="submit" className="w-full" size="lg" disabled={laden}>
-                {laden ? "Bezig…" : "Inloggen"}
+                {laden ? t("auth.loading") : t("auth.login")}
               </Button>
             </form>
           ) : (
             <form onSubmit={handleRegistreren} className="mt-5 space-y-4">
               <div>
                 <label htmlFor="register-email" className="form-label">
-                  E-mailadres
+                  {t("auth.email")}
                 </label>
                 <Input
                   id="register-email"
@@ -471,7 +496,7 @@ export function LoginForm() {
               </div>
               <div>
                 <label htmlFor="register-password" className="form-label">
-                  Wachtwoord
+                  {t("auth.password")}
                 </label>
                 <Input
                   id="register-password"
@@ -487,7 +512,7 @@ export function LoginForm() {
               </div>
               <div>
                 <label htmlFor="register-password-confirm" className="form-label">
-                  Wachtwoord bevestigen
+                  {t("auth.passwordConfirm")}
                 </label>
                 <Input
                   id="register-password-confirm"
@@ -508,23 +533,23 @@ export function LoginForm() {
                   onChange={(e) => setLeeftijdBevestigd(e.target.checked)}
                   className="login-checkbox__input mt-0.5"
                 />
-                <span className="text-sm text-muted-foreground">
-                  Ik bevestig dat ik 18+ ben.
-                </span>
+                <span className="text-sm text-muted-foreground">{t("auth.ageConfirm")}</span>
               </label>
               <Button type="submit" className="w-full" size="lg" disabled={laden}>
-                {laden ? "Bezig…" : "Account aanmaken"}
+                {laden ? t("auth.loading") : t("auth.createAccount")}
               </Button>
             </form>
           )}
         </>
       )}
 
-      <p className="mt-6 text-center text-sm text-muted-foreground">
-        <Link href="/" className="login-link font-medium">
-          ← Terug naar Veloura
-        </Link>
-      </p>
+      {view !== "rolkeuze" && (
+        <p className="mt-6 text-center text-sm text-muted-foreground">
+          <Link href="/" className="login-link font-medium">
+            ← {t("auth.backHome")}
+          </Link>
+        </p>
+      )}
     </div>
   );
 }

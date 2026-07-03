@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { HorizontalListingsCarousel } from "@/components/home/horizontal-listings-carousel";
 import { RecentBekekenSection } from "@/components/recent-bekeken-section";
+import { useTranslation } from "@/contexts/locale-context";
 import type { Advertentie } from "@/lib/types";
 
 interface SearchResultsFallbackProps {
@@ -18,25 +19,25 @@ export function SearchResultsFallback({
   fotos,
   filtersActive,
 }: SearchResultsFallbackProps) {
+  const { t } = useTranslation();
+
   return (
     <div className="search-results-fallback">
       <div className="zoek-empty">
-        <h3 className="zoek-empty__title">Geen profielen gevonden</h3>
+        <h3 className="zoek-empty__title">{t("search.emptyTitle")}</h3>
         <p className="zoek-empty__text">
-          {filtersActive
-            ? "Pas je filters aan of bekijk alle actieve profielen."
-            : "Er zijn momenteel geen profielen die aan je zoekopdracht voldoen."}
+          {filtersActive ? t("search.emptyFiltered") : t("search.emptyDefault")}
         </p>
         <div className="zoek-empty__actions">
           <Link href="/zoeken" className="zoek-empty__cta zoek-empty__cta--primary">
-            {filtersActive ? "Filters wissen & alles bekijken" : "Bekijk alle profielen"}
+            {filtersActive ? t("search.clearFilters") : t("search.viewAll")}
           </Link>
         </div>
       </div>
 
       <HorizontalListingsCarousel
-        title="Aanbevolen profielen"
-        subtitle="Ontdek populaire profielen op Veloura."
+        title={t("search.recommended")}
+        subtitle={t("search.recommendedSub")}
         items={latest}
         fotos={fotos}
         variant="premium"
@@ -46,8 +47,8 @@ export function SearchResultsFallback({
       />
 
       <HorizontalListingsCarousel
-        title="Premium advertenties"
-        subtitle="Extra zichtbaarheid en premium profielen."
+        title={t("search.premiumCarousel")}
+        subtitle={t("search.premiumCarouselSub")}
         items={premium}
         fotos={fotos}
         variant="premium"

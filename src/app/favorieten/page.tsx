@@ -1,7 +1,11 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
-import { FavorietenGrid } from "@/components/favorieten-grid";
+import { FavorietenPageContent } from "@/components/favorieten-page-content";
 import { haalEersteFotos } from "@/lib/advertentie-fotos";
+import {
+  fetchActieveAdvertenties,
+  fetchPremiumAdvertenties,
+} from "@/lib/advertentie-queries";
 import { haalFavorietAdvertenties } from "@/lib/favorieten-queries";
 import { createClient } from "@/lib/supabase/server";
 
@@ -20,24 +24,30 @@ export default async function FavorietenPage() {
     redirect("/login?redirect=/favorieten");
   }
 
-  const advertenties = await haalFavorietAdvertenties(supabase, user.id);
+  const [advertenties, fallbackPremium, fallbackLatest] = await Promise.all([
+    haalFavorietAdvertenties(supabase, user.id),
+    fetchPremiumAdvertenties(supabase, 12),
+    fetchActieveAdvertenties(supabase, { limit: 12 }),
+  ]);
+
   const fotos = await haalEersteFotos(
     supabase,
     advertenties.map((a) => a.id)
   );
 
-  return (
-    <div className="search-page search-page--compact favorieten-page">
-      <div className="search-page-top search-page-top--compact">
-        <div className="container">
-          <h1 className="search-page-top__title">Mijn favorieten</h1>
-          <p className="search-page-top__subtitle">Je opgeslagen advertenties.</p>
-        </div>
-      </div>
+  const fallbackIds = [
+    ...fallbackPremium.map((a) => a.id),
+    ...fallbackLatest.map((a) => a.id),
+  ];
+  const fallbackFotos = await haalEersteFotos(supabase, [...new Set(fallbackIds)]);
 
-      <div className="container search-page__body">
-        <FavorietenGrid advertenties={advertenties} fotos={fotos} />
-      </div>
-    </div>
+  return (
+    <FavorietenPageContent
+      advertenties={advertenties}
+      fotos={fotos}
+      fallbackPremium={fallbackPremium}
+      fallbackLatest={fallbackLatest}
+      fallbackFotos={fallbackFotos}
+    />
   );
 }

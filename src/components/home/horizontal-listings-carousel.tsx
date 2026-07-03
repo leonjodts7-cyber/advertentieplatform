@@ -5,6 +5,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { CarouselListingCard } from "@/components/home/carousel-listing-card";
 import { CarouselPlaceholderCard } from "@/components/home/carousel-placeholder-card";
+import { useTranslation } from "@/contexts/locale-context";
 import { getCarouselPlaceholders } from "@/lib/home-carousel-placeholders";
 import type { Advertentie } from "@/lib/types";
 import { cn } from "@/lib/utils";
@@ -59,6 +60,7 @@ export function HorizontalListingsCarousel({
   embedded = false,
   fotoCounts,
 }: HorizontalListingsCarouselProps) {
+  const { t } = useTranslation();
   const viewportRef = useRef<HTMLDivElement>(null);
   const [canPrev, setCanPrev] = useState(false);
   const [canNext, setCanNext] = useState(false);
@@ -151,7 +153,7 @@ export function HorizontalListingsCarousel({
           </div>
           {viewAllHref && (
             <Link href={viewAllHref} className="home-listing-block__link">
-              Alles bekijken
+              {t("nav.viewAll")}
             </Link>
           )}
         </div>

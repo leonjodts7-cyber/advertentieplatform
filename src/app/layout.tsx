@@ -1,10 +1,13 @@
 import type { Metadata } from "next";
+import { cookies } from "next/headers";
 import { Cormorant_Garamond, DM_Sans } from "next/font/google";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { FavoritesProvider } from "@/contexts/favorites-context";
+import { LocaleProvider } from "@/contexts/locale-context";
 import { haalFavorietIds } from "@/lib/favorieten-queries";
 import { createClient } from "@/lib/supabase/server";
+import { DEFAULT_LOCALE, LOCALE_COOKIE, isValidLocale } from "@/lib/i18n/config";
 import "./globals.css";
 
 const display = Cormorant_Garamond({
@@ -60,14 +63,20 @@ export default async function RootLayout({
     favoriteIds = await haalFavorietIds(supabase, user.id);
   }
 
+  const cookieStore = await cookies();
+  const localeCookie = cookieStore.get(LOCALE_COOKIE)?.value;
+  const initialLocale = isValidLocale(localeCookie) ? localeCookie : DEFAULT_LOCALE;
+
   return (
-    <html lang="nl" className={`${display.variable} ${sans.variable}`}>
+    <html lang={initialLocale} className={`${display.variable} ${sans.variable}`} suppressHydrationWarning>
       <body className="marketplace-bg relative flex min-h-screen flex-col antialiased">
-        <FavoritesProvider initialIds={favoriteIds} isLoggedIn={!!user}>
-          <Header user={user} />
-          <main className="relative z-10 flex-1">{children}</main>
-          <Footer user={user} />
-        </FavoritesProvider>
+        <LocaleProvider initialLocale={initialLocale}>
+          <FavoritesProvider initialIds={favoriteIds} isLoggedIn={!!user}>
+            <Header user={user} />
+            <main className="relative z-10 flex-1">{children}</main>
+            <Footer user={user} />
+          </FavoritesProvider>
+        </LocaleProvider>
       </body>
     </html>
   );

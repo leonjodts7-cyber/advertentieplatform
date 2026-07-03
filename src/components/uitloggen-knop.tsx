@@ -2,6 +2,7 @@
 
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
+import { useTranslation } from "@/contexts/locale-context";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
@@ -14,6 +15,7 @@ export function UitloggenKnop({
   className?: string;
 }) {
   const router = useRouter();
+  const { t } = useTranslation();
   const [laden, setLaden] = useState(false);
 
   async function handleUitloggen() {
@@ -24,15 +26,17 @@ export function UitloggenKnop({
     router.refresh();
   }
 
+  const label = laden ? t("nav.logoutLoading") : t("nav.logout");
+
   if (compact) {
     return (
       <button
         type="button"
         onClick={handleUitloggen}
         disabled={laden}
-        className="header-nav-link rounded-full px-2.5 py-1.5 text-[0.8125rem] font-medium text-[var(--text-muted)] hover:text-[var(--text-main)] whitespace-nowrap shrink-0"
+        className={cn("header-btn header-btn--outline", className)}
       >
-        {laden ? "Bezig…" : "Uitloggen"}
+        {label}
       </button>
     );
   }
@@ -45,7 +49,7 @@ export function UitloggenKnop({
       disabled={laden}
       className={cn("w-full sm:w-auto", className)}
     >
-      {laden ? "Bezig…" : "Uitloggen"}
+      {label}
     </Button>
   );
 }

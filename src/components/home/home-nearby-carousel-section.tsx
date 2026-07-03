@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { MapPin, Navigation } from "lucide-react";
 import { HorizontalListingsCarousel } from "@/components/home/horizontal-listings-carousel";
+import { useTranslation } from "@/contexts/locale-context";
 import type { Advertentie } from "@/lib/types";
 
 const LOC_STORAGE_KEY = "veloura_user_location";
@@ -19,6 +20,7 @@ export function HomeNearbyCarouselSection({
   fotos,
   fotoCounts,
 }: HomeNearbyCarouselSectionProps) {
+  const { t } = useTranslation();
   const [locatieActief, setLocatieActief] = useState(false);
   const [locatieLaden, setLocatieLaden] = useState(false);
   const [locatieFout, setLocatieFout] = useState<string | null>(null);
@@ -65,8 +67,8 @@ export function HomeNearbyCarouselSection({
 
   return (
     <HorizontalListingsCarousel
-      title="Advertenties in jouw buurt"
-      subtitle="Populaire profielen op Veloura. Locatiefilter volgt binnenkort."
+      title={t("home.nearbyTitle")}
+      subtitle={t("home.nearbySubtitle")}
       items={advertenties}
       fotos={fotos}
       variant="nearby"
@@ -83,16 +85,16 @@ export function HomeNearbyCarouselSection({
               onClick={vraagLocatie}
             >
               <Navigation className="h-3.5 w-3.5" aria-hidden />
-              {locatieLaden ? "Locatie ophalen…" : "Gebruik mijn locatie"}
+              {locatieLaden ? t("home.locationLoading") : t("home.useLocation")}
             </button>
             {locatieActief && (
               <span className="home-locatie-active">
                 <MapPin className="h-3.5 w-3.5" aria-hidden />
-                Locatie opgeslagen (filter volgt)
+                {t("home.locationSaved")}
               </span>
             )}
             <Link href="/zoeken" className="home-nearby-compact__link">
-              Of zoek per stad
+              {t("home.searchByCity")}
             </Link>
           </div>
           {locatieFout && (

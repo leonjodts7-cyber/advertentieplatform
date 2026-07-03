@@ -1,5 +1,9 @@
+"use client";
+
 import Link from "next/link";
 import type { User } from "@supabase/supabase-js";
+import { LanguageSwitcher } from "@/components/language-switcher";
+import { useTranslation } from "@/contexts/locale-context";
 
 const PLAATS_REDIRECT = encodeURIComponent("/dashboard/advertenties/nieuw");
 
@@ -8,94 +12,74 @@ interface FooterProps {
 }
 
 export function Footer({ user = null }: FooterProps) {
+  const { t } = useTranslation();
+  const year = new Date().getFullYear();
+
   return (
-    <footer className="mt-auto border-t border-white/10 bg-[#08070a]/80">
-      <div className="container py-10 sm:py-12">
-        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
-          <div className="sm:col-span-2">
-            <p className="font-display text-xl font-medium text-foreground">
-              Veloura
-            </p>
-            <p className="mt-2 max-w-sm text-sm leading-relaxed text-muted-foreground">
-              Premium adult marketplace voor discrete, professionele profielen.
-              Alleen 18+.
-            </p>
+    <footer className="site-footer">
+      <div className="container site-footer__inner">
+        <div className="site-footer__grid">
+          <div className="site-footer__brand">
+            <p className="site-footer__logo">Veloura</p>
+            <p className="site-footer__tagline">{t("footer.tagline")}</p>
+            <p className="site-footer__18">{t("common.only18")}</p>
+            <p className="site-footer__discretion">{t("footer.discretion")}</p>
           </div>
+
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-              Platform
-            </p>
-            <ul className="mt-3 space-y-2 text-sm">
+            <p className="site-footer__heading">{t("footer.platform")}</p>
+            <ul className="site-footer__links">
               <li>
-                <Link
-                  href="/zoeken"
-                  className="text-muted-foreground hover:text-champagne-light"
-                >
-                  Profielen
+                <Link href="/zoeken">{t("footer.profiles")}</Link>
+              </li>
+              <li>
+                <Link href="/ai-lounge">{t("nav.aiLounge")}</Link>
+              </li>
+              <li>
+                <Link href={`/login?redirect=${PLAATS_REDIRECT}`}>
+                  {t("footer.placeAd")}
                 </Link>
               </li>
               <li>
                 <Link
-                  href="/ai-lounge"
-                  className="text-muted-foreground hover:text-champagne-light"
+                  href={
+                    user
+                      ? "/dashboard"
+                      : `/login?redirect=${encodeURIComponent("/dashboard")}`
+                  }
                 >
-                  AI Lounge
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/login?redirect=%2Fdashboard%2Fadvertenties%2Fnieuw"
-                  className="text-muted-foreground hover:text-champagne-light"
-                >
-                  Plaats advertentie
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href={user ? "/dashboard" : `/login?redirect=${encodeURIComponent("/dashboard")}`}
-                  className="text-muted-foreground hover:text-champagne-light"
-                >
-                  {user ? "Dashboard" : "Inloggen"}
+                  {user ? t("nav.dashboard") : t("nav.login")}
                 </Link>
               </li>
             </ul>
           </div>
+
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-              Juridisch
-            </p>
-            <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
+            <p className="site-footer__heading">{t("footer.legal")}</p>
+            <ul className="site-footer__links">
               <li>
-                <Link
-                  href="/juridisch/privacy"
-                  className="hover:text-champagne-light"
-                >
-                  Privacybeleid
-                </Link>
+                <Link href="/juridisch/privacy">{t("footer.privacy")}</Link>
               </li>
               <li>
-                <Link
-                  href="/juridisch/voorwaarden"
-                  className="hover:text-champagne-light"
-                >
-                  Gebruiksvoorwaarden
-                </Link>
+                <Link href="/juridisch/voorwaarden">{t("footer.terms")}</Link>
               </li>
               <li>
-                <Link
-                  href="/juridisch/contact"
-                  className="hover:text-champagne-light"
-                >
-                  Contact
-                </Link>
+                <Link href="/juridisch/contact">{t("footer.contact")}</Link>
               </li>
             </ul>
+          </div>
+
+          <div>
+            <p className="site-footer__heading">{t("footer.language")}</p>
+            <LanguageSwitcher className="site-footer__lang" />
           </div>
         </div>
-        <div className="divider-soft mt-8" />
-        <p className="mt-6 text-center text-xs text-muted-foreground">
-          © {new Date().getFullYear()} Veloura. Alle rechten voorbehouden.
-        </p>
+
+        <div className="site-footer__bottom">
+          <p>
+            © {year} Veloura. {t("footer.rights")}
+          </p>
+        </div>
       </div>
     </footer>
   );

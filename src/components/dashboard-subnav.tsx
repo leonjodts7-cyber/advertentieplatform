@@ -2,14 +2,15 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useTranslation } from "@/contexts/locale-context";
 import { cn } from "@/lib/utils";
 
-const TABS = [
-  { href: "/dashboard", label: "Overzicht", exact: true },
-  { href: "/dashboard/advertenties", label: "Mijn advertenties", exact: false },
-  { href: "/dashboard/advertenties/nieuw", label: "Nieuwe advertentie", exact: true },
-  { href: "/dashboard/boosts", label: "Boosts", exact: true },
-  { href: "/dashboard/instellingen", label: "Instellingen", exact: true },
+const TAB_KEYS = [
+  { href: "/dashboard", key: "dashboard.overview", exact: true },
+  { href: "/dashboard/advertenties", key: "dashboard.ads", exact: false },
+  { href: "/dashboard/advertenties/nieuw", key: "dashboard.newListing", exact: true },
+  { href: "/dashboard/boosts", key: "dashboard.boosts", exact: true },
+  { href: "/dashboard/instellingen", key: "dashboard.settings", exact: true },
 ] as const;
 
 function isActive(pathname: string, href: string, exact: boolean) {
@@ -26,18 +27,22 @@ function isActive(pathname: string, href: string, exact: boolean) {
 
 export function DashboardSubnav() {
   const pathname = usePathname();
+  const { t } = useTranslation();
 
   return (
-    <nav className="dashboard-subnav" aria-label="Dashboard navigatie">
-      {TABS.map((tab) => {
+    <nav className="dashboard-subnav dashboard-subnav--compact" aria-label="Dashboard">
+      {TAB_KEYS.map((tab) => {
         const active = isActive(pathname, tab.href, tab.exact);
         return (
           <Link
             key={tab.href}
             href={tab.href}
-            className={cn("dashboard-subnav__pill", active && "dashboard-subnav__pill--active")}
+            className={cn(
+              "dashboard-subnav__pill",
+              active && "dashboard-subnav__pill--active"
+            )}
           >
-            {tab.label}
+            {t(tab.key)}
           </Link>
         );
       })}

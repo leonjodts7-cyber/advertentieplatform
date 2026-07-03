@@ -6,6 +6,7 @@ import { ListingCard } from "@/components/listing-card";
 import { RecentBekekenSection } from "@/components/recent-bekeken-section";
 import { SearchResultsFallback } from "@/components/zoek/search-results-fallback";
 import { ZoekSortDropdown } from "@/components/zoek/zoek-sort-dropdown";
+import { useTranslation } from "@/contexts/locale-context";
 import { getListingCardVariant } from "@/lib/listing-card-variant";
 import type { Advertentie } from "@/lib/types";
 import { cn } from "@/lib/utils";
@@ -20,12 +21,6 @@ interface ZoekResultsProps {
   fallbackFotos?: Map<string, string | undefined>;
 }
 
-function profielCountLabel(count: number): string {
-  if (count === 0) return "Geen profielen gevonden";
-  if (count === 1) return "1 profiel gevonden";
-  return `${count} profielen gevonden`;
-}
-
 export function ZoekResults({
   advertenties,
   fotos,
@@ -36,12 +31,19 @@ export function ZoekResults({
   fallbackFotos = new Map(),
 }: ZoekResultsProps) {
   const [view, setView] = useState<"grid" | "list">("grid");
+  const { t } = useTranslation();
   const isEmpty = advertenties.length === 0;
 
+  function countLabel(count: number): string {
+    if (count === 0) return t("search.noneFound");
+    if (count === 1) return t("search.oneFound");
+    return t("search.manyFound", { count });
+  }
+
   return (
-    <section className="zoek-results" aria-label="Zoekresultaten">
+    <section className="zoek-results" aria-label={t("search.results")}>
       <div className="zoek-results__toolbar">
-        <p className="zoek-results__count">{profielCountLabel(advertenties.length)}</p>
+        <p className="zoek-results__count">{countLabel(advertenties.length)}</p>
         <div className="zoek-results__controls">
           {!isEmpty && <ZoekSortDropdown />}
           {!isEmpty && (
@@ -54,7 +56,7 @@ export function ZoekResults({
                 )}
                 onClick={() => setView("grid")}
               >
-                Raster
+                {t("search.grid")}
               </button>
               <button
                 type="button"
@@ -64,7 +66,7 @@ export function ZoekResults({
                 )}
                 onClick={() => setView("list")}
               >
-                Lijst
+                {t("search.list")}
               </button>
             </div>
           )}
@@ -74,7 +76,7 @@ export function ZoekResults({
       {!isEmpty ? (
         <>
           {view === "grid" ? (
-            <div className="listing-grid listing-grid--search listing-grid--compact-cards">
+            <div className="listing-grid listing-grid--search listing-grid--compact-cards listing-grid--dense">
               {advertenties.map((advertentie) => (
                 <ListingCard
                   key={advertentie.id}

@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { HorizontalListingsCarousel } from "@/components/home/horizontal-listings-carousel";
 import { getRecentBekekenIds } from "@/lib/recent-bekeken";
+import { useTranslation } from "@/contexts/locale-context";
 import type { Advertentie } from "@/lib/types";
 
 interface RecentBekekenSectionProps {
@@ -14,6 +15,7 @@ export function RecentBekekenSection({
   variant = "home",
   className,
 }: RecentBekekenSectionProps) {
+  const { t } = useTranslation();
   const [items, setItems] = useState<Advertentie[]>([]);
   const [fotos, setFotos] = useState<Map<string, string | undefined>>(new Map());
   const [ready, setReady] = useState(false);
@@ -56,8 +58,8 @@ export function RecentBekekenSection({
 
   return (
     <HorizontalListingsCarousel
-      title="Recent bekeken"
-      subtitle="Profielen die je recent hebt bekeken."
+      title={t("home.recentTitle")}
+      subtitle={t("home.recentSubtitle")}
       items={items}
       fotos={fotos}
       variant="latest"
