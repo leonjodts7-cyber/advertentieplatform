@@ -38,14 +38,14 @@ export default async function DashboardPage() {
   const [{ data: advertentiesRaw }, aiStats] = await Promise.all([
     supabase
       .from("advertenties")
-      .select("id, status, premium, beschrijving, premium_tot")
+      .select("id, titel, status, premium, beschrijving, premium_tot")
       .eq("aanbieder_id", user.id),
     haalAiLoungeStats(user.id),
   ]);
 
   const advertenties = (advertentiesRaw ?? []) as Pick<
     Advertentie,
-    "id" | "status" | "premium" | "beschrijving" | "premium_tot"
+    "id" | "titel" | "status" | "premium" | "beschrijving" | "premium_tot"
   >[];
 
   const adIds = advertenties.map((a) => a.id);
@@ -76,6 +76,52 @@ export default async function DashboardPage() {
     return Math.max(max, diff > 0 ? diff : 0);
   }, 0);
 
+  const activity: Array<{
+    id: string;
+    messageKey: string;
+    detail?: string;
+    href?: string;
+  }> = [];
+
+  if (listingFavorites > 0) {
+    activity.push({
+      id: "fav",
+      messageKey: "dashboardInsights.activityNewFavorite",
+      detail: String(listingFavorites),
+      href: "/dashboard",
+    });
+  }
+
+  for (const ad of advertenties) {
+    if (ad.premium_tot) {
+      const diff = Math.ceil(
+        (new Date(ad.premium_tot).getTime() - Date.now()) / (1000 * 60 * 60 * 24)
+      );
+      if (diff > 0 && diff <= 7) {
+        activity.push({
+          id: `premium-${ad.id}`,
+          messageKey: "dashboardInsights.activityPremiumExpiring",
+          detail: ad.titel,
+          href: "/dashboard/boosts",
+        });
+      }
+    }
+    const { meta } = parseAdvertentieBeschrijving(ad.beschrijving ?? "");
+    if (boostActief(meta) && meta.boostEindigtOp) {
+      const diff = Math.ceil(
+        (new Date(meta.boostEindigtOp).getTime() - Date.now()) / (1000 * 60 * 60 * 24)
+      );
+      if (diff <= 0) {
+        activity.push({
+          id: `boost-exp-${ad.id}`,
+          messageKey: "dashboardInsights.activityBoostExpired",
+          detail: ad.titel,
+          href: "/dashboard/boosts",
+        });
+      }
+    }
+  }
+
   return (
     <DashboardOverview
       totaal={advertenties.length}
@@ -86,6 +132,7 @@ export default async function DashboardPage() {
       premiumDagen={premiumDagen}
       listingFavorites={listingFavorites}
       aiCredits={aiStats.resterendeCredits}
+      activity={activity.slice(0, 8)}
     />
   );
 }

@@ -30,7 +30,7 @@ export function ZoekResults({
   fallbackLatest = [],
   fallbackFotos = new Map(),
 }: ZoekResultsProps) {
-  const [view, setView] = useState<"grid" | "list">("grid");
+  const [view, setView] = useState<"grid" | "compact" | "list">("grid");
   const { t } = useTranslation();
   const isEmpty = advertenties.length === 0;
 
@@ -41,13 +41,13 @@ export function ZoekResults({
   }
 
   return (
-    <section className="zoek-results" aria-label={t("search.results")}>
-      <div className="zoek-results__toolbar">
+    <section className="zoek-results zoek-results--sticky" aria-label={t("search.results")}>
+      <div className="zoek-results__toolbar zoek-results__toolbar--sticky">
         <p className="zoek-results__count">{countLabel(advertenties.length)}</p>
         <div className="zoek-results__controls">
           {!isEmpty && <ZoekSortDropdown />}
           {!isEmpty && (
-            <div className="zoek-view-toggle" role="group" aria-label="Weergave">
+            <div className="zoek-view-toggle" role="group" aria-label={t("search.viewMode")}>
               <button
                 type="button"
                 className={cn(
@@ -57,6 +57,16 @@ export function ZoekResults({
                 onClick={() => setView("grid")}
               >
                 {t("search.grid")}
+              </button>
+              <button
+                type="button"
+                className={cn(
+                  "zoek-view-toggle__btn",
+                  view === "compact" && "zoek-view-toggle__btn--active"
+                )}
+                onClick={() => setView("compact")}
+              >
+                {t("search.compactGrid")}
               </button>
               <button
                 type="button"
@@ -75,8 +85,13 @@ export function ZoekResults({
 
       {!isEmpty ? (
         <>
-          {view === "grid" ? (
-            <div className="listing-grid listing-grid--search listing-grid--compact-cards listing-grid--dense">
+          {view === "grid" || view === "compact" ? (
+            <div
+              className={cn(
+                "listing-grid listing-grid--search",
+                view === "compact" && "listing-grid--compact-cards listing-grid--dense"
+              )}
+            >
               {advertenties.map((advertentie) => (
                 <ListingCard
                   key={advertentie.id}

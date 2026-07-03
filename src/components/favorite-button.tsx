@@ -3,11 +3,11 @@
 import { useRouter, usePathname } from "next/navigation";
 import { Heart, Loader2 } from "lucide-react";
 import { useFavorites } from "@/contexts/favorites-context";
+import { useTranslation } from "@/contexts/locale-context";
 import { cn } from "@/lib/utils";
 
 interface FavoriteButtonProps {
   advertentieId: string;
-  /** Card overlay icon or inline label button */
   variant?: "card" | "inline";
   disabled?: boolean;
   className?: string;
@@ -21,11 +21,13 @@ export function FavoriteButton({
 }: FavoriteButtonProps) {
   const router = useRouter();
   const pathname = usePathname();
+  const { t } = useTranslation();
   const { isLoggedIn, isFavorited, isLoading, toggleFavorite } = useFavorites();
 
   const favorited = isFavorited(advertentieId);
   const loading = isLoading(advertentieId);
   const isDisabled = disabled || loading;
+  const ariaLabel = favorited ? t("listing.ariaRemove") : t("listing.ariaSave");
 
   async function handleClick(e: React.MouseEvent<HTMLButtonElement>) {
     e.preventDefault();
@@ -51,7 +53,7 @@ export function FavoriteButton({
           isDisabled && "favorite-button--disabled",
           className
         )}
-        aria-label={favorited ? "Verwijder uit favorieten" : "Opslaan als favoriet"}
+        aria-label={ariaLabel}
         aria-pressed={favorited}
         disabled={isDisabled}
         onClick={handleClick}
@@ -65,7 +67,7 @@ export function FavoriteButton({
             aria-hidden
           />
         )}
-        <span>{favorited ? "Opgeslagen" : "Opslaan"}</span>
+        <span>{favorited ? t("listing.saved") : t("listing.save")}</span>
       </button>
     );
   }
@@ -79,7 +81,7 @@ export function FavoriteButton({
         isDisabled && "favorite-button--disabled",
         className
       )}
-      aria-label={favorited ? "Verwijder uit favorieten" : "Voeg toe aan favorieten"}
+      aria-label={ariaLabel}
       aria-pressed={favorited}
       disabled={isDisabled}
       onClick={handleClick}

@@ -11,9 +11,10 @@ import type { Advertentie } from "@/lib/types";
 interface HomeMarketplaceContentProps {
   spotlight: Advertentie[];
   premium: Advertentie[];
-  nieuwste: Advertentie[];
   nearby: Advertentie[];
-  populaire: Advertentie[];
+  trending: Advertentie[];
+  nieuwVandaag: Advertentie[];
+  meestOpgeslagen: Advertentie[];
   fotos: Map<string, string | undefined>;
   fotoCounts: Map<string, number>;
 }
@@ -21,16 +22,17 @@ interface HomeMarketplaceContentProps {
 export function HomeMarketplaceContent({
   spotlight,
   premium,
-  nieuwste,
   nearby,
-  populaire,
+  trending,
+  nieuwVandaag,
+  meestOpgeslagen,
   fotos,
   fotoCounts,
 }: HomeMarketplaceContentProps) {
   const { t } = useTranslation();
 
   return (
-    <div className="home-page home-page--marketplace home-page--polished overflow-x-hidden">
+    <div className="home-page home-page--marketplace home-page--v2 overflow-x-hidden">
       <HomeHeroCompact />
 
       <HorizontalListingsCarousel
@@ -60,19 +62,29 @@ export function HomeMarketplaceContent({
       />
 
       <HorizontalListingsCarousel
-        title={t("home.latestTitle")}
-        subtitle={t("home.latestSubtitle")}
-        items={nieuwste}
+        title={t("home.trendingTitle")}
+        subtitle={t("home.trendingSubtitle")}
+        items={trending}
         fotos={fotos}
-        variant="latest"
-        viewAllHref="/zoeken"
+        variant="popular"
+        viewAllHref="/zoeken?sort=aanbevolen"
         fotoCounts={fotoCounts}
       />
 
       <HorizontalListingsCarousel
-        title={t("home.popularTitle")}
-        subtitle={t("home.popularSubtitle")}
-        items={populaire}
+        title={t("home.newTodayTitle")}
+        subtitle={t("home.newTodaySubtitle")}
+        items={nieuwVandaag}
+        fotos={fotos}
+        variant="latest"
+        viewAllHref="/zoeken?sort=nieuwste"
+        fotoCounts={fotoCounts}
+      />
+
+      <HorizontalListingsCarousel
+        title={t("home.mostSavedTitle")}
+        subtitle={t("home.mostSavedSubtitle")}
+        items={meestOpgeslagen}
         fotos={fotos}
         variant="popular"
         viewAllHref="/zoeken?sort=premium"

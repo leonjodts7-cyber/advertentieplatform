@@ -216,6 +216,49 @@ export async function fetchPopulaireAdvertenties(
   return sortPopulaire(pool, favorietTellingen).slice(0, limit);
 }
 
+export async function fetchTrendingAdvertenties(
+  supabase: SupabaseClient,
+  limit = 24
+): Promise<Advertentie[]> {
+  const since = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
+  const pool = await fetchActievePool(supabase, 120);
+  const recentPool = pool.filter((a) => a.aangemaakt_op >= since);
+  const base = recentPool.length >= limit ? recentPool : pool;
+  const ids = base.map((a) => a.id);
+  const favorietTellingen = await haalFavorietTellingen(supabase, ids);
+  return sortPopulaire(base, favorietTellingen).slice(0, limit);
+}
+
+export async function fetchNieuwVandaagAdvertenties(
+  supabase: SupabaseClient,
+  limit = 24
+): Promise<Advertentie[]> {
+  const start = new Date();
+  start.setHours(0, 0, 0, 0);
+  const { data } = await supabase
+    .from("advertenties")
+    .select("*")
+    .eq("status", "actief")
+    .gte("aangemaakt_op", start.toISOString())
+    .order("aangemaakt_op", { ascending: false })
+    .limit(limit);
+
+  const today = (data ?? []) as Advertentie[];
+  if (today.length >= limit) return today;
+
+  const pool = await fetchActievePool(supabase, limit);
+  const ids = new Set(today.map((a) => a.id));
+  const fill = pool.filter((a) => !ids.has(a.id)).slice(0, limit - today.length);
+  return [...today, ...fill];
+}
+
+export async function fetchMeestOpgeslagenAdvertenties(
+  supabase: SupabaseClient,
+  limit = 24
+): Promise<Advertentie[]> {
+  return fetchPopulaireAdvertenties(supabase, limit);
+}
+
 export async function fetchVergelijkbareAdvertenties(
   supabase: SupabaseClient,
   advertentie: Advertentie,

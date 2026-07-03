@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { Menu, X } from "lucide-react";
 import type { User } from "@supabase/supabase-js";
 import { AccountDropdown } from "@/components/account-dropdown";
+import { HeaderNotifications } from "@/components/header-notifications";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { useTranslation } from "@/contexts/locale-context";
 import {
@@ -19,6 +20,7 @@ import { cn } from "@/lib/utils";
 interface HeaderClientProps {
   user: User | null;
   role: UserRole;
+  displayName?: string | null;
 }
 
 function navActive(pathname: string, href: string) {
@@ -26,7 +28,7 @@ function navActive(pathname: string, href: string) {
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
-export function HeaderClient({ user, role }: HeaderClientProps) {
+export function HeaderClient({ user, role, displayName }: HeaderClientProps) {
   const pathname = usePathname();
   const { t } = useTranslation();
   const [menuOpen, setMenuOpen] = useState(false);
@@ -38,7 +40,7 @@ export function HeaderClient({ user, role }: HeaderClientProps) {
   const centerLinks = provider
     ? [
         { href: "/dashboard", label: t("nav.dashboard") },
-        { href: "/dashboard/advertenties", label: t("nav.myAds") },
+        { href: "/dashboard/advertenties", label: t("nav.ads") },
         { href: "/dashboard/boosts", label: t("nav.boosts") },
         { href: "/ai-lounge", label: t("nav.aiLounge") },
       ]
@@ -62,19 +64,16 @@ export function HeaderClient({ user, role }: HeaderClientProps) {
   }, [menuOpen]);
 
   const linkClass = (href: string) =>
-    cn(
-      "header-nav-link",
-      navActive(pathname, href) && "header-nav-link--active"
-    );
+    cn("header-nav-link", navActive(pathname, href) && "header-nav-link--active");
 
   return (
     <header className="site-header glass-nav sticky top-0 z-50">
-      <div className="container header-shell">
+      <div className="container header-shell header-shell--premium">
         <Link href="/" className="header-brand">
           <span className="header-brand__text">Veloura</span>
         </Link>
 
-        <nav className="header-nav-center" aria-label="Hoofdnavigatie">
+        <nav className="header-nav-center" aria-label={t("nav.menu")}>
           {centerLinks.map((link) => (
             <Link key={link.href} href={link.href} className={linkClass(link.href)}>
               {link.label}
@@ -90,10 +89,13 @@ export function HeaderClient({ user, role }: HeaderClientProps) {
               {t("nav.loginRegister")}
             </Link>
           ) : (
-            <AccountDropdown user={user} role={role} />
+            <>
+              <HeaderNotifications user={user} role={role} />
+              <AccountDropdown user={user} role={role} displayName={displayName} />
+            </>
           )}
 
-          <Link href={plaatsHref} className="header-btn header-btn--primary">
+          <Link href={plaatsHref} className="header-btn header-btn--primary header-btn--place-ad">
             {t("nav.placeAd")}
           </Link>
 
@@ -104,11 +106,7 @@ export function HeaderClient({ user, role }: HeaderClientProps) {
             aria-label={menuOpen ? t("nav.close") : t("nav.menu")}
             onClick={() => setMenuOpen((o) => !o)}
           >
-            {menuOpen ? (
-              <X className="h-5 w-5" aria-hidden />
-            ) : (
-              <Menu className="h-5 w-5" aria-hidden />
-            )}
+            {menuOpen ? <X className="h-5 w-5" aria-hidden /> : <Menu className="h-5 w-5" aria-hidden />}
           </button>
         </div>
       </div>
@@ -122,7 +120,7 @@ export function HeaderClient({ user, role }: HeaderClientProps) {
             onClick={() => setMenuOpen(false)}
           />
           <div className="header-mobile-panel">
-            <nav className="header-mobile-nav" aria-label="Mobiel menu">
+            <nav className="header-mobile-nav" aria-label={t("nav.menu")}>
               {centerLinks.map((link) => (
                 <Link
                   key={link.href}
@@ -136,21 +134,10 @@ export function HeaderClient({ user, role }: HeaderClientProps) {
                 </Link>
               ))}
 
-              {!user ? (
+              {!user && (
                 <Link href={loginHref} className="header-mobile-link">
                   {t("nav.loginRegister")}
                 </Link>
-              ) : (
-                <>
-                  {!provider && (
-                    <Link href="/favorieten" className="header-mobile-link">
-                      {t("nav.favorites")}
-                    </Link>
-                  )}
-                  <Link href="/dashboard/instellingen" className="header-mobile-link">
-                    {t("account.settings")}
-                  </Link>
-                </>
               )}
 
               <Link href={plaatsHref} className="header-mobile-cta">

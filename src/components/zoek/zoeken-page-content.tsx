@@ -1,11 +1,12 @@
 "use client";
 
+import { Suspense } from "react";
 import { ZoekFilterBar } from "@/components/zoek/zoek-filter-bar";
+import { ZoekHeroSearch } from "@/components/zoek/zoek-hero-search";
 import { ZoekActiveChips } from "@/components/zoek/zoek-active-chips";
 import { ZoekResults } from "@/components/zoek/zoek-results";
 import { useTranslation } from "@/contexts/locale-context";
 import type { Advertentie } from "@/lib/types";
-import { Suspense } from "react";
 
 interface ZoekenPageContentProps {
   advertenties: Advertentie[];
@@ -46,11 +47,14 @@ export function ZoekenPageContent({
   const { t } = useTranslation();
 
   return (
-    <div className="search-page search-page--compact search-page--polished">
-      <div className="search-page-top search-page-top--compact">
+    <div className="search-page search-page--v2">
+      <div className="search-page-top search-page-top--hero">
         <div className="container">
           <h1 className="search-page-top__title">{t("search.title")}</h1>
           <p className="search-page-top__subtitle">{t("search.subtitle")}</p>
+          <Suspense fallback={null}>
+            <ZoekHeroSearch />
+          </Suspense>
         </div>
       </div>
 

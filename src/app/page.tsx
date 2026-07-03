@@ -1,8 +1,9 @@
 import {
-  fetchActieveAdvertenties,
-  fetchPopulaireAdvertenties,
+  fetchMeestOpgeslagenAdvertenties,
+  fetchNieuwVandaagAdvertenties,
   fetchPremiumAdvertenties,
   fetchSpotlightAdvertenties,
+  fetchTrendingAdvertenties,
 } from "@/lib/advertentie-queries";
 import { haalEersteFotos, haalFotoAantallen } from "@/lib/advertentie-fotos";
 import { isPremiumListing } from "@/lib/advertentie-boost";
@@ -23,27 +24,43 @@ function sortPremiumFirst(advertenties: Advertentie[]): Advertentie[] {
   });
 }
 
+function pickUnique(
+  ads: Advertentie[],
+  used: Set<string>,
+  limit: number
+): Advertentie[] {
+  const result: Advertentie[] = [];
+  for (const ad of ads) {
+    if (used.has(ad.id)) continue;
+    result.push(ad);
+    used.add(ad.id);
+    if (result.length >= limit) break;
+  }
+  return result;
+}
+
 export default async function HomePage() {
   const supabase = await createClient();
+  const used = new Set<string>();
 
-  const [spotlight, premium, nieuwste, nearbyRaw, populaire] = await Promise.all([
-    fetchSpotlightAdvertenties(supabase, LISTING_LIMIT),
-    fetchPremiumAdvertenties(supabase, LISTING_LIMIT),
-    fetchActieveAdvertenties(supabase, { limit: LISTING_LIMIT }),
-    fetchActieveAdvertenties(supabase, { limit: LISTING_LIMIT }),
-    fetchPopulaireAdvertenties(supabase, LISTING_LIMIT),
-  ]);
+  const [spotlightRaw, premiumRaw, nearbyRaw, trendingRaw, nieuwRaw, savedRaw] =
+    await Promise.all([
+      fetchSpotlightAdvertenties(supabase, LISTING_LIMIT),
+      fetchPremiumAdvertenties(supabase, LISTING_LIMIT),
+      fetchTrendingAdvertenties(supabase, LISTING_LIMIT * 2),
+      fetchTrendingAdvertenties(supabase, LISTING_LIMIT),
+      fetchNieuwVandaagAdvertenties(supabase, LISTING_LIMIT),
+      fetchMeestOpgeslagenAdvertenties(supabase, LISTING_LIMIT),
+    ]);
 
-  const nearby = sortPremiumFirst(nearbyRaw);
+  const spotlight = pickUnique(spotlightRaw, used, LISTING_LIMIT);
+  const premium = pickUnique(premiumRaw, used, LISTING_LIMIT);
+  const nearby = pickUnique(sortPremiumFirst(nearbyRaw), used, LISTING_LIMIT);
+  const trending = pickUnique(trendingRaw, used, LISTING_LIMIT);
+  const nieuwVandaag = pickUnique(nieuwRaw, used, LISTING_LIMIT);
+  const meestOpgeslagen = pickUnique(savedRaw, used, LISTING_LIMIT);
 
-  const allIds = [
-    ...spotlight.map((a) => a.id),
-    ...premium.map((a) => a.id),
-    ...nieuwste.map((a) => a.id),
-    ...nearby.map((a) => a.id),
-    ...populaire.map((a) => a.id),
-  ];
-  const uniqueIds = [...new Set(allIds)];
+  const uniqueIds = [...used];
   const fotos = await haalEersteFotos(supabase, uniqueIds);
   const fotoCounts = await haalFotoAantallen(supabase, uniqueIds);
 
@@ -51,9 +68,10 @@ export default async function HomePage() {
     <HomeMarketplaceContent
       spotlight={spotlight}
       premium={premium}
-      nieuwste={nieuwste}
       nearby={nearby}
-      populaire={populaire}
+      trending={trending}
+      nieuwVandaag={nieuwVandaag}
+      meestOpgeslagen={meestOpgeslagen}
       fotos={fotos}
       fotoCounts={fotoCounts}
     />

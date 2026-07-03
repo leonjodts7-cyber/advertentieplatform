@@ -4,11 +4,13 @@ import Link from "next/link";
 import { BadgeCheck, Camera, Video } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { FavoriteButton } from "@/components/favorite-button";
+import { useTranslation } from "@/contexts/locale-context";
 import { formatPrijs } from "@/lib/helpers";
 import {
   categorieLabel,
   parseAdvertentieBeschrijving,
 } from "@/lib/advertentie-metadata";
+import { categoryLabelI18n } from "@/lib/i18n/marketplace-i18n";
 import {
   boostActief,
   isPlaatsingActief,
@@ -20,12 +22,13 @@ import type { Advertentie } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
 function ListingPlaceholder() {
+  const { t } = useTranslation();
   return (
     <div className="listing-placeholder absolute inset-0">
       <div className="listing-placeholder__glow" />
       <div className="listing-placeholder__arch" />
       <div className="listing-placeholder__line" />
-      <span className="listing-placeholder__label">Profiel</span>
+      <span className="listing-placeholder__label">{t("listing.profile")}</span>
     </div>
   );
 }
@@ -54,6 +57,7 @@ export function CarouselListingCard({
   priority = false,
   wide = false,
 }: CarouselListingCardProps) {
+  const { t } = useTranslation();
   const tier =
     carouselTier ??
     (variant === "latest"
@@ -64,7 +68,9 @@ export function CarouselListingCard({
           ? "premium"
           : undefined);
   const { meta } = parseAdvertentieBeschrijving(advertentie.beschrijving);
-  const categorie = categorieLabel(meta.categorie);
+  const categorie = meta.categorie
+    ? categoryLabelI18n(t, meta.categorie, categorieLabel(meta.categorie))
+    : categorieLabel(meta.categorie);
   const linkHref = href ?? `/advertentie/${advertentie.id}`;
   const isPremium = isPremiumListing(advertentie) || boostActief(meta);
   const isSpotlight =
@@ -123,28 +129,33 @@ export function CarouselListingCard({
           )}
 
           <div className="carousel-listing-card__badges">
+            {advertentie.beschikbaar && (
+              <Badge variant="online" className="carousel-listing-card__badge">
+                {t("listing.online")}
+              </Badge>
+            )}
             {isNieuw && (
               <Badge
                 variant="default"
                 className="carousel-listing-card__badge carousel-listing-card__badge--nieuw"
               >
-                Nieuw
+                {t("listing.new")}
               </Badge>
             )}
             {isSpotlight && !compactMeta && (
               <Badge variant="premium" className="carousel-listing-card__badge">
-                Spotlight
+                {t("listing.spotlight")}
               </Badge>
             )}
             {isPremium && !isSpotlight && (
               <Badge variant="premium" className="carousel-listing-card__badge">
-                Premium
+                {t("listing.premium")}
               </Badge>
             )}
             {advertentie.geverifieerd && (
               <Badge variant="verified" className="carousel-listing-card__badge">
                 <BadgeCheck className="h-3 w-3" aria-hidden />
-                Geverifieerd
+                {t("listing.verified")}
               </Badge>
             )}
           </div>
@@ -158,12 +169,12 @@ export function CarouselListingCard({
               <span aria-hidden> · </span>
             )}
             {advertentie.leeftijd != null && (
-              <span>{advertentie.leeftijd} jaar</span>
+              <span>{t("listing.years", { age: advertentie.leeftijd })}</span>
             )}
           </p>
           {advertentie.prijs_vanaf != null && (
             <p className="carousel-listing-card__price">
-              Vanaf {formatPrijs(advertentie.prijs_vanaf)}
+              {t("listing.fromPrice", { price: formatPrijs(advertentie.prijs_vanaf) })}
             </p>
           )}
           {categorie && !compactMeta && (
@@ -178,12 +189,12 @@ export function CarouselListingCard({
                 tier === "nearby" && "carousel-listing-card__cta--subtle"
               )}
             >
-              Bekijk profiel
+              {t("listing.viewProfile")}
             </span>
           )}
           {tier === "latest" && (
             <span className="carousel-listing-card__cta carousel-listing-card__cta--link-only">
-              Bekijk
+              {t("listing.view")}
             </span>
           )}
         </div>
