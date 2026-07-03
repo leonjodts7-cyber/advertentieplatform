@@ -11,11 +11,13 @@ const LOC_STORAGE_KEY = "veloura_user_location";
 interface HomeNearbyCarouselSectionProps {
   advertenties: Advertentie[];
   fotos: Map<string, string | undefined>;
+  fotoCounts?: Map<string, number>;
 }
 
 export function HomeNearbyCarouselSection({
   advertenties,
   fotos,
+  fotoCounts,
 }: HomeNearbyCarouselSectionProps) {
   const [locatieActief, setLocatieActief] = useState(false);
   const [locatieLaden, setLocatieLaden] = useState(false);
@@ -70,6 +72,7 @@ export function HomeNearbyCarouselSection({
       variant="nearby"
       viewAllHref="/zoeken"
       ariaLabel="Advertenties in jouw buurt"
+      fotoCounts={fotoCounts}
       toolbar={
         <div className="mb-2">
           <div className="home-nearby-compact__actions">

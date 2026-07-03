@@ -146,3 +146,90 @@ export async function fetchActieveAdvertenties(
   const { data } = await query;
   return (data ?? []) as Advertentie[];
 }
+
+export async function fetchAdvertentiesByIds(
+  supabase: SupabaseClient,
+  ids: string[]
+): Promise<Advertentie[]> {
+  if (ids.length === 0) return [];
+
+  const { data, error } = await supabase
+    .from("advertenties")
+    .select("*")
+    .in("id", ids)
+    .eq("status", "actief");
+
+  if (error || !data?.length) return [];
+
+  const byId = new Map((data as Advertentie[]).map((ad) => [ad.id, ad]));
+  return ids
+    .map((id) => byId.get(id))
+    .filter((ad): ad is Advertentie => ad != null);
+}
+
+async function haalFavorietTellingen(
+  supabase: SupabaseClient,
+  advertentieIds: string[]
+): Promise<Map<string, number>> {
+  const map = new Map<string, number>();
+  if (advertentieIds.length === 0) return map;
+
+  const { data } = await supabase
+    .from("favorieten")
+    .select("advertentie_id")
+    .in("advertentie_id", advertentieIds);
+
+  for (const row of data ?? []) {
+    const id = row.advertentie_id as string;
+    map.set(id, (map.get(id) ?? 0) + 1);
+  }
+
+  return map;
+}
+
+function sortPopulaire(
+  ads: Advertentie[],
+  favorietTellingen: Map<string, number>
+): Advertentie[] {
+  return [...ads].sort((a, b) => {
+    const ap = isPremiumListing(a) ? 1 : 0;
+    const bp = isPremiumListing(b) ? 1 : 0;
+    if (ap !== bp) return bp - ap;
+
+    const af = favorietTellingen.get(a.id) ?? 0;
+    const bf = favorietTellingen.get(b.id) ?? 0;
+    if (af !== bf) return bf - af;
+
+    return (
+      new Date(b.aangemaakt_op).getTime() - new Date(a.aangemaakt_op).getTime()
+    );
+  });
+}
+
+export async function fetchPopulaireAdvertenties(
+  supabase: SupabaseClient,
+  limit = 24
+): Promise<Advertentie[]> {
+  const pool = await fetchActievePool(supabase, 120);
+  const ids = pool.map((a) => a.id);
+  const favorietTellingen = await haalFavorietTellingen(supabase, ids);
+  return sortPopulaire(pool, favorietTellingen).slice(0, limit);
+}
+
+export async function fetchVergelijkbareAdvertenties(
+  supabase: SupabaseClient,
+  advertentie: Advertentie,
+  limit = 12
+): Promise<Advertentie[]> {
+  const { data } = await supabase
+    .from("advertenties")
+    .select("*")
+    .eq("status", "actief")
+    .neq("id", advertentie.id)
+    .ilike("stad", `%${advertentie.stad}%`)
+    .order("aangemaakt_op", { ascending: false })
+    .limit(limit * 2);
+
+  const pool = sortPremiumFirst((data ?? []) as Advertentie[]);
+  return pool.slice(0, limit);
+}

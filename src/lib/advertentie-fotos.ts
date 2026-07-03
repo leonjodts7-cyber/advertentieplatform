@@ -22,3 +22,23 @@ export async function haalEersteFotos(
 
   return map;
 }
+
+export async function haalFotoAantallen(
+  supabase: SupabaseClient,
+  advertentieIds: string[]
+): Promise<Map<string, number>> {
+  const map = new Map<string, number>();
+  if (advertentieIds.length === 0) return map;
+
+  const { data } = await supabase
+    .from("advertentie_fotos")
+    .select("advertentie_id")
+    .in("advertentie_id", advertentieIds);
+
+  for (const foto of data ?? []) {
+    const id = foto.advertentie_id as string;
+    map.set(id, (map.get(id) ?? 0) + 1);
+  }
+
+  return map;
+}

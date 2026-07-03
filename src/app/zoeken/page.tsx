@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { ZoekFilterBar } from "@/components/zoek/zoek-filter-bar";
 import { ZoekActiveChips } from "@/components/zoek/zoek-active-chips";
 import { ZoekResults } from "@/components/zoek/zoek-results";
-import { haalEersteFotos } from "@/lib/advertentie-fotos";
+import { haalEersteFotos, haalFotoAantallen } from "@/lib/advertentie-fotos";
 import {
   fetchActieveAdvertenties,
   fetchPremiumAdvertenties,
@@ -22,7 +22,11 @@ import {
   metaBevatTerm,
   parseAdvertentieBeschrijving,
 } from "@/lib/advertentie-metadata";
-import { sorteerAdvertenties, isPlaatsingActief, plaatsingType } from "@/lib/advertentie-boost";
+import { isPlaatsingActief, plaatsingType } from "@/lib/advertentie-boost";
+import {
+  parseZoekSort,
+  sortAdvertentiesByOption,
+} from "@/lib/zoek-sort";
 
 export const metadata: Metadata = {
   title: "Profielen zoeken",
@@ -182,9 +186,16 @@ export default async function ZoekenPage({ searchParams }: ZoekenPageProps) {
     });
   }
 
-  advertenties = sorteerAdvertenties(advertenties);
+  advertenties = sortAdvertentiesByOption(
+    advertenties,
+    parseZoekSort(params.sort)
+  );
 
   const fotos = await haalEersteFotos(supabase, advertenties.map((a) => a.id));
+  const fotoCounts = await haalFotoAantallen(
+    supabase,
+    advertenties.map((a) => a.id)
+  );
   const filtersActive = hasActiveFilters(params);
 
   let fallbackPremium: Advertentie[] = [];
@@ -215,31 +226,38 @@ export default async function ZoekenPage({ searchParams }: ZoekenPageProps) {
       </div>
 
       <div className="container search-page__body">
-        <Suspense fallback={<div className="zoek-filter-bar zoek-filter-bar--skeleton" />}>
-          <ZoekFilterBar />
-        </Suspense>
+        <div className="search-page__layout">
+          <aside className="search-page__sidebar">
+            <Suspense fallback={<div className="zoek-filter-bar zoek-filter-bar--skeleton" />}>
+              <ZoekFilterBar />
+            </Suspense>
+          </aside>
 
-        <Suspense fallback={null}>
-          <ZoekActiveChips />
-        </Suspense>
+          <div className="search-page__main">
+            <Suspense fallback={null}>
+              <ZoekActiveChips />
+            </Suspense>
 
-        {ai === "1" && q?.trim() && (
-          <div className="zoek-ai-banner">
-            <SparklesIcon />
-            <span>
-              AI zoekopdracht: <strong>{q.trim()}</strong>
-            </span>
+            {ai === "1" && q?.trim() && (
+              <div className="zoek-ai-banner">
+                <SparklesIcon />
+                <span>
+                  AI zoekopdracht: <strong>{q.trim()}</strong>
+                </span>
+              </div>
+            )}
+
+            <ZoekResults
+              advertenties={advertenties}
+              fotos={fotos}
+              fotoCounts={fotoCounts}
+              filtersActive={filtersActive}
+              fallbackPremium={fallbackPremium}
+              fallbackLatest={fallbackLatest}
+              fallbackFotos={fallbackFotos}
+            />
           </div>
-        )}
-
-        <ZoekResults
-          advertenties={advertenties}
-          fotos={fotos}
-          filtersActive={filtersActive}
-          fallbackPremium={fallbackPremium}
-          fallbackLatest={fallbackLatest}
-          fallbackFotos={fallbackFotos}
-        />
+        </div>
       </div>
     </div>
   );

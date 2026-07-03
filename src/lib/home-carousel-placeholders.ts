@@ -1,6 +1,6 @@
 import { POPULAIRE_STEDEN } from "@/lib/marketplace";
 
-export type CarouselPlaceholderVariant = "spotlight" | "premium" | "nearby" | "latest";
+export type CarouselPlaceholderVariant = "spotlight" | "premium" | "nearby" | "latest" | "popular";
 
 export interface CarouselPlaceholderItem {
   id: string;
@@ -87,6 +87,13 @@ export const LATEST_PLACEHOLDERS = maakPlaceholders(
   "Nieuw profiel"
 );
 
+export const POPULAR_PLACEHOLDERS = maakPlaceholders(
+  "popular",
+  "POPULAIR",
+  8,
+  "Populair profiel"
+);
+
 export function getCarouselPlaceholders(
   variant: CarouselPlaceholderVariant
 ): CarouselPlaceholderItem[] {
@@ -99,5 +106,7 @@ export function getCarouselPlaceholders(
       return NEARBY_PLACEHOLDERS;
     case "latest":
       return LATEST_PLACEHOLDERS;
+    case "popular":
+      return POPULAR_PLACEHOLDERS;
   }
 }

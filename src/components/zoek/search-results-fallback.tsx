@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { HorizontalListingsCarousel } from "@/components/home/horizontal-listings-carousel";
-import { POPULAIRE_STEDEN, MARKETPLACE_CATEGORIEEN } from "@/lib/marketplace";
+import { RecentBekekenSection } from "@/components/recent-bekeken-section";
 import type { Advertentie } from "@/lib/types";
 
 interface SearchResultsFallbackProps {
@@ -35,8 +35,19 @@ export function SearchResultsFallback({
       </div>
 
       <HorizontalListingsCarousel
-        title="Aanbevolen premium profielen"
-        subtitle="Uitgelichte profielen op Veloura."
+        title="Aanbevolen profielen"
+        subtitle="Ontdek populaire profielen op Veloura."
+        items={latest}
+        fotos={fotos}
+        variant="premium"
+        viewAllHref="/zoeken"
+        embedded
+        className="search-embedded-carousel"
+      />
+
+      <HorizontalListingsCarousel
+        title="Premium advertenties"
+        subtitle="Extra zichtbaarheid en premium profielen."
         items={premium}
         fotos={fotos}
         variant="premium"
@@ -45,46 +56,7 @@ export function SearchResultsFallback({
         className="search-embedded-carousel"
       />
 
-      <HorizontalListingsCarousel
-        title="Nieuwste profielen"
-        subtitle="Recent geplaatste advertenties."
-        items={latest}
-        fotos={fotos}
-        variant="latest"
-        viewAllHref="/zoeken"
-        embedded
-        className="search-embedded-carousel"
-      />
-
-      <section className="search-fallback-categories">
-        <h3 className="search-fallback-categories__title">Populaire categorieën</h3>
-        <div className="search-fallback-chips">
-          {MARKETPLACE_CATEGORIEEN.slice(0, 8).map((cat) => (
-            <Link
-              key={cat.slug}
-              href={`/zoeken?categorie=${cat.slug}`}
-              className="search-fallback-chip"
-            >
-              {cat.label}
-            </Link>
-          ))}
-        </div>
-      </section>
-
-      <section className="search-fallback-categories">
-        <h3 className="search-fallback-categories__title">Populaire steden</h3>
-        <div className="search-fallback-chips">
-          {POPULAIRE_STEDEN.slice(0, 8).map((stad) => (
-            <Link
-              key={stad}
-              href={`/zoeken?stad=${encodeURIComponent(stad)}`}
-              className="search-fallback-chip"
-            >
-              {stad}
-            </Link>
-          ))}
-        </div>
-      </section>
+      <RecentBekekenSection variant="embedded" className="search-embedded-carousel" />
     </div>
   );
 }

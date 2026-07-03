@@ -9,7 +9,7 @@ import { getCarouselPlaceholders } from "@/lib/home-carousel-placeholders";
 import type { Advertentie } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
-export type ListingCarouselVariant = "spotlight" | "premium" | "nearby" | "latest";
+export type ListingCarouselVariant = "spotlight" | "premium" | "nearby" | "latest" | "popular";
 
 export interface HorizontalListingsCarouselProps {
   title: string;
@@ -24,6 +24,7 @@ export interface HorizontalListingsCarouselProps {
   toolbar?: React.ReactNode;
   /** Compact section for search page fallbacks */
   embedded?: boolean;
+  fotoCounts?: Map<string, number>;
 }
 
 const GAP_PX = 8;
@@ -33,6 +34,7 @@ const SECTION_CLASS: Record<ListingCarouselVariant, string> = {
   premium: "home-listing-block home-listing-block--premium",
   nearby: "home-nearby-compact home-listing-block home-listing-block--nearby",
   latest: "home-listing-block home-listing-block--compact home-listing-block--latest",
+  popular: "home-listing-block home-listing-block--popular",
 };
 
 const INTRINSIC_SIZE: Record<ListingCarouselVariant, string> = {
@@ -40,6 +42,7 @@ const INTRINSIC_SIZE: Record<ListingCarouselVariant, string> = {
   premium: "235px 320px",
   nearby: "220px 300px",
   latest: "195px 280px",
+  popular: "235px 320px",
 };
 
 export function HorizontalListingsCarousel({
@@ -54,6 +57,7 @@ export function HorizontalListingsCarousel({
   className,
   toolbar,
   embedded = false,
+  fotoCounts,
 }: HorizontalListingsCarouselProps) {
   const viewportRef = useRef<HTMLDivElement>(null);
   const [canPrev, setCanPrev] = useState(false);
@@ -216,14 +220,17 @@ export function HorizontalListingsCarousel({
                         afbeeldingUrl={fotos.get(advertentie.id)}
                         href={`${hrefBase}${advertentie.id}`}
                         carouselTier={variant}
+                        fotoCount={fotoCounts?.get(advertentie.id) ?? 0}
                         variant={
                           variant === "spotlight"
                             ? "spotlight"
                             : variant === "premium"
                               ? "premium"
-                              : variant === "latest"
-                                ? "latest"
-                                : "default"
+                              : variant === "popular"
+                                ? "premium"
+                                : variant === "latest"
+                                  ? "latest"
+                                  : "default"
                         }
                         priority={index < 6}
                       />

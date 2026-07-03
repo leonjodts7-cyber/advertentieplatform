@@ -90,6 +90,42 @@ export default async function DashboardPage() {
       </div>
 
       <div className="container dashboard-page__body">
+        <div className="dashboard-metrics">
+          <div className="dashboard-metric-card">
+            <span className="dashboard-metric-card__label">Profielweergaven</span>
+            <span className="dashboard-metric-card__value">0</span>
+          </div>
+          <div className="dashboard-metric-card">
+            <span className="dashboard-metric-card__label">Favorieten</span>
+            <span className="dashboard-metric-card__value">0</span>
+          </div>
+          <div className="dashboard-metric-card">
+            <span className="dashboard-metric-card__label">Contactkliks</span>
+            <span className="dashboard-metric-card__value">0</span>
+          </div>
+          <div className="dashboard-metric-card">
+            <span className="dashboard-metric-card__label">Actieve advertenties</span>
+            <span className="dashboard-metric-card__value dashboard-metric-card__value--success">
+              {actief}
+            </span>
+          </div>
+        </div>
+
+        <section className="dashboard-upsell">
+          <div className="dashboard-upsell__content">
+            <h2 className="dashboard-upsell__title">
+              Boost je advertentie voor meer zichtbaarheid
+            </h2>
+            <p className="dashboard-upsell__text">
+              Kies premium of een boost-pakket om hoger in zoekresultaten en op
+              de homepage te verschijnen.
+            </p>
+          </div>
+          <Link href="/dashboard/boosts" className="dashboard-btn dashboard-btn--primary dashboard-btn--sm">
+            Bekijk boost opties
+          </Link>
+        </section>
+
         <div className="dashboard-quick-actions">
           <Link href="/dashboard/advertenties/nieuw" className="dashboard-btn dashboard-btn--primary">
             Nieuwe advertentie
@@ -164,7 +200,8 @@ export default async function DashboardPage() {
           <section className="dashboard-panel">
             <h2 className="dashboard-panel__title">Prestaties</h2>
             <p className="dashboard-panel__text dashboard-panel__text--muted">
-              Statistieken worden binnenkort beschikbaar.
+              Gedetailleerde statistieken volgen zodra tracking actief is.
+              Weergaven en contactkliks worden nog niet gemeten.
             </p>
           </section>
 

@@ -235,6 +235,14 @@ export function DashboardAdvertentieCard({
         </div>
       </div>
       <div className="dashboard-ad-card__actions">
+        {advertentie.status === "actief" && (
+          <Link
+            href={`/advertentie/${advertentie.id}`}
+            className="dashboard-btn dashboard-btn--outline dashboard-btn--sm"
+          >
+            Bekijken
+          </Link>
+        )}
         <Link href={bewerkUrl} className="dashboard-btn dashboard-btn--secondary dashboard-btn--sm">
           Bewerken
         </Link>

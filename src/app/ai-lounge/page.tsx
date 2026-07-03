@@ -36,6 +36,11 @@ export default async function AiLoungePage() {
             Chat met fictieve volwassen companions. Elke companion heeft een eigen
             persoonlijkheid — betaal per bericht met credits.
           </p>
+          {user && (
+            <p className="ai-lounge-hero__credits ai-lounge-hero__credits--prominent">
+              Jouw saldo: <strong>{creditsSaldo}</strong> credits
+            </p>
+          )}
           <div className="ai-lounge-meta">
             <span>{companions.length} companions beschikbaar</span>
             <span>{CREDITS_PER_BERICHT} credits per bericht</span>
@@ -48,9 +53,9 @@ export default async function AiLoungePage() {
           <div className="ai-lounge-hero__actions">
             {user ? (
               <>
-                <p className="ai-lounge-hero__credits">
-                  Jouw saldo: <strong>{creditsSaldo}</strong> credits
-                </p>
+                <Button asChild size="sm">
+                  <Link href="/ai-lounge">Start chatten</Link>
+                </Button>
                 <Button asChild size="sm" variant="outline">
                   <Link href="/credits">Credits kopen</Link>
                 </Button>
