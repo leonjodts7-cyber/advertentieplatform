@@ -38,18 +38,20 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { useTranslation } from "@/contexts/locale-context";
+import { categoryLabelI18n } from "@/lib/i18n/marketplace-i18n";
 import { cn } from "@/lib/utils";
 import type { Advertentie } from "@/lib/types";
 
-const STAPPEN = [
-  "Pakket",
-  "Basis",
-  "Profiel",
-  "Mogelijkheden",
-  "Media",
-  "Beschikbaarheid",
-  "Promotie",
-  "Publiceren",
+const STEP_KEYS = [
+  "package",
+  "basic",
+  "profile",
+  "options",
+  "media",
+  "availability",
+  "promotion",
+  "publish",
 ] as const;
 
 const INPUT = "onDark" as const;
@@ -87,6 +89,7 @@ export function AdvertentieWizard({
 }: AdvertentieWizardProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { t } = useTranslation();
   const isEdit = Boolean(advertentie);
   const parsed = advertentie
     ? parseAdvertentieBeschrijving(advertentie.beschrijving)
@@ -189,16 +192,16 @@ export function AdvertentieWizard({
 
   const validatieFouten = useMemo(() => {
     const fouten: { stap: number; melding: string }[] = [];
-    if (!titel.trim()) fouten.push({ stap: 1, melding: "Titel is verplicht" });
-    if (!beschrijving.trim()) fouten.push({ stap: 1, melding: "Beschrijving is verplicht" });
-    if (!categorie) fouten.push({ stap: 1, melding: "Categorie is verplicht" });
-    if (!stad.trim()) fouten.push({ stap: 1, melding: "Stad is verplicht" });
+    if (!titel.trim()) fouten.push({ stap: 1, melding: t("wizard.validation.titleRequired") });
+    if (!beschrijving.trim()) fouten.push({ stap: 1, melding: t("wizard.validation.descriptionRequired") });
+    if (!categorie) fouten.push({ stap: 1, melding: t("wizard.validation.categoryRequired") });
+    if (!stad.trim()) fouten.push({ stap: 1, melding: t("wizard.validation.cityRequired") });
     const leeftijdNum = parseInt(leeftijd, 10);
     if (isNaN(leeftijdNum) || leeftijdNum < 18) {
-      fouten.push({ stap: 1, melding: "Leeftijd moet minimaal 18 zijn" });
+      fouten.push({ stap: 1, melding: t("wizard.validation.ageMin") });
     }
     return fouten;
-  }, [titel, beschrijving, categorie, stad, leeftijd]);
+  }, [titel, beschrijving, categorie, stad, leeftijd, t]);
 
   function bouwMeta(videoUrls: string[], hoofdFotoUrl?: string): AdvertentieMetadata {
     const boostActiefNu = boostType !== "none";
@@ -319,7 +322,11 @@ export function AdvertentieWizard({
   async function saveAdvertentie(status: Advertentie["status"]) {
     setFout(null);
     if (validatieFouten.length > 0) {
-      setFout(validatieFouten.map((f) => `Stap ${f.stap + 1}: ${f.melding}`).join(" · "));
+      setFout(
+        validatieFouten
+          .map((f) => t("wizard.validation.stepError", { step: f.stap + 1, message: f.melding }))
+          .join(" · ")
+      );
       setStap(validatieFouten[0].stap);
       return;
     }
@@ -327,7 +334,7 @@ export function AdvertentieWizard({
     const leeftijdNummer = parseInt(leeftijd, 10);
     const prijsNummer = parseFloat(prijsVanaf);
     if (isNaN(prijsNummer) || prijsNummer < 0) {
-      setFout("Voer een geldige prijs in.");
+      setFout(t("wizard.validation.invalidPrice"));
       setStap(1);
       return;
     }
@@ -366,7 +373,7 @@ export function AdvertentieWizard({
         .select("id")
         .single();
       if (error || !data) {
-        setFout(error?.message ?? "Opslaan mislukt.");
+        setFout(error?.message ?? t("wizard.validation.saveFailed"));
         setLaden(false);
         return;
       }
@@ -407,9 +414,7 @@ export function AdvertentieWizard({
 
   async function handleVerwijderen() {
     if (!advertentie?.id) return;
-    const bevestigd = window.confirm(
-      "Weet je zeker dat je deze advertentie wilt verwijderen? Dit kan niet ongedaan worden gemaakt."
-    );
+    const bevestigd = window.confirm(t("wizard.validation.deleteConfirm"));
     if (!bevestigd) return;
 
     setFout(null);
@@ -443,9 +448,9 @@ export function AdvertentieWizard({
   return (
     <div className={cn("wizard", dashboard && "wizard--dashboard")}>
       <div className="wizard__steps">
-        {STAPPEN.map((label, i) => (
+        {STEP_KEYS.map((key, i) => (
           <button
-            key={label}
+            key={key}
             type="button"
             className={cn(
               "wizard__step",
@@ -454,7 +459,7 @@ export function AdvertentieWizard({
             )}
             onClick={() => setStap(i)}
           >
-            {i + 1}. {label}
+            {i + 1}. {t(`wizard.steps.${key}`)}
           </button>
         ))}
       </div>
@@ -467,20 +472,20 @@ export function AdvertentieWizard({
 
       {stap === 0 && (
         <div className="wizard__panel">
-          <h2 className="wizard__title">Kies je pakket</h2>
+          <h2 className="wizard__title">{t("wizard.package.title")}</h2>
           <div className="wizard-pakket-grid">
             <button
               type="button"
               className={cn("wizard-pakket-card", pakket === "gratis" && "wizard-pakket-card--active")}
               onClick={() => setPakket("gratis")}
             >
-              <p className="wizard-pakket-card__name">Gratis</p>
+              <p className="wizard-pakket-card__name">{t("wizard.package.free")}</p>
               <p className="wizard-pakket-card__price">€0</p>
               <ul className="wizard-pakket-card__list">
-                <li>20 foto&apos;s</li>
-                <li>1 video</li>
-                <li>Normale positie</li>
-                <li>Basisstatistieken</li>
+                <li>{t("wizard.package.freePhotos")}</li>
+                <li>{t("wizard.package.freeVideos")}</li>
+                <li>{t("wizard.package.normalPosition")}</li>
+                <li>{t("wizard.package.basicStats")}</li>
               </ul>
             </button>
             <button
@@ -491,91 +496,89 @@ export function AdvertentieWizard({
               )}
               onClick={() => setPakket("premium")}
             >
-              <p className="wizard-pakket-card__name">Premium</p>
-              <p className="wizard-pakket-card__price">€19,99/maand introductieprijs</p>
+              <p className="wizard-pakket-card__name">{t("wizard.package.premium")}</p>
+              <p className="wizard-pakket-card__price">{t("wizard.package.priceIntro")}</p>
               <ul className="wizard-pakket-card__list">
-                <li>100 foto&apos;s</li>
-                <li>5 video&apos;s</li>
-                <li>Premium badge</li>
-                <li>Hoger in zoekresultaten</li>
-                <li>Boost-opties beschikbaar</li>
+                <li>{t("wizard.package.premiumPhotos")}</li>
+                <li>{t("wizard.package.premiumVideos")}</li>
+                <li>{t("wizard.package.premiumBadge")}</li>
+                <li>{t("wizard.package.higherSearch")}</li>
+                <li>{t("wizard.package.boostOptions")}</li>
               </ul>
             </button>
           </div>
           <div className="wizard-boost-hint mt-4">
-            <p className="wizard-boost-hint__title">Tijdelijk bovenaan?</p>
-            <p className="wizard-boost-hint__text">
-              Wil je tijdelijk bovenaan staan? Kies later een boost per stad, categorie of homepage.
-            </p>
+            <p className="wizard-boost-hint__title">{t("wizard.package.boostHintTitle")}</p>
+            <p className="wizard-boost-hint__text">{t("wizard.package.boostHintText")}</p>
           </div>
           <p className="wizard__note mt-3">
-            Betaling wordt later gekoppeld. Premium: {formatEuro(PREMIUM_MAAND_PRIJS)}/maand indicatie.
+            {t("wizard.package.paymentNote", { price: formatEuro(PREMIUM_MAAND_PRIJS) })}
           </p>
         </div>
       )}
 
       {stap === 1 && (
         <div className="wizard__panel space-y-4">
-          <h2 className="wizard__title">Basisgegevens</h2>
+          <h2 className="wizard__title">{t("wizard.basic.title")}</h2>
           <div>
-            <label className="form-label">Titel</label>
+            <label className="form-label">{t("wizard.basic.titleLabel")}</label>
             <Input variant={INPUT} value={titel} onChange={(e) => setTitel(e.target.value)} required />
           </div>
           <div>
-            <label className="form-label">Beschrijving</label>
+            <label className="form-label">{t("wizard.basic.descriptionLabel")}</label>
             <Textarea variant="onDark" value={beschrijving} onChange={(e) => setBeschrijving(e.target.value)} required />
           </div>
           <div>
-            <label className="form-label">Categorie</label>
+            <label className="form-label">{t("wizard.basic.categoryLabel")}</label>
             <select className="filter-select filter-select--on-dark w-full" value={categorie} onChange={(e) => setCategorie(e.target.value)}>
-              <option value="">Kies categorie</option>
+              <option value="">{t("wizard.basic.chooseCategory")}</option>
               {CATEGORIE_OPTIES.map((c) => (
-                <option key={c.slug} value={c.slug}>{c.label}</option>
+                <option key={c.slug} value={c.slug}>{categoryLabelI18n(t, c.slug, c.label)}</option>
               ))}
             </select>
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
-              <label className="form-label">Stad</label>
+              <label className="form-label">{t("wizard.basic.city")}</label>
               <Input variant={INPUT} value={stad} onChange={(e) => setStad(e.target.value)} required />
             </div>
             <div>
-              <label className="form-label">Regio</label>
+              <label className="form-label">{t("wizard.basic.region")}</label>
               <Input variant={INPUT} value={regio} onChange={(e) => setRegio(e.target.value)} />
             </div>
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
-              <label className="form-label">Leeftijd (min. 18)</label>
+              <label className="form-label">{t("wizard.basic.age")}</label>
               <Input variant={INPUT} type="number" min={18} value={leeftijd} onChange={(e) => setLeeftijd(e.target.value)} />
             </div>
             <div>
-              <label className="form-label">Prijs vanaf (€)</label>
+              <label className="form-label">{t("wizard.basic.priceFrom")}</label>
               <Input variant={INPUT} type="number" min={0} value={prijsVanaf} onChange={(e) => setPrijsVanaf(e.target.value)} />
             </div>
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
-              <label className="form-label">Telefoon</label>
+              <label className="form-label">{t("wizard.basic.phone")}</label>
               <Input variant={INPUT} value={telefoon} onChange={(e) => setTelefoon(e.target.value)} />
             </div>
             <div>
-              <label className="form-label">WhatsApp</label>
-              <Input variant={INPUT} value={whatsapp} onChange={(e) => setWhatsapp(e.target.value)} placeholder="Optioneel" />
+              <label className="form-label">{t("wizard.basic.whatsapp")}</label>
+              <Input variant={INPUT} value={whatsapp} onChange={(e) => setWhatsapp(e.target.value)} placeholder={t("wizard.basic.optional")} />
             </div>
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
-              <label className="form-label">Website</label>
-              <Input variant={INPUT} value={website} onChange={(e) => setWebsite(e.target.value)} placeholder="Optioneel" />
+              <label className="form-label">{t("wizard.basic.website")}</label>
+              <Input variant={INPUT} value={website} onChange={(e) => setWebsite(e.target.value)} placeholder={t("wizard.basic.optional")} />
             </div>
             <div>
-              <label className="form-label">Telegram</label>
-              <Input variant={INPUT} value={telegram} onChange={(e) => setTelegram(e.target.value)} placeholder="Optioneel" />
+              <label className="form-label">{t("wizard.basic.telegram")}</label>
+              <Input variant={INPUT} value={telegram} onChange={(e) => setTelegram(e.target.value)} placeholder={t("wizard.basic.optional")} />
             </div>
           </div>
           <div>
-            <p className="form-label">Adres type</p>
+            <p className="form-label">{t("wizard.basic.addressType")}</p>
             <div className="wizard-check-grid">
               {ADRES_TYPE_OPTIES.map((opt) => (
                 <label key={opt.value} className="wizard-check">
@@ -590,7 +593,7 @@ export function AdvertentieWizard({
 
       {stap === 2 && (
         <div className="wizard__panel space-y-4">
-          <h2 className="wizard__title">Profielgegevens</h2>
+          <h2 className="wizard__title">{t("wizard.profile.title")}</h2>
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
               <label className="form-label">Geslacht</label>
@@ -645,7 +648,7 @@ export function AdvertentieWizard({
 
       {stap === 3 && (
         <div className="wizard__panel space-y-4">
-          <h2 className="wizard__title">Mogelijkheden</h2>
+          <h2 className="wizard__title">{t("wizard.options.title")}</h2>
           <div className="wizard-check-grid">
             {MOGELIJKHEDEN_OPTIES.map((opt) => (
               <label key={opt.value} className="wizard-check">
@@ -676,18 +679,22 @@ export function AdvertentieWizard({
 
       {stap === 4 && (
         <div className="wizard__panel space-y-4">
-          <h2 className="wizard__title">Media</h2>
+          <h2 className="wizard__title">{t("wizard.media.title")}</h2>
           <p className="text-sm text-muted-foreground">
-            Max {limieten.fotos} foto&apos;s en {limieten.videos} video&apos;s ({pakket === "premium" ? "Premium" : "Gratis"})
+            {t("wizard.media.limit", {
+              photos: limieten.fotos,
+              videos: limieten.videos,
+              package: pakket === "premium" ? t("wizard.package.premium") : t("wizard.package.free"),
+            })}
           </p>
           <div className="flex flex-wrap gap-3">
             <label className="wizard-upload-btn">
-              Foto&apos;s toevoegen
+              {t("wizard.media.addPhotos")}
               <input type="file" accept="image/*" multiple hidden onChange={(e) => handleMediaSelect(e, "foto")} disabled={fotoCount >= limieten.fotos} />
             </label>
             {limieten.videos > 0 && (
               <label className="wizard-upload-btn">
-                Video toevoegen
+                {t("wizard.media.addVideo")}
                 <input type="file" accept="video/*" hidden onChange={(e) => handleMediaSelect(e, "video")} disabled={videoCount >= limieten.videos} />
               </label>
             )}
@@ -703,9 +710,9 @@ export function AdvertentieWizard({
                 )}
                 <div className="wizard-media-item__actions">
                   {item.type === "foto" && !item.isHoofd && (
-                    <button type="button" onClick={() => setHoofdfoto(i)}>Hoofdfoto</button>
+                    <button type="button" onClick={() => setHoofdfoto(i)}>{t("wizard.media.mainPhoto")}</button>
                   )}
-                  {item.isHoofd && <span className="wizard-media-item__badge">Hoofd</span>}
+                  {item.isHoofd && <span className="wizard-media-item__badge">{t("wizard.media.main")}</span>}
                   <button type="button" className="wizard-media-item__remove" onClick={() => removeMedia(i)}>×</button>
                 </div>
               </div>
@@ -716,7 +723,7 @@ export function AdvertentieWizard({
 
       {stap === 5 && (
         <div className="wizard__panel space-y-4">
-          <h2 className="wizard__title">Beschikbaarheid</h2>
+          <h2 className="wizard__title">{t("wizard.availability.title")}</h2>
           <div className="wizard-check-grid">
             {BESCHIKBAARHEID_OPTIES.map((opt) => (
               <label key={opt.value} className="wizard-check">
@@ -884,20 +891,20 @@ export function AdvertentieWizard({
       <div className="wizard__nav mt-6 flex flex-wrap gap-2">
         {stap > 0 && (
           <Button type="button" variant="secondary" onClick={() => setStap(stap - 1)}>
-            Vorige
+            {t("wizard.nav.previous")}
           </Button>
         )}
-        {stap < STAPPEN.length - 1 ? (
+        {stap < STEP_KEYS.length - 1 ? (
           <Button type="button" onClick={() => setStap(stap + 1)}>
-            Volgende
+            {t("wizard.nav.next")}
           </Button>
         ) : (
           <>
             <Button type="button" variant="secondary" disabled={laden} onClick={() => saveAdvertentie("concept")}>
-              {laden ? "Bezig…" : "Opslaan als concept"}
+              {laden ? t("wizard.nav.saving") : t("wizard.publish.saveDraft")}
             </Button>
             <Button type="button" disabled={laden} onClick={() => saveAdvertentie("actief")}>
-              {laden ? "Bezig…" : "Nu publiceren"}
+              {laden ? t("wizard.nav.saving") : t("wizard.publish.publishNow")}
             </Button>
           </>
         )}
@@ -909,11 +916,11 @@ export function AdvertentieWizard({
             disabled={laden}
             onClick={() => void handleVerwijderen()}
           >
-            Advertentie verwijderen
+            {t("wizard.publish.delete")}
           </Button>
         )}
         <Button asChild variant="ghost">
-          <Link href="/dashboard/advertenties">Annuleren</Link>
+          <Link href="/dashboard/advertenties">{t("common.cancel")}</Link>
         </Button>
       </div>
     </div>

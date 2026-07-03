@@ -1,9 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { DashboardSubnav } from "@/components/dashboard-subnav";
 import { useTranslation } from "@/contexts/locale-context";
+import type { ProviderAnalyticsSummary } from "@/lib/analytics/types";
+import { formatPrijs } from "@/lib/helpers";
 
 export interface DashboardActivityItem {
   id: string;
@@ -22,6 +24,7 @@ interface DashboardOverviewProps {
   aiCredits: number;
   totaal: number;
   activity: DashboardActivityItem[];
+  initialAnalytics: ProviderAnalyticsSummary;
 }
 
 export function DashboardOverview({
@@ -34,28 +37,85 @@ export function DashboardOverview({
   aiCredits,
   totaal,
   activity,
+  initialAnalytics,
 }: DashboardOverviewProps) {
   const { t } = useTranslation();
   const [chartRange, setChartRange] = useState<"7" | "30" | "90">("7");
+  const [analytics, setAnalytics] = useState(initialAnalytics);
+  const [loadingAnalytics, setLoadingAnalytics] = useState(false);
+
+  useEffect(() => {
+    if (chartRange === "7") {
+      setAnalytics(initialAnalytics);
+      return;
+    }
+    setLoadingAnalytics(true);
+    void fetch(`/api/analytics/provider?days=${chartRange}`)
+      .then((res) => (res.ok ? res.json() : initialAnalytics))
+      .then((data: ProviderAnalyticsSummary) => setAnalytics(data))
+      .catch(() => setAnalytics(initialAnalytics))
+      .finally(() => setLoadingAnalytics(false));
+  }, [chartRange, initialAnalytics]);
+
+  const contacts =
+    analytics.phoneClicks +
+    analytics.whatsappClicks +
+    analytics.websiteClicks +
+    analytics.chatStarts;
 
   const todayMetrics = [
-    { label: t("dashboardInsights.views"), value: "—" },
-    { label: t("dashboardInsights.favorites"), value: listingFavorites },
-    { label: t("dashboardInsights.contacts"), value: "—" },
-    { label: t("dashboardInsights.chats"), value: aiCredits > 0 ? "AI" : "—" },
+    { label: t("dashboardInsights.views"), value: String(analytics.profileViews) },
+    { label: t("dashboardInsights.favorites"), value: analytics.favoriteAdds },
+    { label: t("dashboardInsights.contacts"), value: String(contacts) },
+    { label: t("dashboardInsights.chats"), value: analytics.chatStarts || (aiCredits > 0 ? "AI" : "—") },
     { label: t("dashboardInsights.appointments"), value: actief },
   ];
 
-  const chartBars = [
-    Math.max(1, listingFavorites),
-    Math.max(1, actief),
-    Math.max(1, premiumActief),
-    Math.max(1, actieveBoosts),
-    Math.max(1, concept),
-    Math.max(1, totaal),
-    Math.max(1, listingFavorites + actief),
-  ];
+  const chartBars =
+    analytics.dailyViews.length > 0
+      ? analytics.dailyViews.map((d) => d.count)
+      : [1, 1, 1, 1, 1, 1, 1];
   const chartMax = Math.max(...chartBars, 1);
+
+  const insights: string[] = [];
+
+  if (analytics.viewsChangePercent !== null) {
+    insights.push(
+      analytics.viewsChangePercent >= 0
+        ? t("analytics.viewsUp", { percent: analytics.viewsChangePercent })
+        : t("analytics.viewsDown", { percent: Math.abs(analytics.viewsChangePercent) })
+    );
+  }
+
+  if (analytics.popularDay) {
+    insights.push(
+      t("analytics.popularDay", { day: t(`analytics.days.${analytics.popularDay}`) })
+    );
+  }
+
+  if (analytics.popularHour !== null) {
+    insights.push(t("analytics.popularHour", { hour: analytics.popularHour }));
+  }
+
+  if (analytics.contactRatio !== null) {
+    insights.push(t("analytics.contactRatio", { ratio: analytics.contactRatio }));
+  }
+
+  if (analytics.saveRatio !== null) {
+    insights.push(t("analytics.saveRatio", { ratio: analytics.saveRatio }));
+  }
+
+  if (analytics.topAdvertentieTitle) {
+    insights.push(t("analytics.topListing", { title: analytics.topAdvertentieTitle }));
+  }
+
+  if (analytics.avgPrice !== null) {
+    insights.push(t("analytics.avgPrice", { price: analytics.avgPrice }));
+  }
+
+  if (analytics.newVisitors > 0) {
+    insights.push(t("analytics.newVisitors", { count: analytics.newVisitors }));
+  }
 
   return (
     <div className="dashboard-page dashboard-page--cockpit">
@@ -103,7 +163,11 @@ export function DashboardOverview({
               ))}
             </div>
           </div>
-          <div className="dashboard-cockpit-chart__bars" aria-hidden>
+          <div
+            className="dashboard-cockpit-chart__bars"
+            aria-hidden
+            data-loading={loadingAnalytics || undefined}
+          >
             {chartBars.map((v, i) => (
               <div
                 key={i}
@@ -113,9 +177,10 @@ export function DashboardOverview({
             ))}
           </div>
           <div className="dashboard-cockpit-chart__legend">
-            <span>{t("dashboardInsights.chartFavorites")}</span>
             <span>{t("dashboardInsights.chartViews")}</span>
-            <span>{t("dashboard.listingFavorites")}</span>
+            {analytics.avgPrice !== null && (
+              <span>{formatPrijs(analytics.avgPrice)}</span>
+            )}
           </div>
         </section>
 
@@ -154,14 +219,11 @@ export function DashboardOverview({
           <section className="dashboard-panel dashboard-panel--compact">
             <h2 className="dashboard-panel__title">{t("dashboardInsights.insightsTitle")}</h2>
             <ul className="dashboard-insights-list">
-              {listingFavorites > 0 && (
-                <li>{t("dashboardInsights.insightBetterWeek")}</li>
+              {insights.length > 0 ? (
+                insights.map((line) => <li key={line}>{line}</li>)
+              ) : (
+                <li>{t("dashboardInsights.activityNoItems")}</li>
               )}
-              <li>{t("dashboardInsights.insightPeakTime")}</li>
-              <li>
-                {t("dashboardInsights.insightSaveRatio")}:{" "}
-                {totaal > 0 ? `${Math.round((listingFavorites / Math.max(totaal, 1)) * 10) / 10}` : "—"}
-              </li>
               <li>
                 {t("dashboard.activeAds")}: {actief} · {t("dashboard.premiumActive")}: {premiumActief}
               </li>

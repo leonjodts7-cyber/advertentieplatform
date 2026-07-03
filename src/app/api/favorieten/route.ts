@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { haalFavorietIds } from "@/lib/favorieten-queries";
+import { recordAnalyticsEvent } from "@/lib/analytics/queries";
 import { createClient } from "@/lib/supabase/server";
 
 export async function GET(request: Request) {
@@ -9,7 +10,7 @@ export async function GET(request: Request) {
   } = await supabase.auth.getUser();
 
   if (!user) {
-    return NextResponse.json({ error: "Niet ingelogd" }, { status: 401 });
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   const { searchParams } = new URL(request.url);
@@ -41,30 +42,30 @@ export async function POST(request: Request) {
   } = await supabase.auth.getUser();
 
   if (!user) {
-    return NextResponse.json({ error: "Niet ingelogd" }, { status: 401 });
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   let body: { advertentie_id?: string };
   try {
     body = (await request.json()) as { advertentie_id?: string };
   } catch {
-    return NextResponse.json({ error: "Ongeldige body" }, { status: 400 });
+    return NextResponse.json({ error: "Invalid body" }, { status: 400 });
   }
 
   const advertentieId = body.advertentie_id?.trim();
   if (!advertentieId) {
-    return NextResponse.json({ error: "advertentie_id is verplicht" }, { status: 400 });
+    return NextResponse.json({ error: "advertentie_id required" }, { status: 400 });
   }
 
   const { data: advertentie } = await supabase
     .from("advertenties")
-    .select("id")
+    .select("id, aanbieder_id")
     .eq("id", advertentieId)
     .eq("status", "actief")
     .maybeSingle();
 
   if (!advertentie) {
-    return NextResponse.json({ error: "Advertentie niet gevonden" }, { status: 404 });
+    return NextResponse.json({ error: "Listing not found" }, { status: 404 });
   }
 
   const { error } = await supabase.from("favorieten").insert({
@@ -79,6 +80,13 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
+  void recordAnalyticsEvent(supabase, {
+    eventType: "favorite_add",
+    advertentieId,
+    aanbiederId: advertentie.aanbieder_id as string,
+    viewerId: user.id,
+  });
+
   return NextResponse.json({ ok: true, favorited: true });
 }
 
@@ -89,15 +97,21 @@ export async function DELETE(request: Request) {
   } = await supabase.auth.getUser();
 
   if (!user) {
-    return NextResponse.json({ error: "Niet ingelogd" }, { status: 401 });
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   const { searchParams } = new URL(request.url);
   const advertentieId = searchParams.get("advertentie_id")?.trim();
 
   if (!advertentieId) {
-    return NextResponse.json({ error: "advertentie_id is verplicht" }, { status: 400 });
+    return NextResponse.json({ error: "advertentie_id required" }, { status: 400 });
   }
+
+  const { data: advertentie } = await supabase
+    .from("advertenties")
+    .select("id, aanbieder_id")
+    .eq("id", advertentieId)
+    .maybeSingle();
 
   const { error } = await supabase
     .from("favorieten")
@@ -107,6 +121,15 @@ export async function DELETE(request: Request) {
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+
+  if (advertentie) {
+    void recordAnalyticsEvent(supabase, {
+      eventType: "favorite_remove",
+      advertentieId,
+      aanbiederId: advertentie.aanbieder_id as string,
+      viewerId: user.id,
+    });
   }
 
   return NextResponse.json({ ok: true, favorited: false });

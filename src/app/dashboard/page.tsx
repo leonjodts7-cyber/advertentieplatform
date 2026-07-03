@@ -1,14 +1,15 @@
 import { redirect } from "next/navigation";
-import type { Metadata } from "next";
 import { DashboardOverview } from "@/components/dashboard-overview";
 import type { Advertentie } from "@/lib/types";
 import { haalAiLoungeStats } from "@/lib/ai/queries";
+import { fetchProviderAnalytics } from "@/lib/analytics/queries";
 import { createClient } from "@/lib/supabase/server";
 import { zorgProfielBestaat } from "@/lib/profiel";
 import { parseAdvertentieBeschrijving } from "@/lib/advertentie-metadata";
 import { boostActief } from "@/lib/advertentie-boost";
 import { isProviderRole } from "@/lib/user-role";
 import { resolveUserRole } from "@/lib/user-role-server";
+import { buildPageMetadata } from "@/lib/metadata-i18n";
 
 function telActieveBoosts(ads: Pick<Advertentie, "beschrijving" | "status">[]): number {
   return ads.filter((a) => {
@@ -18,9 +19,11 @@ function telActieveBoosts(ads: Pick<Advertentie, "beschrijving" | "status">[]): 
   }).length;
 }
 
-export const metadata: Metadata = {
-  title: "Dashboard",
-};
+export async function generateMetadata() {
+  return buildPageMetadata("pages.dashboard.title", "pages.dashboard.description", {
+    path: "/dashboard",
+  });
+}
 
 export default async function DashboardPage() {
   const supabase = await createClient();
@@ -35,12 +38,13 @@ export default async function DashboardPage() {
 
   await zorgProfielBestaat(user.id, user.email ?? "");
 
-  const [{ data: advertentiesRaw }, aiStats] = await Promise.all([
+  const [{ data: advertentiesRaw }, aiStats, initialAnalytics] = await Promise.all([
     supabase
       .from("advertenties")
       .select("id, titel, status, premium, beschrijving, premium_tot")
       .eq("aanbieder_id", user.id),
     haalAiLoungeStats(user.id),
+    fetchProviderAnalytics(supabase, user.id, 7),
   ]);
 
   const advertenties = (advertentiesRaw ?? []) as Pick<
@@ -133,6 +137,7 @@ export default async function DashboardPage() {
       listingFavorites={listingFavorites}
       aiCredits={aiStats.resterendeCredits}
       activity={activity.slice(0, 8)}
+      initialAnalytics={initialAnalytics}
     />
   );
 }

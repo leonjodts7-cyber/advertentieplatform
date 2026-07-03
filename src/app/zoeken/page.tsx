@@ -1,5 +1,5 @@
-import type { Metadata } from "next";
 import { ZoekenPageContent } from "@/components/zoek/zoeken-page-content";
+import { buildPageMetadata } from "@/lib/metadata-i18n";
 import { haalEersteFotos, haalFotoAantallen } from "@/lib/advertentie-fotos";
 import {
   fetchActieveAdvertenties,
@@ -25,10 +25,11 @@ import {
   sortAdvertentiesByOption,
 } from "@/lib/zoek-sort";
 
-export const metadata: Metadata = {
-  title: "Profielen zoeken",
-  description: "Zoek discrete profielen op Veloura. Alleen 18+.",
-};
+export async function generateMetadata() {
+  return buildPageMetadata("pages.search.title", "pages.search.description", {
+    path: "/zoeken",
+  });
+}
 
 interface ZoekenPageProps {
   searchParams: Promise<Record<string, string | undefined>>;

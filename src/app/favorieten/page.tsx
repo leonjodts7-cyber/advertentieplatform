@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { FavorietenPageContent } from "@/components/favorieten-page-content";
 import { haalEersteFotos } from "@/lib/advertentie-fotos";
@@ -8,11 +7,14 @@ import {
 } from "@/lib/advertentie-queries";
 import { haalFavorietAdvertenties } from "@/lib/favorieten-queries";
 import { createClient } from "@/lib/supabase/server";
+import { buildPageMetadata } from "@/lib/metadata-i18n";
 
-export const metadata: Metadata = {
-  title: "Mijn favorieten",
-  description: "Je opgeslagen advertenties op Veloura.",
-};
+export async function generateMetadata() {
+  return buildPageMetadata("pages.favorites.title", "pages.favorites.description", {
+    path: "/favorieten",
+    noIndex: true,
+  });
+}
 
 export default async function FavorietenPage() {
   const supabase = await createClient();
