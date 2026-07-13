@@ -9,17 +9,19 @@ interface AiCompanionCardProps {
   companion: AiCompanion;
   ingelogd?: boolean;
   creditsSaldo?: number;
+  featured?: boolean;
 }
 
 export function AiCompanionCard({
   companion,
   ingelogd = false,
   creditsSaldo = 0,
+  featured = false,
 }: AiCompanionCardProps) {
   const heeftCredits = creditsSaldo >= companion.kostenPerBericht;
 
   return (
-    <article className="ai-companion-card group">
+    <article className={`ai-companion-card group${featured ? " ai-companion-card--featured" : ""}`}>
       <div className="ai-companion-card__media">
         <CompanionVisual companion={companion} priority={companion.id === "valentina"} />
         <div className="ai-companion-card__badges">

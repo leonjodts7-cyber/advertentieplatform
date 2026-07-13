@@ -1,15 +1,16 @@
-import type { Metadata } from "next";
 import { AiLoungeContent } from "@/components/ai/ai-lounge-content";
 import { getAllCompanions } from "@/lib/ai-companions";
 import { haalCreditSaldo } from "@/lib/credits";
+import { haalRecenteAiGesprekken } from "@/lib/ai/queries";
+import { buildPageMetadata } from "@/lib/metadata-i18n";
 import { createClient } from "@/lib/supabase/server";
 import { zorgProfielBestaat } from "@/lib/profiel";
 
-export const metadata: Metadata = {
-  title: "AI Lounge",
-  description:
-    "Kies een fictieve volwassen companion en chat per bericht met credits op Veloura.",
-};
+export async function generateMetadata() {
+  return buildPageMetadata("pages.aiLounge.title", "pages.aiLounge.description", {
+    path: "/ai-lounge",
+  });
+}
 
 export default async function AiLoungePage() {
   const companions = getAllCompanions();
@@ -19,9 +20,14 @@ export default async function AiLoungePage() {
   } = await supabase.auth.getUser();
 
   let creditsSaldo = 0;
+  let recentChats: Awaited<ReturnType<typeof haalRecenteAiGesprekken>> = [];
+
   if (user) {
     await zorgProfielBestaat(user.id, user.email ?? "");
-    creditsSaldo = await haalCreditSaldo(user.id);
+    [creditsSaldo, recentChats] = await Promise.all([
+      haalCreditSaldo(user.id),
+      haalRecenteAiGesprekken(user.id),
+    ]);
   }
 
   return (
@@ -29,6 +35,7 @@ export default async function AiLoungePage() {
       companions={companions}
       ingelogd={!!user}
       creditsSaldo={creditsSaldo}
+      recentChats={recentChats}
     />
   );
 }

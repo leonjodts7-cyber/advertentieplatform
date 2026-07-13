@@ -82,7 +82,7 @@ export function AdvertentieDetailContent({
 
   return (
     <div className={hasMobileContact ? "pb-24 lg:pb-0" : "pb-6 lg:pb-0"}>
-      <RecentBekekenTracker advertentieId={advertentie.id} />
+      <RecentBekekenTracker advertentieId={advertentie.id} advertentie={advertentie} />
       <AnalyticsTracker advertentieId={advertentie.id} eventType="profile_view" />
 
       <div className="section-dark pb-6">

@@ -259,6 +259,144 @@ export async function fetchMeestOpgeslagenAdvertenties(
   return fetchPopulaireAdvertenties(supabase, limit);
 }
 
+export async function fetchOnlineNuAdvertenties(
+  supabase: SupabaseClient,
+  limit = 24
+): Promise<Advertentie[]> {
+  const { data } = await supabase
+    .from("advertenties")
+    .select("*")
+    .eq("status", "actief")
+    .eq("beschikbaar", true)
+    .order("aangemaakt_op", { ascending: false })
+    .limit(limit);
+
+  const online = sortPremiumFirst((data ?? []) as Advertentie[]);
+  if (online.length >= limit) return online.slice(0, limit);
+
+  const pool = await fetchActievePool(supabase, limit);
+  const ids = new Set(online.map((a) => a.id));
+  const fill = pool.filter((a) => !ids.has(a.id) && a.beschikbaar).slice(0, limit - online.length);
+  return [...online, ...fill];
+}
+
+export async function fetchRecentBijgewerktAdvertenties(
+  supabase: SupabaseClient,
+  limit = 24
+): Promise<Advertentie[]> {
+  const { data } = await supabase
+    .from("advertenties")
+    .select("*")
+    .eq("status", "actief")
+    .order("bijgewerkt_op", { ascending: false })
+    .limit(limit);
+
+  return sortPremiumFirst((data ?? []) as Advertentie[]);
+}
+
+export async function fetchEditorsChoiceAdvertenties(
+  supabase: SupabaseClient,
+  limit = 24
+): Promise<Advertentie[]> {
+  const [spotlight, premium] = await Promise.all([
+    fetchSpotlightAdvertenties(supabase, Math.ceil(limit / 2)),
+    fetchPremiumAdvertenties(supabase, Math.ceil(limit / 2)),
+  ]);
+  return dedupeById([...spotlight, ...premium]).slice(0, limit);
+}
+
+export async function fetchNieuweAanbiedersAdvertenties(
+  supabase: SupabaseClient,
+  limit = 24
+): Promise<Advertentie[]> {
+  const since = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
+  const pool = await fetchActievePool(supabase, 120);
+  const recent = pool.filter((a) => a.aangemaakt_op >= since);
+  const seenProviders = new Set<string>();
+  const result: Advertentie[] = [];
+
+  for (const ad of sortPremiumFirst(recent)) {
+    if (seenProviders.has(ad.aanbieder_id)) continue;
+    seenProviders.add(ad.aanbieder_id);
+    result.push(ad);
+    if (result.length >= limit) break;
+  }
+
+  if (result.length >= limit) return result;
+  const ids = new Set(result.map((a) => a.id));
+  for (const ad of sortPremiumFirst(pool)) {
+    if (ids.has(ad.id) || seenProviders.has(ad.aanbieder_id)) continue;
+    seenProviders.add(ad.aanbieder_id);
+    result.push(ad);
+    if (result.length >= limit) break;
+  }
+  return result;
+}
+
+export async function fetchSnelStijgendeAdvertenties(
+  supabase: SupabaseClient,
+  limit = 24
+): Promise<Advertentie[]> {
+  const since = new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString();
+  const pool = await fetchActievePool(supabase, 120);
+  const recent = pool.filter((a) => a.aangemaakt_op >= since);
+  const base = recent.length >= limit ? recent : pool;
+  const ids = base.map((a) => a.id);
+  const favorietTellingen = await haalFavorietTellingen(supabase, ids);
+  return sortPopulaire(base, favorietTellingen).slice(0, limit);
+}
+
+export async function fetchBestBeoordeeldAdvertenties(
+  supabase: SupabaseClient,
+  limit = 24
+): Promise<Advertentie[]> {
+  const { data: reviews } = await supabase
+    .from("advertentie_reviews")
+    .select("advertentie_id, rating");
+
+  const ratings = new Map<string, { sum: number; count: number }>();
+  for (const row of reviews ?? []) {
+    const id = row.advertentie_id as string;
+    const rating = row.rating as number;
+    const cur = ratings.get(id) ?? { sum: 0, count: 0 };
+    ratings.set(id, { sum: cur.sum + rating, count: cur.count + 1 });
+  }
+
+  const rankedIds = [...ratings.entries()]
+    .filter(([, v]) => v.count >= 1)
+    .sort((a, b) => {
+      const avgA = a[1].sum / a[1].count;
+      const avgB = b[1].sum / b[1].count;
+      if (avgB !== avgA) return avgB - avgA;
+      return b[1].count - a[1].count;
+    })
+    .map(([id]) => id);
+
+  if (rankedIds.length > 0) {
+    const ads = await fetchAdvertentiesByIds(supabase, rankedIds.slice(0, limit * 2));
+    const byId = new Map(ads.map((a) => [a.id, a]));
+    const ranked = rankedIds
+      .map((id) => byId.get(id))
+      .filter((a): a is Advertentie => a != null)
+      .slice(0, limit);
+    if (ranked.length >= limit) return ranked;
+  }
+
+  return fetchPopulaireAdvertenties(supabase, limit);
+}
+
+export async function fetchInStadAdvertenties(
+  supabase: SupabaseClient,
+  stad: string,
+  limit = 24
+): Promise<Advertentie[]> {
+  if (!stad.trim()) return fetchPopulaireAdvertenties(supabase, limit);
+  const ads = await fetchActieveAdvertenties(supabase, { stad: stad.trim(), limit: limit * 2 });
+  const ids = ads.map((a) => a.id);
+  const favorietTellingen = await haalFavorietTellingen(supabase, ids);
+  return sortPopulaire(ads, favorietTellingen).slice(0, limit);
+}
+
 export async function fetchVergelijkbareAdvertenties(
   supabase: SupabaseClient,
   advertentie: Advertentie,

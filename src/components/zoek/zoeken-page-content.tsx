@@ -4,6 +4,8 @@ import { Suspense } from "react";
 import { ZoekFilterBar } from "@/components/zoek/zoek-filter-bar";
 import { ZoekHeroSearch } from "@/components/zoek/zoek-hero-search";
 import { ZoekActiveChips } from "@/components/zoek/zoek-active-chips";
+import { ZoekQuickFilters } from "@/components/zoek/zoek-quick-filters";
+import { ZoekSavedSearches } from "@/components/zoek/zoek-saved-searches";
 import { ZoekResults } from "@/components/zoek/zoek-results";
 import { useTranslation } from "@/contexts/locale-context";
 import type { Advertentie } from "@/lib/types";
@@ -67,6 +69,12 @@ export function ZoekenPageContent({
           </aside>
 
           <div className="search-page__main">
+            <Suspense fallback={null}>
+              <ZoekQuickFilters />
+            </Suspense>
+            <Suspense fallback={null}>
+              <ZoekSavedSearches />
+            </Suspense>
             <Suspense fallback={null}>
               <ZoekActiveChips />
             </Suspense>

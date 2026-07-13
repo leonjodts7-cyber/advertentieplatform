@@ -1,28 +1,30 @@
-import Link from "next/link";
+"use client";
 
-const POPULAR_SEARCHES = [
-  { label: "Escort Antwerpen", href: "/zoeken?stad=Antwerpen&categorie=escort" },
-  {
-    label: "Privé ontvangst Gent",
-    href: "/zoeken?stad=Gent&categorie=prive-ontvangst",
-  },
-  { label: "Video afspraak", href: "/zoeken?categorie=video" },
-  {
-    label: "Massage Brussel",
-    href: "/zoeken?stad=Brussel&categorie=massage",
-  },
-  { label: "Beschikbaar vandaag", href: "/zoeken?beschikbaar=1" },
-  { label: "Geverifieerde profielen", href: "/zoeken?geverifieerd=1" },
+import Link from "next/link";
+import { useTranslation } from "@/contexts/locale-context";
+
+const POPULAR_SEARCH_KEYS = [
+  { key: "escortAntwerp", href: "/zoeken?stad=Antwerpen&categorie=escort" },
+  { key: "priveGent", href: "/zoeken?stad=Gent&categorie=prive-ontvangst" },
+  { key: "video", href: "/zoeken?categorie=video" },
+  { key: "massageBrussels", href: "/zoeken?stad=Brussel&categorie=massage" },
+  { key: "availableToday", href: "/zoeken?beschikbaar=true" },
+  { key: "verified", href: "/zoeken?geverifieerd=true" },
 ] as const;
 
 export function PopularSearches() {
+  const { t } = useTranslation();
+
   return (
-    <div className="flex flex-wrap gap-2">
-      {POPULAR_SEARCHES.map((item) => (
-        <Link key={item.href} href={item.href} className="search-chip">
-          {item.label}
-        </Link>
-      ))}
+    <div className="popular-searches">
+      <p className="popular-searches__label">{t("discovery.popularSearches")}</p>
+      <div className="popular-searches__chips">
+        {POPULAR_SEARCH_KEYS.map((item) => (
+          <Link key={item.key} href={item.href} className="search-chip">
+            {t(`discovery.popular.${item.key}`)}
+          </Link>
+        ))}
+      </div>
     </div>
   );
 }

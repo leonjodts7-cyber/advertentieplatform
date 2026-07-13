@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import { getCompanionById } from "@/lib/ai-companions";
 import type { AiBericht, AiGesprek, AiPersonage } from "@/lib/ai-types";
 import { AI_PERSONAGES_FALLBACK } from "@/lib/ai/personages-fallback";
 
@@ -112,4 +113,55 @@ export async function haalAiLoungeStats(gebruikerId: string) {
     resterendeCredits:
       (saldoRow.data as { saldo: number } | null)?.saldo ?? 0,
   };
+}
+
+export interface RecentAiChat {
+  personageId: string;
+  personageSlug: string;
+  personageNaam: string;
+  laatstActief: string;
+}
+
+export async function haalRecenteAiGesprekken(
+  gebruikerId: string,
+  limit = 4
+): Promise<RecentAiChat[]> {
+  const supabase = await createClient();
+  const { data: gesprekken } = await supabase
+    .from("ai_gesprekken")
+    .select("personage_id, bijgewerkt_op, aangemaakt_op")
+    .eq("gebruiker_id", gebruikerId)
+    .order("bijgewerkt_op", { ascending: false })
+    .limit(limit);
+
+  if (!gesprekken?.length) return [];
+
+  const personageIds = gesprekken.map((g) => g.personage_id as string);
+  const { data: personages } = await supabase
+    .from("ai_personages")
+    .select("id, slug, naam")
+    .in("id", personageIds);
+
+  const byId = new Map(
+    (personages ?? []).map((p) => [
+      p.id as string,
+      { slug: p.slug as string, naam: p.naam as string },
+    ])
+  );
+
+  return gesprekken
+    .map((g) => {
+      const p = byId.get(g.personage_id as string);
+      const fallback = getCompanionById(g.personage_id as string);
+      const slug = p?.slug ?? fallback?.id ?? (g.personage_id as string);
+      const naam = p?.naam ?? fallback?.naam;
+      if (!naam) return null;
+      return {
+        personageId: g.personage_id as string,
+        personageSlug: slug,
+        personageNaam: naam,
+        laatstActief: (g.bijgewerkt_op as string) ?? (g.aangemaakt_op as string),
+      };
+    })
+    .filter((r): r is RecentAiChat => r != null);
 }
