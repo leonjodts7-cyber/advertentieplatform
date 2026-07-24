@@ -7,9 +7,13 @@ import { useTranslation } from "@/contexts/locale-context";
 import { CREDITS_PER_BERICHT, type AiCompanion } from "@/lib/ai-companions";
 import type { RecentAiChat } from "@/lib/ai/queries";
 import { MessageCircle, Sparkles } from "lucide-react";
+import { useEffect, useState } from "react";
 
 interface AiLoungeContentProps {
   companions: AiCompanion[];
+}
+
+interface AiLoungeSession {
   ingelogd: boolean;
   creditsSaldo: number;
   recentChats: RecentAiChat[];
@@ -24,13 +28,30 @@ function pickCompanions(all: AiCompanion[], ids: string[]): AiCompanion[] {
   return ids.map((id) => byId.get(id)).filter((c): c is AiCompanion => c != null);
 }
 
-export function AiLoungeContent({
-  companions,
-  ingelogd,
-  creditsSaldo,
-  recentChats,
-}: AiLoungeContentProps) {
+export function AiLoungeContent({ companions }: AiLoungeContentProps) {
   const { t } = useTranslation();
+  const [session, setSession] = useState<AiLoungeSession>({
+    ingelogd: false,
+    creditsSaldo: 0,
+    recentChats: [],
+  });
+
+  useEffect(() => {
+    let cancelled = false;
+    void fetch("/api/ai-lounge/session", { credentials: "include" })
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data: AiLoungeSession | null) => {
+        if (!cancelled && data) setSession(data);
+      })
+      .catch(() => {
+        /* silent */
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const { ingelogd, creditsSaldo, recentChats } = session;
 
   const featured = pickCompanions(companions, FEATURED_IDS);
   const popular = pickCompanions(companions, POPULAR_IDS);

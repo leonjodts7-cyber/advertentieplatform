@@ -1,5 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Advertentie } from "@/lib/types";
+import { LISTING_CARD_COLUMNS } from "@/lib/listing-columns";
 import {
   isPlaatsingActief,
   isPremiumListing,
@@ -55,7 +56,7 @@ async function fetchActievePool(
 ): Promise<Advertentie[]> {
   const { data } = await supabase
     .from("advertenties")
-    .select("*")
+    .select(LISTING_CARD_COLUMNS)
     .eq("status", "actief")
     .order("aangemaakt_op", { ascending: false })
     .limit(poolLimit);
@@ -80,7 +81,7 @@ export async function fetchSpotlightAdvertenties(
 ): Promise<Advertentie[]> {
   const { data, error } = await supabase
     .from("advertenties")
-    .select("*")
+    .select(LISTING_CARD_COLUMNS)
     .eq("status", "actief")
     .eq("plaatsing_type", "homepage")
     .gt("plaatsing_eindigt_op", nowIso())
@@ -105,7 +106,7 @@ export async function fetchPremiumAdvertenties(
 ): Promise<Advertentie[]> {
   const { data, error } = await supabase
     .from("advertenties")
-    .select("*")
+    .select(LISTING_CARD_COLUMNS)
     .eq("status", "actief")
     .or("premium.eq.true,plaatsing_type.in.(stad,categorie)")
     .order("aangemaakt_op", { ascending: false })
@@ -134,7 +135,7 @@ export async function fetchActieveAdvertenties(
 
   let query = supabase
     .from("advertenties")
-    .select("*")
+    .select(LISTING_CARD_COLUMNS)
     .eq("status", "actief")
     .order("aangemaakt_op", { ascending: false })
     .limit(limit);
@@ -155,7 +156,7 @@ export async function fetchAdvertentiesByIds(
 
   const { data, error } = await supabase
     .from("advertenties")
-    .select("*")
+    .select(LISTING_CARD_COLUMNS)
     .in("id", ids)
     .eq("status", "actief");
 
@@ -237,7 +238,7 @@ export async function fetchNieuwVandaagAdvertenties(
   start.setHours(0, 0, 0, 0);
   const { data } = await supabase
     .from("advertenties")
-    .select("*")
+    .select(LISTING_CARD_COLUMNS)
     .eq("status", "actief")
     .gte("aangemaakt_op", start.toISOString())
     .order("aangemaakt_op", { ascending: false })
@@ -265,7 +266,7 @@ export async function fetchOnlineNuAdvertenties(
 ): Promise<Advertentie[]> {
   const { data } = await supabase
     .from("advertenties")
-    .select("*")
+    .select(LISTING_CARD_COLUMNS)
     .eq("status", "actief")
     .eq("beschikbaar", true)
     .order("aangemaakt_op", { ascending: false })
@@ -286,7 +287,7 @@ export async function fetchRecentBijgewerktAdvertenties(
 ): Promise<Advertentie[]> {
   const { data } = await supabase
     .from("advertenties")
-    .select("*")
+    .select(LISTING_CARD_COLUMNS)
     .eq("status", "actief")
     .order("bijgewerkt_op", { ascending: false })
     .limit(limit);
@@ -404,7 +405,7 @@ export async function fetchVergelijkbareAdvertenties(
 ): Promise<Advertentie[]> {
   const { data } = await supabase
     .from("advertenties")
-    .select("*")
+    .select(LISTING_CARD_COLUMNS)
     .eq("status", "actief")
     .neq("id", advertentie.id)
     .ilike("stad", `%${advertentie.stad}%`)

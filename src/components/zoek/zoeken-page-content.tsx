@@ -62,13 +62,18 @@ export function ZoekenPageContent({
 
       <div className="container search-page__body">
         <div className="search-page__layout">
-          <aside className="search-page__sidebar">
+          <aside className="search-page__sidebar search-page__sidebar--desktop">
             <Suspense fallback={<div className="zoek-filter-bar zoek-filter-bar--skeleton" />}>
               <ZoekFilterBar />
             </Suspense>
           </aside>
 
           <div className="search-page__main">
+            <div className="search-page__mobile-filters">
+              <Suspense fallback={null}>
+                <ZoekFilterBar mobileOnly />
+              </Suspense>
+            </div>
             <Suspense fallback={null}>
               <ZoekQuickFilters />
             </Suspense>

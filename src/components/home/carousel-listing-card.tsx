@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { BadgeCheck, Camera, Video } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -83,6 +84,50 @@ export function CarouselListingCard({
   const showVideoCount = videoCount > 0;
   const compactMeta = tier === "latest" || tier === "nearby";
 
+  const statusBadge = isSpotlight && !compactMeta
+    ? { key: "spotlight", label: t("listing.spotlight"), variant: "premium" as const }
+    : isPremium
+      ? { key: "premium", label: t("listing.premium"), variant: "premium" as const }
+      : isNieuw && !advertentie.beschikbaar
+        ? { key: "new", label: t("listing.new"), variant: "default" as const }
+        : null;
+
+  const trustBadge = advertentie.geverifieerd
+    ? { key: "verified", label: t("listing.verified"), variant: "verified" as const }
+    : null;
+
+  const visibleBadges: Array<{
+    key: string;
+    label: string;
+    variant: "online" | "premium" | "default" | "verified";
+    showIcon?: boolean;
+  }> = [];
+
+  if (advertentie.beschikbaar) {
+    visibleBadges.push({
+      key: "online",
+      label: t("listing.online"),
+      variant: "online",
+    });
+  }
+
+  if (statusBadge && visibleBadges.length < 2) {
+    visibleBadges.push({
+      key: statusBadge.key,
+      label: statusBadge.label,
+      variant: statusBadge.variant,
+    });
+  }
+
+  if (trustBadge && visibleBadges.length < 2) {
+    visibleBadges.push({
+      key: trustBadge.key,
+      label: trustBadge.label,
+      variant: trustBadge.variant,
+      showIcon: true,
+    });
+  }
+
   return (
     <article
       className={cn(
@@ -98,13 +143,13 @@ export function CarouselListingCard({
       <Link href={linkHref} className="carousel-listing-card__link">
         <div className="carousel-listing-card__media">
           {afbeeldingUrl ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
+            <Image
               src={afbeeldingUrl}
               alt={advertentie.titel}
-              loading={priority ? "eager" : "lazy"}
-              decoding="async"
-              className="carousel-listing-card__img"
+              fill
+              sizes="(max-width: 640px) 45vw, 220px"
+              priority={priority}
+              className="carousel-listing-card__img object-cover"
             />
           ) : (
             <ListingPlaceholder />
@@ -129,35 +174,16 @@ export function CarouselListingCard({
           )}
 
           <div className="carousel-listing-card__badges">
-            {advertentie.beschikbaar && (
-              <Badge variant="online" className="carousel-listing-card__badge">
-                {t("listing.online")}
-              </Badge>
-            )}
-            {isNieuw && (
+            {visibleBadges.map((badge) => (
               <Badge
-                variant="default"
-                className="carousel-listing-card__badge carousel-listing-card__badge--nieuw"
+                key={badge.key}
+                variant={badge.variant}
+                className="carousel-listing-card__badge"
               >
-                {t("listing.new")}
+                {badge.showIcon ? <BadgeCheck className="h-3 w-3" aria-hidden /> : null}
+                {badge.label}
               </Badge>
-            )}
-            {isSpotlight && !compactMeta && (
-              <Badge variant="premium" className="carousel-listing-card__badge">
-                {t("listing.spotlight")}
-              </Badge>
-            )}
-            {isPremium && !isSpotlight && (
-              <Badge variant="premium" className="carousel-listing-card__badge">
-                {t("listing.premium")}
-              </Badge>
-            )}
-            {advertentie.geverifieerd && (
-              <Badge variant="verified" className="carousel-listing-card__badge">
-                <BadgeCheck className="h-3 w-3" aria-hidden />
-                {t("listing.verified")}
-              </Badge>
-            )}
+            ))}
           </div>
         </div>
 

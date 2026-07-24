@@ -4,6 +4,7 @@ import {
   createContext,
   useCallback,
   useContext,
+  useEffect,
   useMemo,
   useState,
 } from "react";
@@ -19,17 +20,34 @@ const FavoritesContext = createContext<FavoritesContextValue | null>(null);
 
 interface FavoritesProviderProps {
   children: React.ReactNode;
-  initialIds?: string[];
-  isLoggedIn: boolean;
 }
 
-export function FavoritesProvider({
-  children,
-  initialIds = [],
-  isLoggedIn,
-}: FavoritesProviderProps) {
-  const [ids, setIds] = useState<Set<string>>(() => new Set(initialIds));
+export function FavoritesProvider({ children }: FavoritesProviderProps) {
+  const [ids, setIds] = useState<Set<string>>(() => new Set());
   const [loadingIds, setLoadingIds] = useState<Set<string>>(() => new Set());
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    void fetch("/api/favorieten", { credentials: "include" })
+      .then(async (res) => {
+        if (cancelled) return;
+        if (res.status === 401) {
+          setIsLoggedIn(false);
+          return;
+        }
+        if (!res.ok) return;
+        const data = (await res.json()) as { ids?: string[] };
+        setIds(new Set(data.ids ?? []));
+        setIsLoggedIn(true);
+      })
+      .catch(() => {
+        if (!cancelled) setIsLoggedIn(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const isFavorited = useCallback(
     (advertentieId: string) => ids.has(advertentieId),
@@ -66,10 +84,7 @@ export function FavoritesProvider({
               body: JSON.stringify({ advertentie_id: advertentieId }),
             });
 
-        if (!res.ok) {
-          throw new Error("Favoriet opslaan mislukt");
-        }
-
+        if (!res.ok) throw new Error("Failed");
         return !wasFavorited;
       } catch {
         setIds((prev) => {

@@ -1,6 +1,7 @@
 import { ZoekenPageContent } from "@/components/zoek/zoeken-page-content";
 import { buildPageMetadata } from "@/lib/metadata-i18n";
-import { haalEersteFotos, haalFotoAantallen } from "@/lib/advertentie-fotos";
+import { getCachedListingPhotos } from "@/lib/cache/listing-photos";
+import { LISTING_CARD_COLUMNS } from "@/lib/listing-columns";
 import {
   fetchActieveAdvertenties,
   fetchPremiumAdvertenties,
@@ -143,9 +144,10 @@ export default async function ZoekenPage({ searchParams }: ZoekenPageProps) {
 
   let query = supabase
     .from("advertenties")
-    .select("*")
+    .select(LISTING_CARD_COLUMNS)
     .eq("status", "actief")
-    .order("aangemaakt_op", { ascending: false });
+    .order("aangemaakt_op", { ascending: false })
+    .limit(100);
 
   if (stad?.trim()) query = query.ilike("stad", `%${stad.trim()}%`);
   if (q?.trim() && ai !== "1") {
@@ -189,11 +191,8 @@ export default async function ZoekenPage({ searchParams }: ZoekenPageProps) {
     parseZoekSort(params.sort)
   );
 
-  const fotos = await haalEersteFotos(supabase, advertenties.map((a) => a.id));
-  const fotoCounts = await haalFotoAantallen(
-    supabase,
-    advertenties.map((a) => a.id)
-  );
+  const ids = advertenties.map((a) => a.id);
+  const { urls: fotos, counts: fotoCounts } = await getCachedListingPhotos(ids);
   const filtersActive = hasActiveFilters(params);
 
   let fallbackPremium: Advertentie[] = [];
@@ -209,7 +208,10 @@ export default async function ZoekenPage({ searchParams }: ZoekenPageProps) {
       ...fallbackPremium.map((a) => a.id),
       ...fallbackLatest.map((a) => a.id),
     ];
-    fallbackFotos = await haalEersteFotos(supabase, [...new Set(fallbackIds)]);
+    const { urls: fallbackFotosMap } = await getCachedListingPhotos([
+      ...new Set(fallbackIds),
+    ]);
+    fallbackFotos = fallbackFotosMap;
   }
 
   return (

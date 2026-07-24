@@ -20,7 +20,7 @@ import {
   TAAL_OPTIES,
   type ZoekFilterValues,
 } from "@/lib/zoek-filters";
-import { Sparkles } from "lucide-react";
+import { Sparkles, SlidersHorizontal } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useTranslation } from "@/contexts/locale-context";
 import { fetchAiZoekParams } from "@/lib/ai-zoek-nav";
@@ -36,12 +36,13 @@ function boolFromParam(value: string | null) {
   return value === "true" || value === "1";
 }
 
-export function ZoekFilterBar() {
+export function ZoekFilterBar({ mobileOnly = false }: { mobileOnly?: boolean }) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { t } = useTranslation();
   const [isPending, startTransition] = useTransition();
   const [extendedOpen, setExtendedOpen] = useState(false);
+  const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
   const [aiOpen, setAiOpen] = useState(searchParams.get("ai") === "1");
 
   const [q, setQ] = useState(searchParams.get("q") ?? "");
@@ -137,9 +138,16 @@ export function ZoekFilterBar() {
     });
   }
 
+  function closeMobileDrawer() {
+    setMobileDrawerOpen(false);
+    setExtendedOpen(false);
+    setAiOpen(false);
+  }
+
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     navigate(buildFilterParams(getValues()));
+    if (mobileOnly) closeMobileDrawer();
   }
 
   async function handleAiSubmit(e: React.FormEvent) {
@@ -191,8 +199,66 @@ export function ZoekFilterBar() {
     (k) => k !== "ai" && searchParams.get(k)
   );
 
+  const filterCount = Array.from(searchParams.keys()).filter(
+    (k) => k !== "ai" && searchParams.get(k)?.trim()
+  ).length;
+
   return (
-    <div className="zoek-filter-bar">
+    <div className={cn("zoek-filter-bar", mobileOnly && "zoek-filter-bar--mobile-only")}>
+      {mobileOnly && !mobileDrawerOpen && (
+        <div className="zoek-mobile-filter-bar">
+          <button
+            type="button"
+            className="zoek-mobile-filter-bar__btn"
+            onClick={() => setMobileDrawerOpen(true)}
+          >
+            <SlidersHorizontal className="h-4 w-4" aria-hidden />
+            {t("search.filters")}
+            {filterCount > 0 && (
+              <span className="zoek-mobile-filter-bar__count">{filterCount}</span>
+            )}
+          </button>
+          {hasFilters && (
+            <button
+              type="button"
+              className="zoek-mobile-filter-bar__clear"
+              onClick={handleClear}
+            >
+              {t("search.clearFiltersBtn")}
+            </button>
+          )}
+        </div>
+      )}
+
+      {(!mobileOnly || mobileDrawerOpen) && (
+        <>
+          {mobileOnly && mobileDrawerOpen && (
+            <button
+              type="button"
+              className="zoek-filter-drawer__backdrop"
+              aria-label={t("nav.close")}
+              onClick={closeMobileDrawer}
+            />
+          )}
+          <div
+            className={cn(
+              mobileOnly &&
+                mobileDrawerOpen &&
+                "zoek-filter-drawer zoek-filter-drawer--mobile-full"
+            )}
+          >
+            {mobileOnly && mobileDrawerOpen && (
+              <div className="zoek-filter-drawer__head">
+                <h2 className="zoek-filter-drawer__title">{t("search.filters")}</h2>
+                <button
+                  type="button"
+                  className="zoek-filter-drawer__close"
+                  onClick={closeMobileDrawer}
+                >
+                  {t("nav.close")}
+                </button>
+              </div>
+            )}
       {aiOpen ? (
         <form onSubmit={handleAiSubmit} className="zoek-filter-bar__ai">
           <div className="zoek-filter-bar__ai-header">
@@ -463,6 +529,7 @@ export function ZoekFilterBar() {
                 onClick={() => {
                   navigate(buildFilterParams(getValues()));
                   setExtendedOpen(false);
+                  if (mobileOnly) closeMobileDrawer();
                 }}
               >
                 {t("search.showProfiles")}
@@ -476,6 +543,7 @@ export function ZoekFilterBar() {
                   onClick={() => {
                     handleClear();
                     setExtendedOpen(false);
+                    if (mobileOnly) closeMobileDrawer();
                   }}
                 >
                   {t("search.clearFiltersBtn")}
@@ -483,6 +551,9 @@ export function ZoekFilterBar() {
               )}
             </div>
           </aside>
+        </>
+      )}
+          </div>
         </>
       )}
     </div>

@@ -1,12 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { CarouselListingCard } from "@/components/home/carousel-listing-card";
-import { CarouselPlaceholderCard } from "@/components/home/carousel-placeholder-card";
 import { useTranslation } from "@/contexts/locale-context";
-import { getCarouselPlaceholders } from "@/lib/home-carousel-placeholders";
 import type { Advertentie } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
@@ -66,12 +64,9 @@ export function HorizontalListingsCarousel({
   const [canNext, setCanNext] = useState(false);
   const [scrollable, setScrollable] = useState(false);
 
-  const usePlaceholders = items.length === 0;
-  const placeholders = useMemo(
-    () => (usePlaceholders ? getCarouselPlaceholders(variant) : []),
-    [usePlaceholders, variant]
-  );
-  const slideCount = usePlaceholders ? placeholders.length : items.length;
+  if (items.length === 0 && !embedded) return null;
+
+  const slideCount = items.length;
 
   const updateArrows = useCallback(() => {
     const el = viewportRef.current;
@@ -141,7 +136,7 @@ export function HorizontalListingsCarousel({
       )}
       data-home-carousel={variant}
       data-carousel-count={slideCount}
-      data-carousel-demo={usePlaceholders ? "true" : "false"}
+      data-carousel-demo="false"
     >
       <div className="container">
         <div className="home-listing-block__header">
@@ -190,20 +185,7 @@ export function HorizontalListingsCarousel({
             tabIndex={0}
           >
             <div className="listings-carousel__track">
-              {usePlaceholders
-                ? placeholders.map((placeholder, index) => (
-                    <div
-                      key={placeholder.id}
-                      data-carousel-slide
-                      className="listings-carousel__slide snap-start"
-                    >
-                      <CarouselPlaceholderCard
-                        item={placeholder}
-                        carouselTier={variant}
-                      />
-                    </div>
-                  ))
-                : items.map((advertentie, index) => (
+              {items.map((advertentie, index) => (
                     <div
                       key={advertentie.id}
                       data-carousel-slide
@@ -234,7 +216,7 @@ export function HorizontalListingsCarousel({
                                   ? "latest"
                                   : "default"
                         }
-                        priority={index < 6}
+                        priority={variant === "spotlight" && index === 0}
                       />
                     </div>
                   ))}

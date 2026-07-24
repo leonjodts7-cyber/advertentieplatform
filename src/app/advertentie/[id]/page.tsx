@@ -6,7 +6,7 @@ import {
   parseAdvertentieBeschrijving,
 } from "@/lib/advertentie-metadata";
 import { fetchVergelijkbareAdvertenties } from "@/lib/advertentie-queries";
-import { haalEersteFotos } from "@/lib/advertentie-fotos";
+import { getCachedListingPhotos } from "@/lib/cache/listing-photos";
 import { fetchAdvertentieReviews, fetchReviewSummary } from "@/lib/reviews/queries";
 import type { Metadata } from "next";
 import { buildBreadcrumbJsonLd, buildListingJsonLd } from "@/lib/seo/structured-data";
@@ -93,8 +93,7 @@ export default async function AdvertentieDetailPage({
   ]);
 
   const fotos = (fotosRaw ?? []) as AdvertentieFoto[];
-  const vergelijkFotos = await haalEersteFotos(
-    supabase,
+  const { urls: vergelijkFotos } = await getCachedListingPhotos(
     vergelijkbaar.map((a) => a.id)
   );
 

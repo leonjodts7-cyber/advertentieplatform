@@ -1,13 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import { MapPin, Navigation } from "lucide-react";
+import { MapPin } from "lucide-react";
 import { HorizontalListingsCarousel } from "@/components/home/horizontal-listings-carousel";
 import { useTranslation } from "@/contexts/locale-context";
 import type { Advertentie } from "@/lib/types";
-
-const LOC_STORAGE_KEY = "veloura_user_location";
 
 interface HomeNearbyCarouselSectionProps {
   advertenties: Advertentie[];
@@ -21,49 +18,8 @@ export function HomeNearbyCarouselSection({
   fotoCounts,
 }: HomeNearbyCarouselSectionProps) {
   const { t } = useTranslation();
-  const [locatieActief, setLocatieActief] = useState(false);
-  const [locatieLaden, setLocatieLaden] = useState(false);
-  const [locatieFout, setLocatieFout] = useState<string | null>(null);
 
-  useEffect(() => {
-    try {
-      if (localStorage.getItem(LOC_STORAGE_KEY)) setLocatieActief(true);
-    } catch {
-      /* ignore */
-    }
-  }, []);
-
-  function vraagLocatie() {
-    setLocatieFout(null);
-    if (!navigator.geolocation) {
-      setLocatieFout("Locatie wordt niet ondersteund door je browser.");
-      return;
-    }
-    setLocatieLaden(true);
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        try {
-          localStorage.setItem(
-            LOC_STORAGE_KEY,
-            JSON.stringify({
-              lat: pos.coords.latitude,
-              lng: pos.coords.longitude,
-              at: Date.now(),
-            })
-          );
-        } catch {
-          /* ignore */
-        }
-        setLocatieActief(true);
-        setLocatieLaden(false);
-      },
-      () => {
-        setLocatieFout("Locatie niet beschikbaar.");
-        setLocatieLaden(false);
-      },
-      { enableHighAccuracy: false, timeout: 10000 }
-    );
-  }
+  if (advertenties.length === 0) return null;
 
   return (
     <HorizontalListingsCarousel
@@ -73,35 +29,14 @@ export function HomeNearbyCarouselSection({
       fotos={fotos}
       variant="nearby"
       viewAllHref="/zoeken"
-      ariaLabel="Advertenties in jouw buurt"
+      ariaLabel={t("home.nearbyTitle")}
       fotoCounts={fotoCounts}
       toolbar={
-        <div className="mb-2">
-          <div className="home-nearby-compact__actions">
-            <button
-              type="button"
-              className="home-locatie-btn"
-              disabled={locatieLaden}
-              onClick={vraagLocatie}
-            >
-              <Navigation className="h-3.5 w-3.5" aria-hidden />
-              {locatieLaden ? t("home.locationLoading") : t("home.useLocation")}
-            </button>
-            {locatieActief && (
-              <span className="home-locatie-active">
-                <MapPin className="h-3.5 w-3.5" aria-hidden />
-                {t("home.locationSaved")}
-              </span>
-            )}
-            <Link href="/zoeken" className="home-nearby-compact__link">
-              {t("home.searchByCity")}
-            </Link>
-          </div>
-          {locatieFout && (
-            <p className="home-nearby-compact__error mt-2" role="alert">
-              {locatieFout}
-            </p>
-          )}
+        <div className="home-nearby-compact__actions">
+          <Link href="/zoeken" className="home-nearby-compact__link">
+            <MapPin className="h-3.5 w-3.5" aria-hidden />
+            {t("home.searchByCity")}
+          </Link>
         </div>
       }
     />
